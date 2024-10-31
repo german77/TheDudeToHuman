@@ -130,10 +130,12 @@
     <ClCompile Include="../src/SqliteReader.cpp" />
     <ClCompile Include="../src/TheDudeToHuman.cpp" />
     <ClCompile Include="../src/sqlite3.c" />
+    <ClCompile Include="../src/DudeDatabase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="../src/SqliteReader.h" />
     <ClInclude Include="../src/sqlite3.h" />
+    <ClInclude Include="../src/DudeDatabase.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

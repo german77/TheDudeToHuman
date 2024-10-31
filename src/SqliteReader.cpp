@@ -52,7 +52,7 @@ namespace Database {
 	}
 
 	int SqliteReader::ExecStatement(SqlData& data, const std::string& sql) const {
-		sqlite3_stmt* statement{nullptr};
+		sqlite3_stmt* statement{ nullptr };
 
 		int rc = sqlite3_prepare(db, sql.c_str(), -1, &statement, 0);
 
