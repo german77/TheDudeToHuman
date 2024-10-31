@@ -6,10 +6,10 @@
 #include <string>
 #include <vector>
 
+#include "common_types.h"
 #include "sqlite3.h"
 
 namespace Database {
-	using u8 = unsigned char;
 	using SqlRow = std::pair<int, std::vector<u8>>;
 	using SqlData = std::vector<SqlRow>;
 

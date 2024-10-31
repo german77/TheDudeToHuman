@@ -10,8 +10,9 @@ int main() {
 	std::string db_filename = "../dude.db";
 	Database::DudeDatabase db{ db_filename };
 
-	Database::SqlData data{};
-	db.GetObjs(data);
+	auto data = db.ListObjectTypes();
 
-	printf("Table rows %d", data.size());
+	for (int type : data) {
+		printf("%#02x\n", type);
+	}
 }

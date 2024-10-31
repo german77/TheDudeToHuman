@@ -24,7 +24,7 @@
     <ClCompile Include="../src/sqlite3.c">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="DudeDatabase.cpp">
+    <ClCompile Include="../src/DudeDatabase.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,7 +35,10 @@
     <ClInclude Include="../src/sqlite3.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="DudeDatabase.h">
+    <ClInclude Include="../src/DudeDatabase.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="../src/common_types.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
