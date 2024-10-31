@@ -4,24 +4,31 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include "sqlite3.h"
 
 namespace Database {
+	using u8 = unsigned char;
+	using SqlRow = std::pair<int, std::vector<u8>>;
+	using SqlData = std::vector<SqlRow>;
 
-	class SqliteReader{
+
+	class SqliteReader {
 	public:
-		SqliteReader(std::string db_file);
+		SqliteReader(const std::string& db_file);
 
 		int OpenDatabase();
-
 		void CloseDatabase();
 
+		int  GetTableData(SqlData& data, const std::string& table_name) const;
+
 	private:
-		bool is_open;
-		std::string db_filename;
-		sqlite3* db;
+		int ExecStatement(SqlData& data, const std::string& sql) const;
+		SqlRow ReadRow(sqlite3_stmt* statement) const;
+
+		bool is_open{};
+		std::string db_filename{};
+		sqlite3* db{ NULL };
 	};
-
-
 }
