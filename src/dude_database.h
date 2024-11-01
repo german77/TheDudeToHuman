@@ -34,15 +34,16 @@ namespace Database {
 		RawObjData BlobToRawObjData(std::span<const u8> blob) const;
 		DeviceData RawDataToDeviceData(std::span<const u8> raw_data) const;
 
-		TextField GetTextField(std::span<const u8> raw_data, std::size_t& offset, FieldType type) const;
+		TextField GetTextField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;
 		ObjectIdField GetObjectIdField(std::span<const u8> raw_data, std::size_t& offset) const;
 		UnknownDeviceField1 GetUnknownDeviceField1(std::span<const u8> raw_data, std::size_t& offset) const;
-		UnknownDeviceField2 GetUnknownDeviceField2(std::span<const u8> raw_data, std::size_t& offset, FieldType type) const;
+		UnknownDeviceField2 GetUnknownDeviceField2(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;
 		IpAddressField GetIpAddressField(std::span<const u8> raw_data, std::size_t& offset) const;
 		MacAddressField GetMacAddressField(std::span<const u8> raw_data, std::size_t& offset) const;
 		DnsField GetDnsField(std::span<const u8> raw_data, std::size_t& offset) const;
 
 		bool CheckSize(std::size_t raw_data_size, std::size_t offset, std::size_t header_size) const;
+		bool ValidateId(FieldId a, FieldId b) const;
 		bool ValidateType(FieldType a, FieldType b) const;
 
 		Database::SqliteReader db;

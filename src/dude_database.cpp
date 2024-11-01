@@ -108,27 +108,26 @@ namespace Database {
 
 		std::size_t offset = offsetof(DeviceData, unk);
 		data.unk = GetUnknownDeviceField1(raw_data, offset);
-		offset += 1; // padding
 		data.dns = GetDnsField(raw_data, offset);
 		data.ip = GetIpAddressField(raw_data, offset);
 		offset += 0x3F;
 		data.object_id = GetObjectIdField(raw_data, offset);
-		data.unk1 = GetUnknownDeviceField2(raw_data, offset, FieldType::Unk1);
-		data.unk2 = GetUnknownDeviceField2(raw_data, offset, FieldType::Unk2);
-		data.unk3 = GetUnknownDeviceField2(raw_data, offset, FieldType::Unk3);
-		data.custom_field_3 = GetTextField(raw_data, offset, FieldType::CustomField3);
-		data.custom_field_2 = GetTextField(raw_data, offset, FieldType::CustomField2);
-		data.custom_field_1 = GetTextField(raw_data, offset, FieldType::CustomField1);
-		data.password = GetTextField(raw_data, offset, FieldType::Password);
-		data.username = GetTextField(raw_data, offset, FieldType::Username);
+		data.unk1 = GetUnknownDeviceField2(raw_data, offset, FieldId::Unk1);
+		data.unk2 = GetUnknownDeviceField2(raw_data, offset, FieldId::Unk2);
+		data.unk3 = GetUnknownDeviceField2(raw_data, offset, FieldId::Unk3);
+		data.custom_field_3 = GetTextField(raw_data, offset, FieldId::CustomField3);
+		data.custom_field_2 = GetTextField(raw_data, offset, FieldId::CustomField2);
+		data.custom_field_1 = GetTextField(raw_data, offset, FieldId::CustomField1);
+		data.password = GetTextField(raw_data, offset, FieldId::Password);
+		data.username = GetTextField(raw_data, offset, FieldId::Username);
 		data.mac = GetMacAddressField(raw_data, offset);
-		data.name = GetTextField(raw_data, offset, FieldType::Name);
+		data.name = GetTextField(raw_data, offset, FieldId::Name);
 
 		return data;
 	}
 
-	TextField DudeDatabase::GetTextField(std::span<const u8> raw_data, std::size_t& offset, FieldType type) const {
-		constexpr std::size_t header_size = sizeof(TextField::type) + sizeof(TextField::data_size);
+	TextField DudeDatabase::GetTextField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const {
+		constexpr std::size_t header_size = sizeof(TextField::info) + sizeof(TextField::data_size);
 		TextField field{};
 
 		if (!CheckSize(raw_data.size(), offset, header_size)) {
@@ -138,7 +137,8 @@ namespace Database {
 		memcpy(&field, raw_data.data() + offset, header_size);
 		offset += header_size;
 
-		ValidateType(field.type, type);
+		ValidateId(field.info.id.Value(), id);
+		ValidateType(field.info.type.Value(), FieldType::ShortString);
 
 		if (!CheckSize(raw_data.size(), offset, field.data_size)) {
 			return {};
@@ -153,7 +153,7 @@ namespace Database {
 	}
 
 	ObjectIdField DudeDatabase::GetObjectIdField(std::span<const u8> raw_data, std::size_t& offset) const {
-		constexpr std::size_t header_size = sizeof(ObjectIdField::type) + sizeof(ObjectIdField::id);
+		constexpr std::size_t header_size = sizeof(ObjectIdField::info) + sizeof(ObjectIdField::id);
 		ObjectIdField field{};
 
 		if (!CheckSize(raw_data.size(), offset, header_size)) {
@@ -163,13 +163,14 @@ namespace Database {
 		memcpy(&field, raw_data.data() + offset, header_size);
 		offset += header_size;
 
-		ValidateType(field.type, FieldType::ObjectId);
+		ValidateId(field.info.id.Value(), FieldId::ObjectId);
+		ValidateType(field.info.type.Value(), FieldType::Int);
 
 		return field;
 	}
 
 	UnknownDeviceField1 DudeDatabase::GetUnknownDeviceField1(std::span<const u8> raw_data, std::size_t& offset) const {
-		constexpr std::size_t header_size = sizeof(UnknownDeviceField1::type) + sizeof(UnknownDeviceField1::entries);
+		constexpr std::size_t header_size = sizeof(UnknownDeviceField1::info) + sizeof(UnknownDeviceField1::entries);
 		UnknownDeviceField1 field{};
 
 		if (!CheckSize(raw_data.size(), offset, header_size)) {
@@ -178,6 +179,9 @@ namespace Database {
 
 		memcpy(&field, raw_data.data() + offset, header_size);
 		offset += header_size;
+
+		ValidateId(field.info.id.Value(), FieldId::Unknown56);
+		ValidateType(field.info.type.Value(), FieldType::IntArray);
 
 		if (!CheckSize(raw_data.size(), offset, field.entries * sizeof(u32))) {
 			return {};
@@ -190,8 +194,8 @@ namespace Database {
 		return field;
 	}
 
-	UnknownDeviceField2 DudeDatabase::GetUnknownDeviceField2(std::span<const u8> raw_data, std::size_t& offset, FieldType type) const {
-		constexpr std::size_t header_size = sizeof(UnknownDeviceField2::type) + sizeof(UnknownDeviceField2::data_size);
+	UnknownDeviceField2 DudeDatabase::GetUnknownDeviceField2(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const {
+		constexpr std::size_t header_size = sizeof(UnknownDeviceField2::info) + sizeof(UnknownDeviceField2::data);
 		UnknownDeviceField2 field{};
 
 		if (!CheckSize(raw_data.size(), offset, header_size)) {
@@ -201,21 +205,14 @@ namespace Database {
 		memcpy(&field, raw_data.data() + offset, header_size);
 		offset += header_size;
 
-		ValidateType(field.type, type);
-
-		if (!CheckSize(raw_data.size(), offset, field.data_size)) {
-			return {};
-		}
-
-		field.data.resize(field.data_size);
-		memcpy(field.data.data(), raw_data.data() + offset, field.data_size);
-		offset += field.data_size;
+		ValidateId(field.info.id.Value(), id);
+		ValidateType(field.info.type.Value(), FieldType::Byte);
 
 		return field;
 	}
 
 	IpAddressField DudeDatabase::GetIpAddressField(std::span<const u8> raw_data, std::size_t& offset) const {
-		constexpr std::size_t header_size = sizeof(IpAddressField::type) + sizeof(IpAddressField::data_size);
+		constexpr std::size_t header_size = sizeof(IpAddressField::info) + sizeof(IpAddressField::data_size);
 		IpAddressField field{};
 
 		if (!CheckSize(raw_data.size(), offset, header_size)) {
@@ -225,7 +222,8 @@ namespace Database {
 		memcpy(&field, raw_data.data() + offset, header_size);
 		offset += header_size;
 
-		ValidateType(field.type, FieldType::IpAddress);
+		ValidateId(field.info.id.Value(), FieldId::IpAddress);
+		ValidateType(field.info.type.Value(), FieldType::IntArray);
 
 		if (!CheckSize(raw_data.size(), offset, field.data_size)) {
 			return {};
@@ -239,7 +237,7 @@ namespace Database {
 	}
 
 	MacAddressField DudeDatabase::GetMacAddressField(std::span<const u8> raw_data, std::size_t& offset) const {
-		constexpr std::size_t header_size = sizeof(MacAddressField::type) + sizeof(MacAddressField::data_size);
+		constexpr std::size_t header_size = sizeof(MacAddressField::info) + sizeof(MacAddressField::data_size);
 		MacAddressField field{};
 
 		if (!CheckSize(raw_data.size(), offset, header_size)) {
@@ -249,7 +247,8 @@ namespace Database {
 		memcpy(&field, raw_data.data() + offset, header_size);
 		offset += header_size;
 
-		ValidateType(field.type, FieldType::MacAddress);
+		ValidateId(field.info.id.Value(), FieldId::MacAddress);
+		ValidateType(field.info.type.Value(), FieldType::LongArray);
 
 		if (!CheckSize(raw_data.size(), offset, field.data_size)) {
 			return {};
@@ -263,7 +262,7 @@ namespace Database {
 	}
 
 	DnsField DudeDatabase::GetDnsField(std::span<const u8> raw_data, std::size_t& offset) const {
-		constexpr std::size_t header_size = sizeof(DnsField::type) + sizeof(DnsField::entries);
+		constexpr std::size_t header_size = sizeof(DnsField::info) + sizeof(DnsField::entries);
 		DnsField field{};
 
 		if (!CheckSize(raw_data.size(), offset, header_size)) {
@@ -272,6 +271,9 @@ namespace Database {
 
 		memcpy(&field, raw_data.data() + offset, header_size);
 		offset += header_size;
+
+		ValidateId(field.info.id.Value(), FieldId::DnsNames);
+		ValidateType(field.info.type.Value(), FieldType::StringArray);
 
 		if (field.entries == 0) {
 			return field;
@@ -298,18 +300,24 @@ namespace Database {
 
 	bool DudeDatabase::CheckSize(std::size_t raw_data_size, std::size_t offset, std::size_t header_size) const {
 		if (raw_data_size < header_size + offset) {
-			printf("Invalid data size\n");
-			return {};
+			printf("Invalid data type, expected %d, found %d\n", header_size + offset, raw_data_size);
+			return false;
 		}
 		return true;
 
 	}
 
-	bool DudeDatabase::ValidateType(FieldType a, FieldType b) const {
-		constexpr u32 mask = 0xFFFFFF;
+	bool DudeDatabase::ValidateId(FieldId a, FieldId b) const {
+		if (a != b) {
+			printf("Invalid data id, expected %d, found %d\n", b, a);
+			return false;
+		}
+		return true;
+	}
 
-		if ((static_cast<u32>(a) & mask) != (static_cast<u32>(b) & mask)) {
-			printf("Invalid data type\n");
+	bool DudeDatabase::ValidateType(FieldType a, FieldType b) const {
+		if (a != b) {
+			printf("Invalid data type, expected %d, found %d\n", b, a);
 			return false;
 		}
 		return true;

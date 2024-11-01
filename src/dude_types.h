@@ -5,6 +5,7 @@
 
 #include <vector>
 
+#include "common/bit_field.h"
 #include "common/common_funcs.h"
 #include "common/common_types.h"
 
@@ -39,7 +40,7 @@ namespace Database {
 		Unknown3d = 0x4d,
 	};
 
-	enum class FieldType : u32 {
+	enum class FieldId : u32 {
 		None,
 		IpAddress = 0x101f40,
 		DnsNames = 0x101f41,
@@ -61,7 +62,7 @@ namespace Database {
 		Unk2 = 0x101f53,
 		Unk3 = 0x101f54,
 		Unknown55 = 0x101f55,
-
+		Unknown56 = 0x101f56,
 		Pid = 0x101f57,
 		CustomField1 = 0x101f58,
 		CustomField2 = 0x101f59,
@@ -69,6 +70,18 @@ namespace Database {
 
 		ObjectId = 0xfe0001,
 		Name = 0xfe0010,
+	};
+
+	enum class FieldType : u32 {
+		None = 0x00,
+		Bool2 = 0x01,
+		Int = 0x08,
+		Byte = 0x09,
+		Long = 0x10,
+		ShortString = 0x21,
+		LongArray = 0x31,
+		IntArray = 0x88,
+		StringArray = 0xA0,
 	};
 
 #pragma pack(push, 1)
@@ -81,45 +94,52 @@ namespace Database {
 
 	using RawObjData = ObjData<std::vector<u8>>;
 
+	struct FieldInfo {
+		union {
+			u32 raw{};
+
+			BitField<0, 24, FieldId> id;
+			BitField<24, 8, FieldType> type;
+		};
+	};
+
 	struct TextField {
-		FieldType type{ FieldType::None };
+		FieldInfo info{};
 		u8 data_size{};
 		std::string text{};
 	};
 
 	struct ObjectIdField {
-		FieldType type{ FieldType::None };
+		FieldInfo info{};
 		u32 id;
 	};
 
 	struct UnknownDeviceField1 {
-		FieldType type{ FieldType::None };
-		u8 entries{};
-		INSERT_PADDING_BYTES(0x1);
+		FieldInfo info{};
+		u16 entries{};
 		std::vector<u32> data{};
 	};
 
 	struct UnknownDeviceField2 {
-		FieldType type{ FieldType::None };
-		u8 data_size{};
-		std::string data{};
+		FieldInfo info{};
+		u8 data{};
 	};
 
 	struct IpAddressField {
-		FieldType type{ FieldType::None };
+		FieldInfo info{};
 		u16 entries{};
 		u16 data_size{};
 		std::vector<IpAddress> ip_address{};
 	};
 
 	struct MacAddressField {
-		FieldType type{ FieldType::None };
+		FieldInfo info{};
 		u8 data_size{};
 		std::vector<MacAddress> mac_address{};
 	};
 
 	struct DnsField {
-		FieldType type{ FieldType::None };
+		FieldInfo info{};
 		u16 entries{};
 		u16 data_size{};
 		std::string dns{};
