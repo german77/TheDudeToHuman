@@ -202,7 +202,15 @@ namespace Database {
 
 
 	struct DeviceTypeData {
-
+		IntArrayField ignored_services;
+		IntArrayField allowed_services;
+		IntArrayField required_services;
+		IntField image_id;
+		ByteField scale;
+		IntField object_id;
+		IntField unk7;
+		TextField url;
+		TextField name;
 	};
 #pragma pack(pop)
 
