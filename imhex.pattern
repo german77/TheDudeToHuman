@@ -7,7 +7,7 @@ enum ObjectType : u32 {
 	Unknown9 = 0x09,
 	UnknownA = 0x0a,
 	UnknownD = 0x0d,
-	UnknownE = 0x0e,
+	DeviceType = 0x0e,
 	Device = 0x0f,
 	Unknown10 = 0x10,
 	Unknown11 = 0x11,
@@ -64,6 +64,13 @@ enum FieldId : u24 {
 	CustomField1 = 0x101f58,
 	CustomField2 = 0x101f59,
 	CustomField3 = 0x101f5a,
+	
+	RequiredServices = 0x102710,
+	AllowedServices = 0x102711,
+	IgnoredServices = 0x102712,
+	Image = 0x102713,
+	Scale = 0x102714,
+	UrlAddress = 0x102715,
 
     Unknown68 = 0x113c68,
     Community = 0x113c69,
@@ -76,6 +83,7 @@ enum FieldId : u24 {
     TryTimeout = 0x113c72,
 
 	ObjectId = 0xfe0001,
+	UnknownFE0005 = 0xfe0005,
 	Name = 0xfe0010,
 };
 
@@ -182,6 +190,18 @@ struct Device{
 	TextField name;
 };
 
+struct DeviceType {
+    IntArrayField ignored_services;
+    IntArrayField allowed_services;
+    IntArrayField required_services;
+    IntField image_id;
+    ByteField scale;
+    IntField object_id;
+    IntField unk7;
+    TextField url;
+    TextField name;
+};
+
 struct SnmpProfile {
 	ByteField unk1;
 	ByteField port;
@@ -202,6 +222,9 @@ struct Data{
     
     if (type == ObjectType::Device){
         Device context;
+    }
+    if (type == ObjectType::DeviceType){
+        DeviceType context;
     }
     if (type == ObjectType::SnmpProfile){
         SnmpProfile context;

@@ -22,7 +22,7 @@ namespace Database {
 		Unknown9 = 0x09,
 		UnknownA = 0x0a,
 		UnknownD = 0x0d,
-		UnknownE = 0x0e,
+		DeviceType = 0x0e,
 		Device = 0x0f,
 		Unknown10 = 0x10,
 		Unknown11 = 0x11,
@@ -55,7 +55,7 @@ namespace Database {
 		Unknown4B = 0x101f4B,
 		DeviceTypeId = 0x101f4C,
 		Unknown4D = 0x101f4D,
-		Unknown4E = 0x101f4E,
+		SnmpProfileId = 0x101f4E,
 
 		Unknown51 = 0x101f51,
 		Unknown52 = 0x101f52,
@@ -68,8 +68,17 @@ namespace Database {
 		CustomField2 = 0x101f59,
 		CustomField3 = 0x101f5a,
 
+		RequiredServices = 0x102710,
+		AllowedServices = 0x102711,
+		IgnoredServices = 0x102712,
+		Image = 0x102713,
+		Scale = 0x102714,
+		UrlAddress = 0x102715,
+
 		ObjectId = 0xfe0001,
+		UnknownFE0005 = 0xfe0005,
 		Name = 0xfe0010,
+
 	};
 
 	enum class FieldType : u32 {
@@ -189,6 +198,11 @@ namespace Database {
 		TextField username;
 		MacAddressField mac;
 		TextField name;
+	};
+
+
+	struct DeviceTypeData {
+
 	};
 #pragma pack(pop)
 
