@@ -61,6 +61,32 @@ namespace Database {
 		return object_types;
 	}
 
+	std::vector<std::pair<int, DeviceTypeData>> DudeDatabase::GetDeviceTypeData() const {
+		std::vector<std::pair<int, DeviceTypeData>> device_type_data{};
+		Database::SqlData sql_data{};
+		GetObjs(sql_data);
+
+		for (auto& [id, blob] : sql_data) {
+			const RawObjData obj_data = BlobToRawObjData(blob);
+
+			if (obj_data.object_type != ObjectType::DeviceType) {
+				continue;
+			}
+
+			printf("Reading row %d\n", id);
+
+			const DeviceTypeData device = RawDataToDeviceTypeData(obj_data.data);
+
+			if (id != device.object_id.value) {
+				printf("Corrupted Entry\n");
+			}
+
+			device_type_data.push_back({ id, device });
+		}
+
+		return device_type_data;
+	}
+
 	std::vector<std::pair<int, DeviceData>> DudeDatabase::GetDeviceData() const {
 		std::vector<std::pair<int, DeviceData>> device_data{};
 		Database::SqlData sql_data{};
@@ -125,6 +151,23 @@ namespace Database {
 		memcpy(&data, blob.data(), header_size);
 		data.data.resize(blob.size() - header_size);
 		memcpy(data.data.data(), blob.data() + header_size, data.data.size());
+
+		return data;
+	}
+
+	DeviceTypeData DudeDatabase::RawDataToDeviceTypeData(std::span<const u8> raw_data) const {
+		std::size_t offset = 0;
+		DeviceTypeData data{};
+
+		data.ignored_services = GetIntArrayField(raw_data, offset, FieldId::IgnoredServices);
+		data.allowed_services = GetIntArrayField(raw_data, offset, FieldId::AllowedServices);
+		data.required_services = GetIntArrayField(raw_data, offset, FieldId::RequiredServices);
+		data.image_id = GetIntField(raw_data, offset, FieldId::ImageId);
+		data.scale = GetByteField(raw_data, offset, FieldId::Scale);
+		data.object_id = GetIntField(raw_data, offset, FieldId::ObjectId);
+		data.secondary_object_id = GetIntField(raw_data, offset, FieldId::SecondaryObjectId);
+		data.url = GetTextField(raw_data, offset, FieldId::UrlAddress);
+		data.name = GetTextField(raw_data, offset, FieldId::Name);
 
 		return data;
 	}

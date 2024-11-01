@@ -51,11 +51,11 @@ namespace Database {
 		Username = 0x101f46,
 		Password = 0x101f47,
 		Unknown49 = 0x101f49,
-		RouterOs = 0x101f4A,
-		Unknown4B = 0x101f4B,
-		DeviceTypeId = 0x101f4C,
-		Unknown4D = 0x101f4D,
-		SnmpProfileId = 0x101f4E,
+		RouterOs = 0x101f4a,
+		Unknown4B = 0x101f4b,
+		DeviceTypeId = 0x101f4c,
+		Unknown4D = 0x101f4d,
+		SnmpProfileId = 0x101f4e,
 
 		Unknown51 = 0x101f51,
 		Unknown52 = 0x101f52,
@@ -71,7 +71,7 @@ namespace Database {
 		RequiredServices = 0x102710,
 		AllowedServices = 0x102711,
 		IgnoredServices = 0x102712,
-		Image = 0x102713,
+		ImageId = 0x102713,
 		Scale = 0x102714,
 		UrlAddress = 0x102715,
 
@@ -87,7 +87,7 @@ namespace Database {
 		TryTimeout = 0x113c72,
 
 		ObjectId = 0xfe0001,
-		UnknownFE0005 = 0xfe0005,
+		SecondaryObjectId = 0xfe0005,
 		Name = 0xfe0010,
 
 	};
@@ -180,6 +180,7 @@ namespace Database {
 		u16 entry_count{};
 		std::vector<StringArrayEntry> entries{};
 	};
+
 	// This is type 0x0E data
 	struct DeviceTypeData {
 		IntArrayField ignored_services;
@@ -188,7 +189,7 @@ namespace Database {
 		IntField image_id;
 		ByteField scale;
 		IntField object_id;
-		IntField unk7;
+		IntField secondary_object_id;
 		TextField url;
 		TextField name;
 	};

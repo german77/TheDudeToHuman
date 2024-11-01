@@ -10,5 +10,5 @@ int main() {
 	std::string db_filename = "../dude.db";
 	Database::DudeDatabase db{ db_filename };
 
-	auto data = db.GetSnmpProfileData();
+	auto data = db.GetDeviceTypeData();
 }
