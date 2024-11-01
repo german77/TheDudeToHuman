@@ -39,11 +39,24 @@ namespace Database {
 		Unknown3d = 0x4d,
 	};
 
-	enum class FieldType : u8 {
+	enum class FieldType : u32 {
 		None,
-		Unknown = 0x09,
-		Text = 0x21,
-		Data = 0x31,
+		IpAddress = 0x101f40,
+		DnsNames = 0x101f41,
+		DnsLookupInterval = 0x101f43,
+		MacAddress = 0x101f44,
+		Username = 0x101f46,
+		Password = 0x101f47,
+
+		Unk1 = 0x101f52,
+		Unk2 = 0x101f53,
+		Unk3 = 0x101f54,
+
+		CustomField1 = 0x101f58,
+		CustomField2 = 0x101f59,
+		CustomField3 = 0x101f5a,
+
+		Name = 0xfe0010,
 	};
 
 #pragma pack(push, 1)
@@ -64,8 +77,6 @@ namespace Database {
 
 	template <typename T>
 	struct DataField {
-		u8 data_id{};
-		u16 unknown{};
 		FieldType type{ FieldType::None };
 		CommonFieldData<T> data{};
 	};
@@ -91,7 +102,8 @@ namespace Database {
 		DnsField dns;
 		INSERT_PADDING_BYTES(0x6);
 		IpAddress ip;
-		INSERT_PADDING_BYTES(0x43);
+		INSERT_PADDING_BYTES(0x3F);
+		u32 object_id;
 		DataField<char> unk1;
 		DataField<char> unk2;
 		DataField<char> unk3;
@@ -99,7 +111,7 @@ namespace Database {
 		DataField<char> custom_field_2;
 		DataField<char> custom_field_1;
 		DataField<char> password;
-		DataField<char> user;
+		DataField<char> username;
 		DataField<MacAddress> mac;
 		DataField<char> name;
 	};

@@ -35,7 +35,7 @@ namespace Database {
 		DeviceData RawDataToDeviceData(std::span<const u8> raw_data) const;
 
 		template <typename T>
-		DataField<T> GetDataField(std::span<const u8> raw_data, std::size_t& offset) const;
+		DataField<T> GetDataField(std::span<const u8> raw_data, std::size_t& offset, FieldType type) const;
 		UnknownDeviceField GetUnknownDeviceField(std::span<const u8> raw_data, std::size_t& offset) const;
 		DnsField GetDnsField(std::span<const u8> raw_data, std::size_t& offset) const;
 

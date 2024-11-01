@@ -77,6 +77,10 @@ namespace Database {
 
 			const DeviceData device = RawDataToDeviceData(obj_data.data);
 
+			if (id != device.object_id) {
+				printf("Corrupted Entry\n");
+			}
+
 			device_data.push_back({ id, device });
 		}
 
@@ -110,27 +114,29 @@ namespace Database {
 		offset += 6; // padding
 
 		memcpy(&data.ip, raw_data.data() + offset, sizeof(IpAddress));
-		offset += sizeof(IpAddress) + 0x43;
+		offset += sizeof(IpAddress) + 0x3F;
 
-		data.unk1 = GetDataField<char>(raw_data, offset);
-		data.unk2 = GetDataField<char>(raw_data, offset);
-		data.unk3 = GetDataField<char>(raw_data, offset);
-		data.custom_field_3 = GetDataField<char>(raw_data, offset);
-		data.custom_field_2 = GetDataField<char>(raw_data, offset);
-		data.custom_field_1 = GetDataField<char>(raw_data, offset);
-		data.password = GetDataField<char>(raw_data, offset);
-		data.user = GetDataField<char>(raw_data, offset);
-		data.mac = GetDataField<MacAddress>(raw_data, offset);
-		data.name = GetDataField<char>(raw_data, offset);
+		memcpy(&data.object_id, raw_data.data() + offset, sizeof(u32));
+		offset += sizeof(u32);
+
+		data.unk1 = GetDataField<char>(raw_data, offset, FieldType::Unk1);
+		data.unk2 = GetDataField<char>(raw_data, offset, FieldType::Unk2);
+		data.unk3 = GetDataField<char>(raw_data, offset, FieldType::Unk3);
+		data.custom_field_3 = GetDataField<char>(raw_data, offset, FieldType::CustomField3);
+		data.custom_field_2 = GetDataField<char>(raw_data, offset, FieldType::CustomField2);
+		data.custom_field_1 = GetDataField<char>(raw_data, offset, FieldType::CustomField1);
+		data.password = GetDataField<char>(raw_data, offset, FieldType::Password);
+		data.username = GetDataField<char>(raw_data, offset, FieldType::Username);
+		data.mac = GetDataField<MacAddress>(raw_data, offset, FieldType::MacAddress);
+		data.name = GetDataField<char>(raw_data, offset, FieldType::Name);
 
 		return data;
 	}
 
 	template <typename T>
-	DataField<T> DudeDatabase::GetDataField(std::span<const u8> raw_data, std::size_t& offset) const {
-		constexpr std::size_t header_size = sizeof(u8) + sizeof(u16) + sizeof(FieldType) + sizeof(u8);
+	DataField<T> DudeDatabase::GetDataField(std::span<const u8> raw_data, std::size_t& offset, FieldType type) const {
+		constexpr std::size_t header_size = sizeof(FieldType) + sizeof(u8);
 		DataField<T> field{};
-		auto& field_data = field.data;
 		auto& data = field.data.data;
 
 		if (raw_data.size() < header_size + offset) {
@@ -141,29 +147,27 @@ namespace Database {
 		memcpy(&field, raw_data.data() + offset, header_size);
 		offset += header_size;
 
-		if (raw_data.size() < field_data.data_size + offset) {
+		if (static_cast<FieldType>(static_cast<u32>(field.type) & 0xFFFFFF) != type) {
+			printf("Invalid data type: %#08x\n", field.type);
+		}
+
+		if (raw_data.size() < field.data.data_size + offset) {
 			printf("Invalid data size: %d\n", raw_data.size());
 			return {};
 		}
 
-		if (field_data.data_size % sizeof(T) != 0) {
-			printf("Invalid object size: %d\n", field_data.data_size);
+		if (field.data.data_size % sizeof(T) != 0) {
+			printf("Invalid object size: %d\n", field.data.data_size);
 			return {};
 		}
 
-		data.resize(field_data.data_size / sizeof(T));
-		memcpy(data.data(), raw_data.data() + offset, field_data.data_size);
-		offset += field_data.data_size;
+		data.resize(field.data.data_size / sizeof(T));
+		memcpy(data.data(), raw_data.data() + offset, field.data.data_size);
+		offset += field.data.data_size;
 
 		// Add null terminator to strings
 		if (std::is_same<T, char>::value) {
 			data.push_back({});
-			printf("%d, ", field_data.data_size);
-
-			for (auto& ch : data) {
-				printf("%c", ch);
-			}
-			printf("\n");
 		}
 
 		return field;
@@ -226,13 +230,8 @@ namespace Database {
 		memcpy(field.data.data(), raw_data.data() + offset, field.data_size);
 		offset += field.data_size;
 
-		field.data.push_back({});
-		printf("dns %d, ", field.data_size);
-
-		for (auto& ch : field.data) {
-			printf("%c", ch);
-		}
-		printf("\n");
+		// Null terminator
+		field.data.push_back('\0');
 
 		return field;
 	}
