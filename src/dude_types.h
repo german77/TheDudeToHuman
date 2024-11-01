@@ -58,9 +58,9 @@ namespace Database {
 		Unknown4E = 0x101f4E,
 
 		Unknown51 = 0x101f51,
-		Unk1 = 0x101f52,
-		Unk2 = 0x101f53,
-		Unk3 = 0x101f54,
+		Unknown52 = 0x101f52,
+		Unknown53 = 0x101f53,
+		Unknown54 = 0x101f54,
 		Unknown55 = 0x101f55,
 		Unknown56 = 0x101f56,
 		Pid = 0x101f57,
@@ -73,8 +73,8 @@ namespace Database {
 	};
 
 	enum class FieldType : u32 {
-		None = 0x00,
-		Bool2 = 0x01,
+		BoolFalse = 0x00,
+		BoolTrue = 0x01,
 		Int = 0x08,
 		Byte = 0x09,
 		Long = 0x10,
@@ -103,60 +103,85 @@ namespace Database {
 		};
 	};
 
+	// This is FieldType::Bool
+	struct BoolField {
+		FieldInfo info{};
+		bool value{};
+	};
+
+	// This is FieldType::Byte
+	struct ByteField {
+		FieldInfo info{};
+		u8 value{};
+	};
+
+	// This is FieldType::Int
+	struct IntField {
+		FieldInfo info{};
+		u32 value{};
+	};
+
+	// This is FieldType::ShortString
 	struct TextField {
 		FieldInfo info{};
 		u8 data_size{};
 		std::string text{};
 	};
 
-	struct ObjectIdField {
-		FieldInfo info{};
-		u32 id;
-	};
-
-	struct UnknownDeviceField1 {
+	// This is FieldType::IntArray
+	struct IntArrayField {
 		FieldInfo info{};
 		u16 entries{};
 		std::vector<u32> data{};
 	};
 
-	struct UnknownDeviceField2 {
-		FieldInfo info{};
-		u8 data{};
-	};
-
+	// This is FieldType::IntArray
 	struct IpAddressField {
 		FieldInfo info{};
 		u16 entries{};
-		u16 data_size{};
 		std::vector<IpAddress> ip_address{};
 	};
 
+	// This is FieldType::LongArray
 	struct MacAddressField {
 		FieldInfo info{};
 		u8 data_size{};
 		std::vector<MacAddress> mac_address{};
 	};
 
-	struct DnsField {
-		FieldInfo info{};
-		u16 entries{};
+	struct StringArrayEntry {
 		u16 data_size{};
-		std::string dns{};
+		std::string text{};
+	};
+
+	// This is FieldType::StringArray
+	struct StringArrayField {
+		FieldInfo info{};
+		u16 entry_count{};
+		std::vector<StringArrayEntry> entries{};
 	};
 
 	// This is type 0x0F data
 	struct DeviceData {
-		INSERT_PADDING_BYTES(0x6);
-		UnknownDeviceField1 unk;
-		INSERT_PADDING_BYTES(0x1);
-		DnsField dns;
+		IntArrayField unk1;
+		IntArrayField unk2;
+		StringArrayField dns;
 		IpAddressField ip;
-		INSERT_PADDING_BYTES(0x3F);
-		ObjectIdField object_id;
-		UnknownDeviceField2 unk1;
-		UnknownDeviceField2 unk2;
-		UnknownDeviceField2 unk3;
+		BoolField unk3;
+		BoolField router_os;
+		BoolField unk5;
+		BoolField unk6;
+		BoolField unk7;
+		ByteField unk8;
+		ByteField dns_lookup_interval;
+		ByteField unk10;
+		IntField device_type_id;
+		IntField unk12;
+		IntField unk13;
+		IntField object_id;
+		ByteField unk14;
+		ByteField unk15;
+		ByteField unk16;
 		TextField custom_field_3;
 		TextField custom_field_2;
 		TextField custom_field_1;
