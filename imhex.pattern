@@ -48,11 +48,11 @@ enum FieldId : u24 {
 	Username = 0x101f46,
 	Password = 0x101f47,
 	Unknown49 = 0x101f49,
-	RouterOs = 0x101f4A,
-	Unknown4B = 0x101f4B,
-	DeviceTypeId = 0x101f4C,
-	Unknown4D = 0x101f4D,
-	SnmpProfileId = 0x101f4E,
+	RouterOs = 0x101f4a,
+	Unknown4B = 0x101f4b,
+	DeviceTypeId = 0x101f4c,
+	Unknown4D = 0x101f4d,
+	SnmpProfileId = 0x101f4e,
 
 	Unknown51 = 0x101f51,
 	Unknown52 = 0x101f52,
@@ -64,26 +64,27 @@ enum FieldId : u24 {
 	CustomField1 = 0x101f58,
 	CustomField2 = 0x101f59,
 	CustomField3 = 0x101f5a,
-	
+
 	RequiredServices = 0x102710,
 	AllowedServices = 0x102711,
 	IgnoredServices = 0x102712,
-	Image = 0x102713,
+	ImageId = 0x102713,
 	Scale = 0x102714,
 	UrlAddress = 0x102715,
 
-    Unknown68 = 0x113c68,
-    Community = 0x113c69,
-    Port = 0x113c6A,
-    Unknown6C = 0x113c6C,
-    Unknown6D = 0x113c6D,
-    Unknown6E = 0x113c6E,
-    Unknown6F = 0x113c6F,
-    Tries = 0x113c71,
-    TryTimeout = 0x113c72,
+	SnmpVersion = 0x113c68,
+	Community = 0x113c69,
+	Port = 0x113c6a,
+	Unknown6B = 0x113c6b,
+	Unknown6C = 0x113c6c,
+	CryptPassword = 0x113c6d,
+	Unknown6E = 0x113c6e,
+	AuthPassword = 0x113c6f,
+	Tries = 0x113c71,
+	TryTimeout = 0x113c72,
 
 	ObjectId = 0xfe0001,
-	UnknownFE0005 = 0xfe0005,
+	SecondaryObjectId = 0xfe0005,
 	Name = 0xfe0010,
 };
 
@@ -161,6 +162,18 @@ struct StringArrayField {
 	StringArrayEntry entries[entry_count];
 };
 
+struct DeviceType {
+    IntArrayField ignored_services;
+    IntArrayField allowed_services;
+    IntArrayField required_services;
+    IntField image_id;
+    ByteField scale;
+    IntField object_id;
+    IntField secondary_object_id;
+    TextField url;
+    TextField name;
+};
+
 struct Device{
 	IntArrayField unk1;
 	IntArrayField unk2;
@@ -190,29 +203,17 @@ struct Device{
 	TextField name;
 };
 
-struct DeviceType {
-    IntArrayField ignored_services;
-    IntArrayField allowed_services;
-    IntArrayField required_services;
-    IntField image_id;
-    ByteField scale;
-    IntField object_id;
-    IntField unk7;
-    TextField url;
-    TextField name;
-};
-
 struct SnmpProfile {
-	ByteField unk1;
+	ByteField version;
 	ByteField port;
-	ByteField unk3;
-	ByteField unk4;
-	ByteField unk5;
+	ByteField unk3; // Security
+	ByteField unk4; // AuthMethod
+	ByteField unk5; // CryptMethod
 	ByteField tries;
 	IntField try_timeout;
 	IntField object_id;
-	TextField unk8;
-	TextField unk9;
+	TextField auth_password;
+	TextField crypt_password;
 	TextField community;
 	TextField name;
 };
@@ -220,11 +221,11 @@ struct SnmpProfile {
 struct Data{
     ObjectType type;
     
-    if (type == ObjectType::Device){
-        Device context;
-    }
     if (type == ObjectType::DeviceType){
         DeviceType context;
+    }
+    if (type == ObjectType::Device){
+        Device context;
     }
     if (type == ObjectType::SnmpProfile){
         SnmpProfile context;
