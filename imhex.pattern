@@ -1,0 +1,211 @@
+enum ObjectType : u32 {
+	None,
+	Unknown1 = 0x01,
+	Unknown3 = 0x03,
+	Unknown4 = 0x04,
+	Unknown5 = 0x05,
+	Unknown9 = 0x09,
+	UnknownA = 0x0a,
+	UnknownD = 0x0d,
+	UnknownE = 0x0e,
+	Device = 0x0f,
+	Unknown10 = 0x10,
+	Unknown11 = 0x11,
+	Unknown18 = 0x18,
+	Unknown22 = 0x22,
+	Unknown29 = 0x29,
+	Unknown2a = 0x2a,
+	Unknown31 = 0x31,
+	Unknown39 = 0x39,
+	SnmpProfile = 0x3a,
+	Unknown3b = 0x3b,
+	Unknown43 = 0x43,
+	Unknown4a = 0x4a,
+	Unknown4b = 0x4b,
+	Unknown3d = 0x4d,
+};
+
+
+enum ProveType : u8 {
+    Icmp,
+    Random,
+    Tcp,
+    Dns,
+    Snmp,
+    Udp,
+    Logic,
+    Function,
+};
+
+enum FieldId : u24 {
+	None,
+	IpAddress = 0x101f40,
+	DnsNames = 0x101f41,
+	Unknown42 = 0x101f42,
+	DnsLookupInterval = 0x101f43,
+	MacAddress = 0x101f44,
+	Unknown45 = 0x101f45,
+	Username = 0x101f46,
+	Password = 0x101f47,
+	Unknown49 = 0x101f49,
+	RouterOs = 0x101f4A,
+	Unknown4B = 0x101f4B,
+	DeviceTypeId = 0x101f4C,
+	Unknown4D = 0x101f4D,
+	SnmpProfileId = 0x101f4E,
+
+	Unknown51 = 0x101f51,
+	Unknown52 = 0x101f52,
+	Unknown53 = 0x101f53,
+	Unknown54 = 0x101f54,
+	Unknown55 = 0x101f55,
+	Unknown56 = 0x101f56,
+	Unknown57 = 0x101f57,
+	CustomField1 = 0x101f58,
+	CustomField2 = 0x101f59,
+	CustomField3 = 0x101f5a,
+
+    Unknown68 = 0x113c68,
+    Community = 0x113c69,
+    Port = 0x113c6A,
+    Unknown6C = 0x113c6C,
+    Unknown6D = 0x113c6D,
+    Unknown6E = 0x113c6E,
+    Unknown6F = 0x113c6F,
+    Tries = 0x113c71,
+    TryTimeout = 0x113c72,
+
+	ObjectId = 0xfe0001,
+	Name = 0xfe0010,
+};
+
+enum FieldType : u8 {
+	BoolFalse = 0x00,
+	BoolTrue = 0x01,
+	Int = 0x08,
+	Byte = 0x09,
+	Long = 0x10,
+	ShortString = 0x21,
+	LongArray = 0x31,
+	IntArray = 0x88,
+	StringArray = 0xA0,
+};
+
+struct FieldInfo {
+    FieldId id;
+    FieldType type;
+};
+
+// This is FieldType::Bool
+struct BoolField {
+	FieldInfo info;
+};
+
+// This is FieldType::Byte
+struct ByteField {
+	FieldInfo info;
+	u8 value;
+};
+
+// This is FieldType::Int
+struct IntField {
+	FieldInfo info;
+	u32 value;
+};
+
+// This is FieldType::ShortString
+struct TextField {
+	FieldInfo info;
+	u8 data_size;
+	char text[data_size];
+};
+
+// This is FieldType::IntArray
+struct IntArrayField {
+	FieldInfo info;
+	u16 entries;
+    u32 data[entries];
+};
+
+// This is FieldType::IntArray
+struct IpAddressField {
+	FieldInfo info;
+	u16 entries;
+    u32 ip_address[entries];
+};
+
+// This is FieldType::LongArray
+struct MacAddressField {
+	FieldInfo info;
+	u8 data_size;
+	u48 mac_address[data_size / sizeof(u48)];
+};
+
+struct StringArrayEntry {
+	u16 data_size;
+	char text[data_size];
+};
+
+// This is FieldType::StringArray
+struct StringArrayField {
+	FieldInfo info;
+	u16 entry_count;
+	StringArrayEntry entries[entry_count];
+};
+
+struct Device{
+	IntArrayField unk1;
+	IntArrayField unk2;
+	StringArrayField dns;
+	IpAddressField ip;
+	BoolField unk3;
+	BoolField router_os;
+	BoolField unk5;
+	BoolField unk6;
+	BoolField unk7;
+	ByteField unk8;
+	ByteField dns_lookup_interval;
+	ByteField unk10;
+	IntField device_type_id;
+	IntField unk12;
+	IntField snmp_profile_id;
+	IntField object_id;
+	ByteField unk14;
+	ByteField unk15;
+	ByteField unk16;
+	TextField custom_field_3;
+	TextField custom_field_2;
+	TextField custom_field_1;
+	TextField password;
+	TextField username;
+	MacAddressField mac;
+	TextField name;
+};
+
+struct SnmpProfile {
+	ByteField unk1;
+	ByteField port;
+	ByteField unk3;
+	ByteField unk4;
+	ByteField unk5;
+	ByteField tries;
+	IntField try_timeout;
+	IntField object_id;
+	TextField unk8;
+	TextField unk9;
+	TextField community;
+	TextField name;
+};
+
+struct Data{
+    ObjectType type;
+    
+    if (type == ObjectType::Device){
+        Device context;
+    }
+    if (type == ObjectType::SnmpProfile){
+        SnmpProfile context;
+    }
+};
+
+Data data @ 0x08;
