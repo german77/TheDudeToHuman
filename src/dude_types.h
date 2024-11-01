@@ -32,7 +32,7 @@ namespace Database {
 		Unknown2a = 0x2a,
 		Unknown31 = 0x31,
 		Unknown39 = 0x39,
-		Unknown3a = 0x3a,
+		SnmpProfile = 0x3a,
 		Unknown3b = 0x3b,
 		Unknown43 = 0x43,
 		Unknown4a = 0x4a,
@@ -63,7 +63,7 @@ namespace Database {
 		Unknown54 = 0x101f54,
 		Unknown55 = 0x101f55,
 		Unknown56 = 0x101f56,
-		Pid = 0x101f57,
+		Unknown57 = 0x101f57,
 		CustomField1 = 0x101f58,
 		CustomField2 = 0x101f59,
 		CustomField3 = 0x101f5a,
@@ -74,6 +74,17 @@ namespace Database {
 		Image = 0x102713,
 		Scale = 0x102714,
 		UrlAddress = 0x102715,
+
+		SnmpVersion = 0x113c68,
+		Community = 0x113c69,
+		Port = 0x113c6a,
+		Unknown6B = 0x113c6b,
+		Unknown6C = 0x113c6c,
+		CryptPassword = 0x113c6d,
+		Unknown6E = 0x113c6e,
+		AuthPassword = 0x113c6f,
+		Tries = 0x113c71,
+		TryTimeout = 0x113c72,
 
 		ObjectId = 0xfe0001,
 		UnknownFE0005 = 0xfe0005,
@@ -169,6 +180,18 @@ namespace Database {
 		u16 entry_count{};
 		std::vector<StringArrayEntry> entries{};
 	};
+	// This is type 0x0E data
+	struct DeviceTypeData {
+		IntArrayField ignored_services;
+		IntArrayField allowed_services;
+		IntArrayField required_services;
+		IntField image_id;
+		ByteField scale;
+		IntField object_id;
+		IntField unk7;
+		TextField url;
+		TextField name;
+	};
 
 	// This is type 0x0F data
 	struct DeviceData {
@@ -186,7 +209,7 @@ namespace Database {
 		ByteField unk10;
 		IntField device_type_id;
 		IntField unk12;
-		IntField unk13;
+		IntField snmp_profile_id;
 		IntField object_id;
 		ByteField unk14;
 		ByteField unk15;
@@ -200,16 +223,19 @@ namespace Database {
 		TextField name;
 	};
 
-
-	struct DeviceTypeData {
-		IntArrayField ignored_services;
-		IntArrayField allowed_services;
-		IntArrayField required_services;
-		IntField image_id;
-		ByteField scale;
+	// This is type 0x3A data
+	struct SnmpProfileData {
+		ByteField version;
+		ByteField port;
+		ByteField unk3; // Security
+		ByteField unk4; // AuthMethod
+		ByteField unk5; // CryptMethod
+		ByteField tries;
+		IntField try_timeout;
 		IntField object_id;
-		IntField unk7;
-		TextField url;
+		TextField auth_password;
+		TextField crypt_password;
+		TextField community;
 		TextField name;
 	};
 #pragma pack(pop)

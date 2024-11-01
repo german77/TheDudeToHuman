@@ -87,6 +87,32 @@ namespace Database {
 		return device_data;
 	}
 
+	std::vector<std::pair<int, SnmpProfileData>> DudeDatabase::GetSnmpProfileData() const {
+		std::vector<std::pair<int, SnmpProfileData>> snmp_profile_data{};
+		Database::SqlData sql_data{};
+		GetObjs(sql_data);
+
+		for (auto& [id, blob] : sql_data) {
+			const RawObjData obj_data = BlobToRawObjData(blob);
+
+			if (obj_data.object_type != ObjectType::SnmpProfile) {
+				continue;
+			}
+
+			printf("Reading row %d\n", id);
+
+			const SnmpProfileData device = RawDataToSnmpProfileData(obj_data.data);
+
+			if (id != device.object_id.value) {
+				printf("Corrupted Entry\n");
+			}
+
+			snmp_profile_data.push_back({ id, device });
+		}
+
+		return snmp_profile_data;
+	}
+
 	RawObjData DudeDatabase::BlobToRawObjData(std::span<const u8> blob) const {
 		constexpr std::size_t header_size = sizeof(u64) + sizeof(u32);
 		RawObjData data{};
@@ -107,7 +133,7 @@ namespace Database {
 		std::size_t offset = 0;
 		DeviceData data{};
 
-		data.unk1 = GetIntArrayField(raw_data, offset, FieldId::Pid);
+		data.unk1 = GetIntArrayField(raw_data, offset, FieldId::Unknown57);
 		data.unk2 = GetIntArrayField(raw_data, offset, FieldId::Unknown56);
 		data.dns = GetStringArrayField(raw_data, offset, FieldId::DnsNames);
 		data.ip = GetIpAddressField(raw_data, offset, FieldId::IpAddress);
@@ -121,7 +147,7 @@ namespace Database {
 		data.unk10 = GetByteField(raw_data, offset, FieldId::Unknown45);
 		data.device_type_id = GetIntField(raw_data, offset, FieldId::DeviceTypeId);
 		data.unk12 = GetIntField(raw_data, offset, FieldId::Unknown4D);
-		data.unk13 = GetIntField(raw_data, offset, FieldId::Unknown4E);
+		data.snmp_profile_id = GetIntField(raw_data, offset, FieldId::SnmpProfileId);
 		data.object_id = GetIntField(raw_data, offset, FieldId::ObjectId);
 		data.unk14 = GetByteField(raw_data, offset, FieldId::Unknown52); // Not always a byte
 		data.unk15 = GetByteField(raw_data, offset, FieldId::Unknown53);
@@ -132,6 +158,26 @@ namespace Database {
 		data.password = GetTextField(raw_data, offset, FieldId::Password);
 		data.username = GetTextField(raw_data, offset, FieldId::Username);
 		data.mac = GetMacAddressField(raw_data, offset, FieldId::MacAddress);
+		data.name = GetTextField(raw_data, offset, FieldId::Name);
+
+		return data;
+	}
+
+	SnmpProfileData DudeDatabase::RawDataToSnmpProfileData(std::span<const u8> raw_data) const {
+		std::size_t offset = 0;
+		SnmpProfileData data{};
+
+		data.version = GetByteField(raw_data, offset, FieldId::SnmpVersion);
+		data.port = GetByteField(raw_data, offset, FieldId::Port);
+		data.unk3 = GetByteField(raw_data, offset, FieldId::Unknown6B);
+		data.unk4 = GetByteField(raw_data, offset, FieldId::Unknown6C);
+		data.unk5 = GetByteField(raw_data, offset, FieldId::Unknown6E);
+		data.tries = GetByteField(raw_data, offset, FieldId::Tries);
+		data.try_timeout = GetIntField(raw_data, offset, FieldId::TryTimeout);
+		data.object_id = GetIntField(raw_data, offset, FieldId::ObjectId);
+		data.auth_password = GetTextField(raw_data, offset, FieldId::AuthPassword);
+		data.crypt_password = GetTextField(raw_data, offset, FieldId::CryptPassword);
+		data.community = GetTextField(raw_data, offset, FieldId::Community);
 		data.name = GetTextField(raw_data, offset, FieldId::Name);
 
 		return data;
