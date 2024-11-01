@@ -5,8 +5,8 @@
 
 #include <vector>
 
-#include "common_funcs.h"
-#include "common_types.h"
+#include "common/common_funcs.h"
+#include "common/common_types.h"
 
 namespace Database {
 	using IpAddress = std::array<u8, 4>;
@@ -43,15 +43,26 @@ namespace Database {
 		None,
 		IpAddress = 0x101f40,
 		DnsNames = 0x101f41,
+		Unknown42 = 0x101f42,
 		DnsLookupInterval = 0x101f43,
 		MacAddress = 0x101f44,
+		Unknown45 = 0x101f45,
 		Username = 0x101f46,
 		Password = 0x101f47,
+		Unknown49 = 0x101f49,
+		RouterOs = 0x101f4A,
+		Unknown4B = 0x101f4B,
+		DeviceTypeId = 0x101f4C,
+		Unknown4D = 0x101f4D,
+		Unknown4E = 0x101f4E,
 
+		Unknown51 = 0x101f51,
 		Unk1 = 0x101f52,
 		Unk2 = 0x101f53,
 		Unk3 = 0x101f54,
+		Unknown55 = 0x101f55,
 
+		Pid = 0x101f57,
 		CustomField1 = 0x101f58,
 		CustomField2 = 0x101f59,
 		CustomField3 = 0x101f5a,

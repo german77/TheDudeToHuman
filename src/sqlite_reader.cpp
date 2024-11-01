@@ -3,7 +3,7 @@
 
 #include <cstdio>
 
-#include "SqliteReader.h"
+#include "sqlite_reader.h"
 
 namespace Database {
 	SqliteReader::SqliteReader(const std::string& db_file) {

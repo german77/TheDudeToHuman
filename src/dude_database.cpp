@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <cstddef>
 
-#include "DudeDatabase.h"
+#include "dude_database.h"
 
 namespace Database {
 	DudeDatabase::DudeDatabase(const std::string& db_file) : db{ db_file } {

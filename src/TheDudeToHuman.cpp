@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <string>
 
-#include "DudeDatabase.h"
+#include "dude_database.h"
 
 int main() {
 	std::string db_filename = "../dude.db";

@@ -6,8 +6,8 @@
 #include <string>
 #include <vector>
 
-#include "common_types.h"
-#include "sqlite3.h"
+#include "common/common_types.h"
+#include "sqlite/sqlite3.h"
 
 namespace Database {
 	using SqlRow = std::pair<int, std::vector<u8>>;

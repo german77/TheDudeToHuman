@@ -129,18 +129,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="../src/SqliteReader.cpp" />
+    <ClCompile Include="../src/dude_database.cpp" />
+    <ClCompile Include="../src/sqlite_reader.cpp" />
+    <ClCompile Include="../src/sqlite/sqlite3.c" />
     <ClCompile Include="../src/TheDudeToHuman.cpp" />
-    <ClCompile Include="../src/sqlite3.c" />
-    <ClCompile Include="../src/DudeDatabase.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="../src/SqliteReader.h" />
-    <ClInclude Include="../src/sqlite3.h" />
-    <ClInclude Include="../src/DudeDatabase.h" />
-    <ClInclude Include="../src/common_types.h" />
-    <ClInclude Include="..\src\common_funcs.h" />
-    <ClInclude Include="..\src\DudeTypes.h" />
+    <ClInclude Include="../src/common/bit_field.h" />
+    <ClInclude Include="../src/common/common_funcs.h" />
+    <ClInclude Include="../src/common/common_types.h" />
+    <ClInclude Include="../src/common/swap.h" />
+    <ClInclude Include="../src/dude_database.h" />
+    <ClInclude Include="../src/dude_types.h" />
+    <ClInclude Include="../src/sqlite_reader.h" />
+    <ClInclude Include="../src/sqlite/sqlite3.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
