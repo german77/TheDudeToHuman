@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 #include <cstdio>
+#include <cstddef>
 
 #include "DudeDatabase.h"
 
@@ -42,14 +43,14 @@ namespace Database {
 		return db.GetTableData(data, "outages");
 	}
 
-	std::vector<u32> DudeDatabase::ListObjectTypes() const {
-		std::vector<u32> object_types{};
-		Database::SqlData data{};
-		GetObjs(data);
+	std::vector<ObjectType> DudeDatabase::ListUsedObjectTypes() const {
+		std::vector<ObjectType> object_types{};
+		Database::SqlData sql_data{};
+		GetObjs(sql_data);
 
-		for (auto& [id, blob] : data) {
-			RawObjData obj_data = BlobToRawObjData(blob);
-			auto it = find(object_types.begin(), object_types.end(), obj_data.object_type);
+		for (auto& [id, blob] : sql_data) {
+			const RawObjData obj_data = BlobToRawObjData(blob);
+			const auto it = find(object_types.begin(), object_types.end(), obj_data.object_type);
 
 			if (it != object_types.end()) {
 				continue;
@@ -60,7 +61,29 @@ namespace Database {
 		return object_types;
 	}
 
-	RawObjData DudeDatabase::BlobToRawObjData(std::span<u8> blob) const {
+	std::vector<std::pair<int, DeviceData>> DudeDatabase::GetDeviceData() const {
+		std::vector<std::pair<int, DeviceData>> device_data{};
+		Database::SqlData sql_data{};
+		GetObjs(sql_data);
+
+		for (auto& [id, blob] : sql_data) {
+			const RawObjData obj_data = BlobToRawObjData(blob);
+
+			if (obj_data.object_type != ObjectType::Device) {
+				continue;
+			}
+
+			printf("Reading row %d\n", id);
+
+			const DeviceData device = RawDataToDeviceData(obj_data.data);
+
+			device_data.push_back({ id, device });
+		}
+
+		return device_data;
+	}
+
+	RawObjData DudeDatabase::BlobToRawObjData(std::span<const u8> blob) const {
 		constexpr std::size_t header_size = sizeof(u64) + sizeof(u32);
 		RawObjData data{};
 
@@ -70,9 +93,147 @@ namespace Database {
 		}
 
 		memcpy(&data, blob.data(), header_size);
-		data.raw_data.resize(blob.size() - header_size);
-		memcpy(data.raw_data.data(), blob.data() + header_size, data.raw_data.size());
+		data.data.resize(blob.size() - header_size);
+		memcpy(data.data.data(), blob.data() + header_size, data.data.size());
 
 		return data;
+	}
+
+	DeviceData DudeDatabase::RawDataToDeviceData(std::span<const u8> raw_data) const {
+		DeviceData data{};
+
+		std::size_t offset = offsetof(DeviceData, unk);
+		data.unk = GetUnknownDeviceField(raw_data, offset);
+		offset += 5; // padding
+
+		data.dns = GetDnsField(raw_data, offset);
+		offset += 6; // padding
+
+		memcpy(&data.ip, raw_data.data() + offset, sizeof(IpAddress));
+		offset += sizeof(IpAddress) + 0x43;
+
+		data.unk1 = GetDataField<char>(raw_data, offset);
+		data.unk2 = GetDataField<char>(raw_data, offset);
+		data.unk3 = GetDataField<char>(raw_data, offset);
+		data.custom_field_3 = GetDataField<char>(raw_data, offset);
+		data.custom_field_2 = GetDataField<char>(raw_data, offset);
+		data.custom_field_1 = GetDataField<char>(raw_data, offset);
+		data.password = GetDataField<char>(raw_data, offset);
+		data.user = GetDataField<char>(raw_data, offset);
+		data.mac = GetDataField<MacAddress>(raw_data, offset);
+		data.name = GetDataField<char>(raw_data, offset);
+
+		return data;
+	}
+
+	template <typename T>
+	DataField<T> DudeDatabase::GetDataField(std::span<const u8> raw_data, std::size_t& offset) const {
+		constexpr std::size_t header_size = sizeof(u8) + sizeof(u16) + sizeof(FieldType) + sizeof(u8);
+		DataField<T> field{};
+		auto& field_data = field.data;
+		auto& data = field.data.data;
+
+		if (raw_data.size() < header_size + offset) {
+			printf("Invalid data size: %d\n", raw_data.size());
+			return {};
+		}
+
+		memcpy(&field, raw_data.data() + offset, header_size);
+		offset += header_size;
+
+		if (raw_data.size() < field_data.data_size + offset) {
+			printf("Invalid data size: %d\n", raw_data.size());
+			return {};
+		}
+
+		if (field_data.data_size % sizeof(T) != 0) {
+			printf("Invalid object size: %d\n", field_data.data_size);
+			return {};
+		}
+
+		data.resize(field_data.data_size / sizeof(T));
+		memcpy(data.data(), raw_data.data() + offset, field_data.data_size);
+		offset += field_data.data_size;
+
+		// Add null terminator to strings
+		if (std::is_same<T, char>::value) {
+			data.push_back({});
+			printf("%d, ", field_data.data_size);
+
+			for (auto& ch : data) {
+				printf("%c", ch);
+			}
+			printf("\n");
+		}
+
+		return field;
+	}
+
+	UnknownDeviceField DudeDatabase::GetUnknownDeviceField(std::span<const u8> raw_data, std::size_t& offset) const {
+		constexpr std::size_t header_size = sizeof(u8);
+		UnknownDeviceField field{};
+
+		if (raw_data.size() < header_size + offset) {
+			printf("Invalid data size: %d\n", raw_data.size());
+			return {};
+		}
+
+		memcpy(&field, raw_data.data() + offset, header_size);
+		offset += header_size;
+
+		if (raw_data.size() < (field.entries * sizeof(u32)) + offset) {
+			printf("Invalid data size: %d\n", raw_data.size());
+			return {};
+		}
+
+		field.data.resize(field.entries);
+		memcpy(field.data.data(), raw_data.data() + offset, field.entries * sizeof(u32));
+		offset += field.entries * sizeof(u32);
+
+		return field;
+	}
+
+	DnsField DudeDatabase::GetDnsField(std::span<const u8> raw_data, std::size_t& offset) const {
+		constexpr std::size_t header_size = sizeof(u8) + sizeof(u8);
+		DnsField field{};
+
+		if (raw_data.size() < header_size + offset) {
+			printf("Invalid data size: %d\n", raw_data.size());
+			return {};
+		}
+
+		memcpy(&field, raw_data.data() + offset, header_size);
+		offset += header_size;
+
+		if (!field.has_dns) {
+			return field;
+		}
+
+		if (raw_data.size() < sizeof(u16) + offset) {
+			printf("Invalid data size: %d\n", raw_data.size());
+			return {};
+		}
+
+		memcpy(&field.data_size, raw_data.data() + offset, sizeof(u16));
+		offset += sizeof(u16);
+
+		if (raw_data.size() < field.data_size + offset) {
+			printf("Invalid data size: %d\n", raw_data.size());
+			return {};
+		}
+
+		field.data.resize(field.data_size);
+		memcpy(field.data.data(), raw_data.data() + offset, field.data_size);
+		offset += field.data_size;
+
+		field.data.push_back({});
+		printf("dns %d, ", field.data_size);
+
+		for (auto& ch : field.data) {
+			printf("%c", ch);
+		}
+		printf("\n");
+
+		return field;
 	}
 }

@@ -8,15 +8,10 @@
 #include <vector>
 
 #include "common_types.h"
+#include "DudeTypes.h"
 #include "SqliteReader.h"
 
 namespace Database {
-	struct RawObjData {
-		u64 magic;
-		u32 object_type;
-		std::vector<u8> raw_data;
-	};
-
 	class DudeDatabase {
 	public:
 		DudeDatabase(const std::string& db_file);
@@ -31,10 +26,18 @@ namespace Database {
 		int GetOutages(SqlData& data) const;
 
 		// Usefull to find new unsuported types
-		std::vector<u32> ListObjectTypes() const;
+		std::vector<ObjectType> ListUsedObjectTypes() const;
+
+		std::vector<std::pair<int, DeviceData>> GetDeviceData() const;
 
 	private:
-		RawObjData BlobToRawObjData(std::span<u8> blob) const;
+		RawObjData BlobToRawObjData(std::span<const u8> blob) const;
+		DeviceData RawDataToDeviceData(std::span<const u8> raw_data) const;
+
+		template <typename T>
+		DataField<T> GetDataField(std::span<const u8> raw_data, std::size_t& offset) const;
+		UnknownDeviceField GetUnknownDeviceField(std::span<const u8> raw_data, std::size_t& offset) const;
+		DnsField GetDnsField(std::span<const u8> raw_data, std::size_t& offset) const;
 
 		Database::SqliteReader db;
 	};

@@ -10,9 +10,5 @@ int main() {
 	std::string db_filename = "../dude.db";
 	Database::DudeDatabase db{ db_filename };
 
-	auto data = db.ListObjectTypes();
-
-	for (int type : data) {
-		printf("%#02x\n", type);
-	}
+	auto data = db.GetDeviceData();
 }
