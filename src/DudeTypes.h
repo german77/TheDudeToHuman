@@ -56,6 +56,7 @@ namespace Database {
 		CustomField2 = 0x101f59,
 		CustomField3 = 0x101f5a,
 
+		ObjectId = 0xfe0001,
 		Name = 0xfe0010,
 	};
 
@@ -69,51 +70,69 @@ namespace Database {
 
 	using RawObjData = ObjData<std::vector<u8>>;
 
-	template <typename T>
-	struct CommonFieldData {
-		u8 data_size{};
-		std::vector<T> data{};
-	};
-
-	template <typename T>
-	struct DataField {
+	struct TextField {
 		FieldType type{ FieldType::None };
-		CommonFieldData<T> data{};
+		u8 data_size{};
+		std::string text{};
 	};
 
-	struct UnknownDeviceField {
+	struct ObjectIdField {
+		FieldType type{ FieldType::None };
+		u32 id;
+	};
+
+	struct UnknownDeviceField1 {
+		FieldType type{ FieldType::None };
 		u8 entries{};
 		INSERT_PADDING_BYTES(0x1);
 		std::vector<u32> data{};
 	};
 
-	struct DnsField {
-		u8 has_dns{};
-		INSERT_PADDING_BYTES(0x1);
+	struct UnknownDeviceField2 {
+		FieldType type{ FieldType::None };
+		u8 data_size{};
+		std::string data{};
+	};
+
+	struct IpAddressField {
+		FieldType type{ FieldType::None };
+		u16 entries{};
 		u16 data_size{};
-		std::vector<char> data{};
+		std::vector<IpAddress> ip_address{};
+	};
+
+	struct MacAddressField {
+		FieldType type{ FieldType::None };
+		u8 data_size{};
+		std::vector<MacAddress> mac_address{};
+	};
+
+	struct DnsField {
+		FieldType type{ FieldType::None };
+		u16 entries{};
+		u16 data_size{};
+		std::string dns{};
 	};
 
 	// This is type 0x0F data
 	struct DeviceData {
-		INSERT_PADDING_BYTES(0xA);
-		UnknownDeviceField unk;
-		INSERT_PADDING_BYTES(0x5);
-		DnsField dns;
 		INSERT_PADDING_BYTES(0x6);
-		IpAddress ip;
+		UnknownDeviceField1 unk;
+		INSERT_PADDING_BYTES(0x1);
+		DnsField dns;
+		IpAddressField ip;
 		INSERT_PADDING_BYTES(0x3F);
-		u32 object_id;
-		DataField<char> unk1;
-		DataField<char> unk2;
-		DataField<char> unk3;
-		DataField<char> custom_field_3;
-		DataField<char> custom_field_2;
-		DataField<char> custom_field_1;
-		DataField<char> password;
-		DataField<char> username;
-		DataField<MacAddress> mac;
-		DataField<char> name;
+		ObjectIdField object_id;
+		UnknownDeviceField2 unk1;
+		UnknownDeviceField2 unk2;
+		UnknownDeviceField2 unk3;
+		TextField custom_field_3;
+		TextField custom_field_2;
+		TextField custom_field_1;
+		TextField password;
+		TextField username;
+		MacAddressField mac;
+		TextField name;
 	};
 #pragma pack(pop)
 
