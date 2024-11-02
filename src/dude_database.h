@@ -31,12 +31,14 @@ namespace Database {
 		std::vector<std::pair<int, DeviceTypeData>> GetDeviceTypeData() const;
 		std::vector<std::pair<int, DeviceData>> GetDeviceData() const;
 		std::vector<std::pair<int, SnmpProfileData>> GetSnmpProfileData() const;
+		std::vector<std::pair<int, Unknown4aData>> GetUnknown4aData() const;
 
 	private:
 		RawObjData BlobToRawObjData(std::span<const u8> blob) const;
 		DeviceTypeData RawDataToDeviceTypeData(std::span<const u8> raw_data) const;
 		DeviceData RawDataToDeviceData(std::span<const u8> raw_data) const;
 		SnmpProfileData RawDataToSnmpProfileData(std::span<const u8> raw_data) const;
+		Unknown4aData RawDataToUnknown4aData(std::span<const u8> raw_data) const;
 
 		BoolField GetBoolField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;
 		ByteField GetByteField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;
@@ -44,6 +46,7 @@ namespace Database {
 		TextField GetTextField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;
 		IntArrayField GetIntArrayField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;
 		IpAddressField GetIpAddressField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;
+		LongArrayField GetLongArrayField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;
 		MacAddressField GetMacAddressField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;
 		StringArrayField GetStringArrayField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;
 

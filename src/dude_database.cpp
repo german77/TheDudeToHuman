@@ -139,6 +139,33 @@ namespace Database {
 		return snmp_profile_data;
 	}
 
+	std::vector<std::pair<int, Unknown4aData>> DudeDatabase::GetUnknown4aData() const {
+		std::vector<std::pair<int, Unknown4aData>> snmp_profile_data{};
+		Database::SqlData sql_data{};
+		GetObjs(sql_data);
+
+		for (auto& [id, blob] : sql_data) {
+			const RawObjData obj_data = BlobToRawObjData(blob);
+
+			if (obj_data.object_type != ObjectType::Unknown4a) {
+				continue;
+			}
+
+			printf("Reading row %d\n", id);
+
+			const Unknown4aData device = RawDataToUnknown4aData(obj_data.data);
+
+			if (id != device.object_id.value) {
+				printf("Corrupted Entry\n");
+			}
+
+			snmp_profile_data.push_back({ id, device });
+		}
+
+		return snmp_profile_data;
+	}
+
+
 	RawObjData DudeDatabase::BlobToRawObjData(std::span<const u8> blob) const {
 		constexpr std::size_t header_size = sizeof(u64) + sizeof(u32);
 		RawObjData data{};
@@ -192,7 +219,7 @@ namespace Database {
 		data.unk12 = GetIntField(raw_data, offset, FieldId::Unknown4D);
 		data.snmp_profile_id = GetIntField(raw_data, offset, FieldId::SnmpProfileId);
 		data.object_id = GetIntField(raw_data, offset, FieldId::ObjectId);
-		data.unk14 = GetByteField(raw_data, offset, FieldId::Unknown52); // Not always a byte
+		data.unk14 = GetIntField(raw_data, offset, FieldId::Unknown52);
 		data.unk15 = GetByteField(raw_data, offset, FieldId::Unknown53);
 		data.unk16 = GetByteField(raw_data, offset, FieldId::Unknown54);
 		data.custom_field_3 = GetTextField(raw_data, offset, FieldId::CustomField3);
@@ -210,8 +237,8 @@ namespace Database {
 		std::size_t offset = 0;
 		SnmpProfileData data{};
 
-		data.version = GetByteField(raw_data, offset, FieldId::SnmpVersion);
-		data.port = GetByteField(raw_data, offset, FieldId::Port);
+		data.version = GetIntField(raw_data, offset, FieldId::SnmpVersion);
+		data.port = GetIntField(raw_data, offset, FieldId::Port);
 		data.unk3 = GetByteField(raw_data, offset, FieldId::Unknown6B);
 		data.unk4 = GetByteField(raw_data, offset, FieldId::Unknown6C);
 		data.unk5 = GetByteField(raw_data, offset, FieldId::Unknown6E);
@@ -221,6 +248,47 @@ namespace Database {
 		data.auth_password = GetTextField(raw_data, offset, FieldId::AuthPassword);
 		data.crypt_password = GetTextField(raw_data, offset, FieldId::CryptPassword);
 		data.community = GetTextField(raw_data, offset, FieldId::Community);
+		data.name = GetTextField(raw_data, offset, FieldId::Name);
+
+		return data;
+	}
+
+	Unknown4aData DudeDatabase::RawDataToUnknown4aData(std::span<const u8> raw_data) const {
+		std::size_t offset = 0;
+		Unknown4aData data{};
+
+		data.unk1 = GetBoolField(raw_data, offset, FieldId::Unknown5DCC);
+		data.unk2 = GetBoolField(raw_data, offset, FieldId::Unknown5DCD);
+		data.unk3 = GetBoolField(raw_data, offset, FieldId::Unknown5DCE);
+		data.unk4 = GetBoolField(raw_data, offset, FieldId::Unknown5DCF);
+		data.unk5 = GetBoolField(raw_data, offset, FieldId::Unknown5DD0);
+		data.unk6 = GetBoolField(raw_data, offset, FieldId::Unknown5DD1);
+		data.unk7 = GetBoolField(raw_data, offset, FieldId::Unknown5DDE);
+		data.unk8 = GetBoolField(raw_data, offset, FieldId::Unknown5DC8);
+		data.unk9 = GetBoolField(raw_data, offset, FieldId::Unknown5DC9);
+		data.unk10 = GetBoolField(raw_data, offset, FieldId::Unknown5DCA);
+		data.unk11 = GetBoolField(raw_data, offset, FieldId::Unknown5DCB);
+		data.unk12 = GetIntField(raw_data, offset, FieldId::Unknown5DD2);
+		data.unk13 = GetIntField(raw_data, offset, FieldId::Unknown5DD3);
+		data.unk14 = GetIntField(raw_data, offset, FieldId::Unknown5DD4);
+		data.unk15 = GetIntField(raw_data, offset, FieldId::Unknown5DD5);
+		data.unk16 = GetIntField(raw_data, offset, FieldId::Unknown5DD6);
+		data.unk17 = GetByteField(raw_data, offset, FieldId::Unknown5DD7);
+		data.unk18 = GetIntField(raw_data, offset, FieldId::Unknown5DD9);
+		data.unk19 = GetByteField(raw_data, offset, FieldId::Unknown5DDA);
+		data.unk20 = GetIntField(raw_data, offset, FieldId::Unknown5DDB);
+		data.unk21 = GetIntField(raw_data, offset, FieldId::Unknown5DDC);
+		data.unk22 = GetIntField(raw_data, offset, FieldId::Unknown5DDD);
+		data.unk23 = GetByteField(raw_data, offset, FieldId::Unknown5DDF);
+		data.object_id = GetIntField(raw_data, offset, FieldId::ObjectId);
+		data.unk25 = GetIntField(raw_data, offset, FieldId::Unknown5DC0);
+		data.unk26 = GetByteField(raw_data, offset, FieldId::Unknown5DC2);
+		data.unk27 = GetByteField(raw_data, offset, FieldId::Unknown5DC3);
+		data.unk28 = GetIntField(raw_data, offset, FieldId::Unknown5DC4);
+		data.unk29 = GetIntField(raw_data, offset, FieldId::Unknown5DC5);
+		data.unk30 = GetIntField(raw_data, offset, FieldId::Unknown5DC6);
+		data.unk31 = GetIntField(raw_data, offset, FieldId::Unknown5DC7);
+		data.unk32 = GetLongArrayField(raw_data, offset, FieldId::Unknown5DD8);
 		data.name = GetTextField(raw_data, offset, FieldId::Name);
 
 		return data;
@@ -267,16 +335,11 @@ namespace Database {
 		ValidateId(field.info.id.Value(), id);
 		ValidateType(field.info.type.Value(), FieldType::Byte);
 
-		// TODO: Type mismatch. Fix behaviour
-		if (field.info.type == FieldType::Int) {
-			offset += sizeof(IntField::value) - sizeof(ByteField::value);
-		}
-
 		return field;
 	}
 
 	IntField DudeDatabase::GetIntField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const {
-		constexpr std::size_t header_size = sizeof(IntField::info) + sizeof(IntField::value);
+		constexpr std::size_t header_size = sizeof(IntField::info);
 		IntField field{};
 
 		if (!CheckSize(raw_data.size(), offset, header_size)) {
@@ -287,14 +350,28 @@ namespace Database {
 		offset += header_size;
 
 		ValidateId(field.info.id.Value(), id);
-		ValidateType(field.info.type.Value(), FieldType::Int);
+
+		switch (field.info.type.Value()) {
+		case FieldType::Int:
+			memcpy(&field.value, raw_data.data() + offset, sizeof(IntField::value));
+			offset += sizeof(IntField::value);
+			break;
+		case FieldType::Byte:
+			// Int sometimes are saved as byte to save space
+			memcpy(&field.value, raw_data.data() + offset, sizeof(ByteField::value));
+			offset += sizeof(ByteField::value);
+			break;
+		default:
+			ValidateType(field.info.type.Value(), FieldType::Int);
+			break;
+		}
 
 		return field;
 	}
 
 
 	TextField DudeDatabase::GetTextField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const {
-		constexpr std::size_t header_size = sizeof(TextField::info) + sizeof(TextField::data_size);
+		constexpr std::size_t header_size = sizeof(TextField::info);
 		TextField field{};
 
 		if (!CheckSize(raw_data.size(), offset, header_size)) {
@@ -305,7 +382,20 @@ namespace Database {
 		offset += header_size;
 
 		ValidateId(field.info.id.Value(), id);
-		ValidateType(field.info.type.Value(), FieldType::ShortString);
+
+		switch (field.info.type.Value()) {
+		case FieldType::ShortString:
+			memcpy(&field.data_size, raw_data.data() + offset, sizeof(u8));
+			offset += sizeof(u8);
+			break;
+		case FieldType::LongString:
+			memcpy(&field.data_size, raw_data.data() + offset, sizeof(u16));
+			offset += sizeof(u16);
+			break;
+		default:
+			ValidateType(field.info.type.Value(), FieldType::ShortString);
+			break;
+		}
 
 		if (!CheckSize(raw_data.size(), offset, field.data_size)) {
 			return {};
@@ -365,6 +455,31 @@ namespace Database {
 		field.ip_address.resize(field.entries);
 		memcpy(field.ip_address.data(), raw_data.data() + offset, field.entries * sizeof(u32));
 		offset += field.entries * sizeof(u32);
+
+		return field;
+	}
+
+	LongArrayField DudeDatabase::GetLongArrayField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const {
+		constexpr std::size_t header_size = sizeof(LongArrayField::info) + sizeof(LongArrayField::data_size);
+		LongArrayField field{};
+
+		if (!CheckSize(raw_data.size(), offset, header_size)) {
+			return {};
+		}
+
+		memcpy(&field, raw_data.data() + offset, header_size);
+		offset += header_size;
+
+		ValidateId(field.info.id.Value(), id);
+		ValidateType(field.info.type.Value(), FieldType::LongArray);
+
+		if (!CheckSize(raw_data.size(), offset, field.data_size)) {
+			return {};
+		}
+
+		field.data.resize(field.data_size);
+		memcpy(field.data.data(), raw_data.data() + offset, field.data_size);
+		offset += field.data_size;
 
 		return field;
 	}
@@ -445,7 +560,7 @@ namespace Database {
 
 	bool DudeDatabase::ValidateId(FieldId a, FieldId b) const {
 		if (a != b) {
-			printf("Invalid data id, expected %d, found %d\n", b, a);
+			printf("Invalid data id, expected 0x%06x, found 0x%06x\n", b, a);
 			return false;
 		}
 		return true;
@@ -453,7 +568,7 @@ namespace Database {
 
 	bool DudeDatabase::ValidateType(FieldType a, FieldType b) const {
 		if (a != b) {
-			printf("Invalid data type, expected %d, found %d\n", b, a);
+			printf("Invalid data type, expected 0x%02x, found 0x%02x\n", b, a);
 			return false;
 		}
 		return true;

@@ -75,6 +75,38 @@ namespace Database {
 		Scale = 0x102714,
 		UrlAddress = 0x102715,
 
+		Unknown5DCC = 0x105dcc,
+		Unknown5DCE = 0x105dce,
+		Unknown5DCD = 0x105dcd,
+		Unknown5DCF = 0x105dcf,
+		Unknown5DD0 = 0x105dd0,
+		Unknown5DD1 = 0x105dd1,
+		Unknown5DDE = 0x105dde,
+		Unknown5DC8 = 0x105dc8,
+		Unknown5DC9 = 0x105dc9,
+		Unknown5DCA = 0x105dca,
+		Unknown5DCB = 0x105dcb,
+		Unknown5DD2 = 0x105dd2,
+		Unknown5DD3 = 0x105dd3,
+		Unknown5DD4 = 0x105dd4,
+		Unknown5DD5 = 0x105dd5,
+		Unknown5DD6 = 0x105dd6,
+		Unknown5DD7 = 0x105dd7,
+		Unknown5DD9 = 0x105dd9,
+		Unknown5DDA = 0x105dda,
+		Unknown5DDB = 0x105ddb,
+		Unknown5DDC = 0x105ddc,
+		Unknown5DDD = 0x105ddd,
+		Unknown5DDF = 0x105ddf,
+		Unknown5DC0 = 0x105dc0,
+		Unknown5DC2 = 0x105dc2,
+		Unknown5DC3 = 0x105dc3,
+		Unknown5DC4 = 0x105dc4,
+		Unknown5DC5 = 0x105dc5,
+		Unknown5DD8 = 0x105dd8,
+		Unknown5DC6 = 0x105dc6,
+		Unknown5DC7 = 0x105dc7,
+
 		SnmpVersion = 0x113c68,
 		Community = 0x113c69,
 		Port = 0x113c6a,
@@ -89,7 +121,6 @@ namespace Database {
 		ObjectId = 0xfe0001,
 		SecondaryObjectId = 0xfe0005,
 		Name = 0xfe0010,
-
 	};
 
 	enum class FieldType : u32 {
@@ -98,6 +129,7 @@ namespace Database {
 		Int = 0x08,
 		Byte = 0x09,
 		Long = 0x10,
+		LongString = 0x20,
 		ShortString = 0x21,
 		LongArray = 0x31,
 		IntArray = 0x88,
@@ -141,10 +173,10 @@ namespace Database {
 		u32 value{};
 	};
 
-	// This is FieldType::ShortString
+	// This is FieldType::ShortString or FieldType::LongString
 	struct TextField {
 		FieldInfo info{};
-		u8 data_size{};
+		u16 data_size{};
 		std::string text{};
 	};
 
@@ -160,6 +192,13 @@ namespace Database {
 		FieldInfo info{};
 		u16 entries{};
 		std::vector<IpAddress> ip_address{};
+	};
+
+	// This is FieldType::LongArray
+	struct LongArrayField {
+		FieldInfo info{};
+		u8 data_size{};
+		std::vector<u8> data{};
 	};
 
 	// This is FieldType::LongArray
@@ -212,7 +251,7 @@ namespace Database {
 		IntField unk12;
 		IntField snmp_profile_id;
 		IntField object_id;
-		ByteField unk14;
+		IntField unk14;
 		ByteField unk15;
 		ByteField unk16;
 		TextField custom_field_3;
@@ -226,8 +265,8 @@ namespace Database {
 
 	// This is type 0x3A data
 	struct SnmpProfileData {
-		ByteField version;
-		ByteField port;
+		IntField version;
+		IntField port;
 		ByteField unk3; // Security
 		ByteField unk4; // AuthMethod
 		ByteField unk5; // CryptMethod
@@ -237,6 +276,43 @@ namespace Database {
 		TextField auth_password;
 		TextField crypt_password;
 		TextField community;
+		TextField name;
+	};
+
+	// This is type 0x4A data
+	struct Unknown4aData {
+		BoolField unk1;
+		BoolField unk2;
+		BoolField unk3;
+		BoolField unk4;
+		BoolField unk5;
+		BoolField unk6;
+		BoolField unk7;
+		BoolField unk8;
+		BoolField unk9;
+		BoolField unk10;
+		BoolField unk11;
+		IntField unk12;
+		IntField unk13;
+		IntField unk14;
+		IntField unk15;
+		IntField unk16;
+		ByteField unk17;
+		IntField unk18;
+		ByteField unk19;
+		IntField unk20;
+		IntField unk21;
+		IntField unk22;
+		ByteField unk23;
+		IntField object_id;
+		IntField unk25;
+		ByteField unk26;
+		ByteField unk27;
+		IntField unk28;
+		IntField unk29;
+		IntField unk30;
+		IntField unk31;
+		LongArrayField unk32;
 		TextField name;
 	};
 #pragma pack(pop)
