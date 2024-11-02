@@ -28,7 +28,7 @@ namespace Database {
 		Unknown11 = 0x11,
 		Unknown18 = 0x18,
 		Unknown22 = 0x22,
-		Unknown29 = 0x29,
+		Link = 0x29,
 		Unknown2a = 0x2a,
 		Unknown31 = 0x31,
 		Unknown39 = 0x39,
@@ -260,6 +260,22 @@ namespace Database {
 		TextField password;
 		TextField username;
 		MacAddressField mac;
+		TextField name;
+	};
+
+	// This is type 0x29 data
+	struct LinkData {
+		BoolField unk1;
+		IntField unk2;
+		ByteField unk3;
+		ByteField unk4;
+		IntField object_id;
+		ByteField unk6;
+		ByteField unk7;
+		ByteField unk8;
+		ByteField unk9;
+		TextField unk10;
+		TextField unit;
 		TextField name;
 	};
 

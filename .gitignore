@@ -33,3 +33,6 @@
 
 # Database files
 *.db*
+
+# Visual Studio
+.vs

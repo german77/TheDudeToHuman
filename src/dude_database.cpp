@@ -115,6 +115,32 @@ namespace Database {
 		return device_data;
 	}
 
+	std::vector<LinkData> DudeDatabase::GetLinkData() const {
+		std::vector<LinkData> link_data{};
+		Database::SqlData sql_data{};
+		GetObjs(sql_data);
+
+		for (auto& [id, blob] : sql_data) {
+			const RawObjData obj_data = BlobToRawObjData(blob);
+
+			if (obj_data.object_type != ObjectType::Link) {
+				continue;
+			}
+
+			printf("Reading row %d\n", id);
+
+			const LinkData device = RawDataToLinkData(obj_data.data);
+
+			if (id != device.object_id.value) {
+				printf("Corrupted Entry\n");
+			}
+
+			link_data.push_back(device);
+		}
+
+		return link_data;
+	}
+
 	std::vector<SnmpProfileData> DudeDatabase::GetSnmpProfileData() const {
 		std::vector<SnmpProfileData> snmp_profile_data{};
 		Database::SqlData sql_data{};
@@ -232,6 +258,26 @@ namespace Database {
 		data.password = GetTextField(raw_data, offset, FieldId::Password);
 		data.username = GetTextField(raw_data, offset, FieldId::Username);
 		data.mac = GetMacAddressField(raw_data, offset, FieldId::MacAddress);
+		data.name = GetTextField(raw_data, offset, FieldId::Name);
+
+		return data;
+	}
+
+	LinkData DudeDatabase::RawDataToLinkData(std::span<const u8> raw_data) const {
+		std::size_t offset = 0;
+		LinkData data{};
+
+		data.unk1 = GetBoolField(raw_data, offset, FieldId::None);
+		data.unk2 = GetIntField(raw_data, offset, FieldId::None);
+		data.unk3 = GetByteField(raw_data, offset, FieldId::None);
+		data.unk4 = GetByteField(raw_data, offset, FieldId::None);
+		data.object_id = GetIntField(raw_data, offset, FieldId::ObjectId);
+		data.unk6 = GetByteField(raw_data, offset, FieldId::None);
+		data.unk7 = GetByteField(raw_data, offset, FieldId::None);
+		data.unk8 = GetByteField(raw_data, offset, FieldId::None);
+		data.unk9 = GetByteField(raw_data, offset, FieldId::None);
+		data.unk10 = GetTextField(raw_data, offset, FieldId::None);
+		data.unit = GetTextField(raw_data, offset, FieldId::None);
 		data.name = GetTextField(raw_data, offset, FieldId::Name);
 
 		return data;
