@@ -43,22 +43,25 @@ namespace Database {
 		return db.GetTableData(data, "outages");
 	}
 
-	std::vector<ObjectType> DudeDatabase::ListUsedObjectTypes() const {
-		std::vector<ObjectType> object_types{};
+	std::vector<DataFormat> DudeDatabase::ListUsedDataFormats() const {
+		std::vector<DataFormat> data_formats{};
 		Database::SqlData sql_data{};
 		GetObjs(sql_data);
 
 		for (auto& [id, blob] : sql_data) {
 			const RawObjData obj_data = BlobToRawObjData(blob);
-			const auto it = find(object_types.begin(), object_types.end(), obj_data.object_type);
+			for (auto& data_format : obj_data.data_format.data) {
+				const DataFormat format = static_cast<DataFormat>(data_format);
+				const auto it = find(data_formats.begin(), data_formats.end(), format);
 
-			if (it != object_types.end()) {
-				continue;
+				if (it != data_formats.end()) {
+					continue;
+				}
+				data_formats.push_back(format);
 			}
-			object_types.push_back(obj_data.object_type);
 		}
 
-		return object_types;
+		return data_formats;
 	}
 
 	std::vector<NotesData> DudeDatabase::GetNotesData() const {
@@ -69,7 +72,7 @@ namespace Database {
 		for (auto& [id, blob] : sql_data) {
 			const RawObjData obj_data = BlobToRawObjData(blob);
 
-			if (obj_data.object_type != ObjectType::Notes) {
+			if (GetMainDataFormat(obj_data) != DataFormat::Notes) {
 				continue;
 			}
 
@@ -95,7 +98,7 @@ namespace Database {
 		for (auto& [id, blob] : sql_data) {
 			const RawObjData obj_data = BlobToRawObjData(blob);
 
-			if (obj_data.object_type != ObjectType::DeviceType) {
+			if (GetMainDataFormat(obj_data) != DataFormat::DeviceType) {
 				continue;
 			}
 
@@ -122,7 +125,7 @@ namespace Database {
 		for (auto& [id, blob] : sql_data) {
 			const RawObjData obj_data = BlobToRawObjData(blob);
 
-			if (obj_data.object_type != ObjectType::Device) {
+			if (GetMainDataFormat(obj_data) != DataFormat::Device) {
 				continue;
 			}
 
@@ -149,7 +152,7 @@ namespace Database {
 		for (auto& [id, blob] : sql_data) {
 			const RawObjData obj_data = BlobToRawObjData(blob);
 
-			if (obj_data.object_type != ObjectType::Link) {
+			if (GetMainDataFormat(obj_data) != DataFormat::Link) {
 				continue;
 			}
 
@@ -175,7 +178,7 @@ namespace Database {
 		for (auto& [id, blob] : sql_data) {
 			const RawObjData obj_data = BlobToRawObjData(blob);
 
-			if (obj_data.object_type != ObjectType::SnmpProfile) {
+			if (GetMainDataFormat(obj_data) != DataFormat::SnmpProfile) {
 				continue;
 			}
 
@@ -202,7 +205,7 @@ namespace Database {
 		for (auto& [id, blob] : sql_data) {
 			const RawObjData obj_data = BlobToRawObjData(blob);
 
-			if (obj_data.object_type != ObjectType::Unknown4a) {
+			if (GetMainDataFormat(obj_data) != DataFormat::Unknown4a) {
 				continue;
 			}
 
@@ -223,7 +226,7 @@ namespace Database {
 
 
 	RawObjData DudeDatabase::BlobToRawObjData(std::span<const u8> blob) const {
-		constexpr std::size_t header_size = sizeof(u64) + sizeof(u32);
+		constexpr std::size_t header_size = sizeof(RawObjData::magic);
 		RawObjData data{};
 
 		if (blob.size() < header_size) {
@@ -232,8 +235,12 @@ namespace Database {
 		}
 
 		memcpy(&data, blob.data(), header_size);
-		data.data.resize(blob.size() - header_size);
-		memcpy(data.data.data(), blob.data() + header_size, data.data.size());
+
+		std::size_t offset = header_size;
+		data.data_format = GetIntArrayField(blob, offset, FieldId::DataFormat);
+
+		data.data.resize(blob.size() - offset);
+		memcpy(data.data.data(), blob.data() + offset, data.data.size());
 
 		return data;
 	}
@@ -676,5 +683,13 @@ namespace Database {
 			return false;
 		}
 		return true;
+	}
+
+	DataFormat DudeDatabase::GetMainDataFormat(const RawObjData& obj_data) const {
+		if (obj_data.data_format.entries == 0) {
+			return DataFormat::None;
+		}
+
+		return static_cast<DataFormat>(obj_data.data_format.data[0]);
 	}
 }

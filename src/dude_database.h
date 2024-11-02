@@ -26,7 +26,7 @@ namespace Database {
 		int GetOutages(SqlData& data) const;
 
 		// Usefull to find new unsuported types
-		std::vector<ObjectType> ListUsedObjectTypes() const;
+		std::vector<DataFormat> ListUsedDataFormats() const;
 
 		std::vector<NotesData> GetNotesData() const;
 		std::vector<DeviceTypeData> GetDeviceTypeData() const;
@@ -58,6 +58,7 @@ namespace Database {
 		bool CheckSize(std::size_t raw_data_size, std::size_t offset, std::size_t header_size) const;
 		bool ValidateId(FieldId a, FieldId b) const;
 		bool ValidateType(FieldType a, FieldType b) const;
+		DataFormat GetMainDataFormat(const RawObjData& obj_data) const;
 
 		Database::SqliteReader db;
 	};

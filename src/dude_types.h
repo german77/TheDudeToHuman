@@ -13,7 +13,7 @@ namespace Database {
 	using IpAddress = std::array<u8, 4>;
 	using MacAddress = std::array<u8, 6>;
 
-	enum class ObjectType : u32 {
+	enum class DataFormat : u32 {
 		None,
 		Unknown1 = 0x01,
 		Unknown3 = 0x03,
@@ -27,6 +27,7 @@ namespace Database {
 		Unknown10 = 0x10,
 		Unknown11 = 0x11,
 		Unknown18 = 0x18,
+		Unknown1f = 0x1f,
 		Unknown22 = 0x22,
 		Link = 0x29,
 		Unknown2a = 0x2a,
@@ -124,6 +125,8 @@ namespace Database {
 		ObjectId = 0xfe0001,
 		SecondaryObjectId = 0xfe0005,
 		Name = 0xfe0010,
+
+		DataFormat = 0xff0001,
 	};
 
 	enum class FieldType : u32 {
@@ -139,16 +142,6 @@ namespace Database {
 		StringArray = 0xA0,
 	};
 
-#pragma pack(push, 1)
-	template <typename T>
-	struct ObjData {
-		u64 magic{};
-		ObjectType object_type{ ObjectType::None };
-		T data{};
-	};
-
-	using RawObjData = ObjData<std::vector<u8>>;
-
 	struct FieldInfo {
 		union {
 			u32 raw{};
@@ -158,6 +151,7 @@ namespace Database {
 		};
 	};
 
+#pragma pack(push, 1)
 	// This is FieldType::Bool
 	struct BoolField {
 		FieldInfo info{};
@@ -228,6 +222,13 @@ namespace Database {
 		u16 entry_count{};
 		std::vector<StringArrayEntry> entries{};
 	};
+
+	struct RawObjData {
+		u16 magic{};
+		IntArrayField data_format{};
+		std::vector<u8> data{};
+	};
+#pragma pack(pop)
 
 	// This is type 0x09 data
 	struct NotesData {
@@ -348,6 +349,5 @@ namespace Database {
 		LongArrayField unk32;
 		TextField name;
 	};
-#pragma pack(pop)
 
 }
