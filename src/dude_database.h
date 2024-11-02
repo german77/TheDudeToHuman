@@ -28,6 +28,7 @@ namespace Database {
 		// Usefull to find new unsuported types
 		std::vector<ObjectType> ListUsedObjectTypes() const;
 
+		std::vector<NotesData> GetNotesData() const;
 		std::vector<DeviceTypeData> GetDeviceTypeData() const;
 		std::vector<DeviceData> GetDeviceData() const;
 		std::vector<LinkData> GetLinkData() const;
@@ -36,6 +37,7 @@ namespace Database {
 
 	private:
 		RawObjData BlobToRawObjData(std::span<const u8> blob) const;
+		NotesData RawDataToNotesData(std::span<const u8> raw_data) const;
 		DeviceTypeData RawDataToDeviceTypeData(std::span<const u8> raw_data) const;
 		DeviceData RawDataToDeviceData(std::span<const u8> raw_data) const;
 		LinkData RawDataToLinkData(std::span<const u8> raw_data) const;
@@ -45,6 +47,7 @@ namespace Database {
 		BoolField GetBoolField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;
 		ByteField GetByteField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;
 		IntField GetIntField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;
+		TimeField GetTimeField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;
 		TextField GetTextField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;
 		IntArrayField GetIntArrayField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;
 		IpAddressField GetIpAddressField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;

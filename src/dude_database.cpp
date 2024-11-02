@@ -61,6 +61,32 @@ namespace Database {
 		return object_types;
 	}
 
+	std::vector<NotesData> DudeDatabase::GetNotesData() const {
+		std::vector<NotesData> notes_data{};
+		Database::SqlData sql_data{};
+		GetObjs(sql_data);
+
+		for (auto& [id, blob] : sql_data) {
+			const RawObjData obj_data = BlobToRawObjData(blob);
+
+			if (obj_data.object_type != ObjectType::Notes) {
+				continue;
+			}
+
+			printf("Reading row %d\n", id);
+
+			const NotesData notes = RawDataToNotesData(obj_data.data);
+
+			if (id != notes.object_id.value) {
+				printf("Corrupted Entry\n");
+			}
+
+			notes_data.push_back(notes);
+		}
+
+		return notes_data;
+	}
+
 	std::vector<DeviceTypeData> DudeDatabase::GetDeviceTypeData() const {
 		std::vector<DeviceTypeData> device_type_data{};
 		Database::SqlData sql_data{};
@@ -208,6 +234,18 @@ namespace Database {
 		memcpy(&data, blob.data(), header_size);
 		data.data.resize(blob.size() - header_size);
 		memcpy(data.data.data(), blob.data() + header_size, data.data.size());
+
+		return data;
+	}
+
+	NotesData DudeDatabase::RawDataToNotesData(std::span<const u8> raw_data) const {
+		std::size_t offset = 0;
+		NotesData data{};
+
+		data.object_id = GetIntField(raw_data, offset, FieldId::ObjectId);
+		data.parent_id = GetIntField(raw_data, offset, FieldId::ParentId);
+		data.time = GetTimeField(raw_data, offset, FieldId::Time);
+		data.name = GetTextField(raw_data, offset, FieldId::Name);
 
 		return data;
 	}
@@ -419,6 +457,22 @@ namespace Database {
 		return field;
 	}
 
+	TimeField DudeDatabase::GetTimeField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const {
+		constexpr std::size_t header_size = sizeof(TimeField::info) + sizeof(TimeField::date);
+		TimeField field{};
+
+		if (!CheckSize(raw_data.size(), offset, header_size)) {
+			return {};
+		}
+
+		memcpy(&field, raw_data.data() + offset, header_size);
+		offset += header_size;
+
+		ValidateId(field.info.id.Value(), id);
+		ValidateType(field.info.type.Value(), FieldType::Int);
+
+		return field;
+	}
 
 	TextField DudeDatabase::GetTextField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const {
 		constexpr std::size_t header_size = sizeof(TextField::info);

@@ -14,4 +14,5 @@ int main() {
 	auto data2 = db.GetDeviceData();
 	auto data3 = db.GetSnmpProfileData();
 	auto data4 = db.GetUnknown4aData();
+	auto data5 = db.GetNotesData();
 }

@@ -19,7 +19,7 @@ namespace Database {
 		Unknown3 = 0x03,
 		Unknown4 = 0x04,
 		Unknown5 = 0x05,
-		Unknown9 = 0x09,
+		Notes = 0x09,
 		UnknownA = 0x0a,
 		UnknownD = 0x0d,
 		DeviceType = 0x0e,
@@ -107,6 +107,9 @@ namespace Database {
 		Unknown5DC6 = 0x105dc6,
 		Unknown5DC7 = 0x105dc7,
 
+		ParentId = 0x105208,
+		Time = 0x105209,
+
 		SnmpVersion = 0x113c68,
 		Community = 0x113c69,
 		Port = 0x113c6a,
@@ -173,6 +176,12 @@ namespace Database {
 		u32 value{};
 	};
 
+	// This is FieldType::Int
+	struct TimeField {
+		FieldInfo info;
+		u32 date;
+	};
+
 	// This is FieldType::ShortString or FieldType::LongString
 	struct TextField {
 		FieldInfo info{};
@@ -218,6 +227,14 @@ namespace Database {
 		FieldInfo info{};
 		u16 entry_count{};
 		std::vector<StringArrayEntry> entries{};
+	};
+
+	// This is type 0x09 data
+	struct NotesData {
+		IntField object_id;
+		IntField parent_id;
+		TimeField time;
+		TextField name;
 	};
 
 	// This is type 0x0E data
