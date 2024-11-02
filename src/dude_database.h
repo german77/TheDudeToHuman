@@ -30,12 +30,14 @@ namespace Database {
 
 		std::vector<std::pair<int, DeviceTypeData>> GetDeviceTypeData() const;
 		std::vector<std::pair<int, DeviceData>> GetDeviceData() const;
+		std::vector<std::pair<int, LinkData>> GetLinkData() const;
 		std::vector<std::pair<int, SnmpProfileData>> GetSnmpProfileData() const;
 
 	private:
 		RawObjData BlobToRawObjData(std::span<const u8> blob) const;
 		DeviceTypeData RawDataToDeviceTypeData(std::span<const u8> raw_data) const;
 		DeviceData RawDataToDeviceData(std::span<const u8> raw_data) const;
+		LinkData RawDataToLinkData(std::span<const u8> raw_data) const;
 		SnmpProfileData RawDataToSnmpProfileData(std::span<const u8> raw_data) const;
 
 		BoolField GetBoolField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;
