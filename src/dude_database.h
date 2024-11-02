@@ -28,10 +28,10 @@ namespace Database {
 		// Usefull to find new unsuported types
 		std::vector<ObjectType> ListUsedObjectTypes() const;
 
-		std::vector<std::pair<int, DeviceTypeData>> GetDeviceTypeData() const;
-		std::vector<std::pair<int, DeviceData>> GetDeviceData() const;
-		std::vector<std::pair<int, SnmpProfileData>> GetSnmpProfileData() const;
-		std::vector<std::pair<int, Unknown4aData>> GetUnknown4aData() const;
+		std::vector<DeviceTypeData> GetDeviceTypeData() const;
+		std::vector<DeviceData> GetDeviceData() const;
+		std::vector<SnmpProfileData> GetSnmpProfileData() const;
+		std::vector<Unknown4aData> GetUnknown4aData() const;
 
 	private:
 		RawObjData BlobToRawObjData(std::span<const u8> blob) const;

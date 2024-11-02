@@ -61,8 +61,8 @@ namespace Database {
 		return object_types;
 	}
 
-	std::vector<std::pair<int, DeviceTypeData>> DudeDatabase::GetDeviceTypeData() const {
-		std::vector<std::pair<int, DeviceTypeData>> device_type_data{};
+	std::vector<DeviceTypeData> DudeDatabase::GetDeviceTypeData() const {
+		std::vector<DeviceTypeData> device_type_data{};
 		Database::SqlData sql_data{};
 		GetObjs(sql_data);
 
@@ -79,16 +79,17 @@ namespace Database {
 
 			if (id != device.object_id.value) {
 				printf("Corrupted Entry\n");
+				continue;
 			}
 
-			device_type_data.push_back({ id, device });
+			device_type_data.push_back(device);
 		}
 
 		return device_type_data;
 	}
 
-	std::vector<std::pair<int, DeviceData>> DudeDatabase::GetDeviceData() const {
-		std::vector<std::pair<int, DeviceData>> device_data{};
+	std::vector<DeviceData> DudeDatabase::GetDeviceData() const {
+		std::vector<DeviceData> device_data{};
 		Database::SqlData sql_data{};
 		GetObjs(sql_data);
 
@@ -105,16 +106,17 @@ namespace Database {
 
 			if (id != device.object_id.value) {
 				printf("Corrupted Entry\n");
+				continue;
 			}
 
-			device_data.push_back({ id, device });
+			device_data.push_back(device);
 		}
 
 		return device_data;
 	}
 
-	std::vector<std::pair<int, SnmpProfileData>> DudeDatabase::GetSnmpProfileData() const {
-		std::vector<std::pair<int, SnmpProfileData>> snmp_profile_data{};
+	std::vector<SnmpProfileData> DudeDatabase::GetSnmpProfileData() const {
+		std::vector<SnmpProfileData> snmp_profile_data{};
 		Database::SqlData sql_data{};
 		GetObjs(sql_data);
 
@@ -131,16 +133,17 @@ namespace Database {
 
 			if (id != device.object_id.value) {
 				printf("Corrupted Entry\n");
+				continue;
 			}
 
-			snmp_profile_data.push_back({ id, device });
+			snmp_profile_data.push_back(device);
 		}
 
 		return snmp_profile_data;
 	}
 
-	std::vector<std::pair<int, Unknown4aData>> DudeDatabase::GetUnknown4aData() const {
-		std::vector<std::pair<int, Unknown4aData>> snmp_profile_data{};
+	std::vector<Unknown4aData> DudeDatabase::GetUnknown4aData() const {
+		std::vector<Unknown4aData> snmp_profile_data{};
 		Database::SqlData sql_data{};
 		GetObjs(sql_data);
 
@@ -157,9 +160,10 @@ namespace Database {
 
 			if (id != device.object_id.value) {
 				printf("Corrupted Entry\n");
+				continue;
 			}
 
-			snmp_profile_data.push_back({ id, device });
+			snmp_profile_data.push_back(device);
 		}
 
 		return snmp_profile_data;
