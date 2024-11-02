@@ -64,164 +64,55 @@ namespace Database {
 		return data_formats;
 	}
 
-	std::vector<NotesData> DudeDatabase::GetNotesData() const {
-		std::vector<NotesData> notes_data{};
+	template <typename T>
+	std::vector<T> DudeDatabase::GetObjectData(DataFormat format, T(DudeDatabase::* RawToObjData)(std::span<const u8> raw_data) const) const {
+		std::vector<T> data{};
 		Database::SqlData sql_data{};
 		GetObjs(sql_data);
 
 		for (auto& [id, blob] : sql_data) {
-			const RawObjData obj_data = BlobToRawObjData(blob);
+			const RawObjData raw_obj_data = BlobToRawObjData(blob);
 
-			if (GetMainDataFormat(obj_data) != DataFormat::Notes) {
+			if (GetMainDataFormat(raw_obj_data) != format) {
 				continue;
 			}
 
 			printf("Reading row %d\n", id);
 
-			const NotesData notes = RawDataToNotesData(obj_data.data);
+			const T obj_data = (this->*RawToObjData)(raw_obj_data.data);
 
-			if (id != notes.object_id.value) {
+			if (id != obj_data.object_id.value) {
 				printf("Corrupted Entry\n");
 			}
 
-			notes_data.push_back(notes);
+			data.push_back(obj_data);
 		}
 
-		return notes_data;
+		return data;
+	}
+
+	std::vector<NotesData> DudeDatabase::GetNotesData() const {
+		return GetObjectData<NotesData>(DataFormat::Notes, &DudeDatabase::RawDataToNotesData);
 	}
 
 	std::vector<DeviceTypeData> DudeDatabase::GetDeviceTypeData() const {
-		std::vector<DeviceTypeData> device_type_data{};
-		Database::SqlData sql_data{};
-		GetObjs(sql_data);
-
-		for (auto& [id, blob] : sql_data) {
-			const RawObjData obj_data = BlobToRawObjData(blob);
-
-			if (GetMainDataFormat(obj_data) != DataFormat::DeviceType) {
-				continue;
-			}
-
-			printf("Reading row %d\n", id);
-
-			const DeviceTypeData device = RawDataToDeviceTypeData(obj_data.data);
-
-			if (id != device.object_id.value) {
-				printf("Corrupted Entry\n");
-				continue;
-			}
-
-			device_type_data.push_back(device);
-		}
-
-		return device_type_data;
+		return GetObjectData<DeviceTypeData>(DataFormat::DeviceType, &DudeDatabase::RawDataToDeviceTypeData);
 	}
 
 	std::vector<DeviceData> DudeDatabase::GetDeviceData() const {
-		std::vector<DeviceData> device_data{};
-		Database::SqlData sql_data{};
-		GetObjs(sql_data);
-
-		for (auto& [id, blob] : sql_data) {
-			const RawObjData obj_data = BlobToRawObjData(blob);
-
-			if (GetMainDataFormat(obj_data) != DataFormat::Device) {
-				continue;
-			}
-
-			printf("Reading row %d\n", id);
-
-			const DeviceData device = RawDataToDeviceData(obj_data.data);
-
-			if (id != device.object_id.value) {
-				printf("Corrupted Entry\n");
-				continue;
-			}
-
-			device_data.push_back(device);
-		}
-
-		return device_data;
+		return GetObjectData<DeviceData>(DataFormat::Device, &DudeDatabase::RawDataToDeviceData);
 	}
 
 	std::vector<LinkData> DudeDatabase::GetLinkData() const {
-		std::vector<LinkData> link_data{};
-		Database::SqlData sql_data{};
-		GetObjs(sql_data);
-
-		for (auto& [id, blob] : sql_data) {
-			const RawObjData obj_data = BlobToRawObjData(blob);
-
-			if (GetMainDataFormat(obj_data) != DataFormat::Link) {
-				continue;
-			}
-
-			printf("Reading row %d\n", id);
-
-			const LinkData device = RawDataToLinkData(obj_data.data);
-
-			if (id != device.object_id.value) {
-				printf("Corrupted Entry\n");
-			}
-
-			link_data.push_back(device);
-		}
-
-		return link_data;
+		return GetObjectData<LinkData>(DataFormat::Link, &DudeDatabase::RawDataToLinkData);
 	}
 
 	std::vector<SnmpProfileData> DudeDatabase::GetSnmpProfileData() const {
-		std::vector<SnmpProfileData> snmp_profile_data{};
-		Database::SqlData sql_data{};
-		GetObjs(sql_data);
-
-		for (auto& [id, blob] : sql_data) {
-			const RawObjData obj_data = BlobToRawObjData(blob);
-
-			if (GetMainDataFormat(obj_data) != DataFormat::SnmpProfile) {
-				continue;
-			}
-
-			printf("Reading row %d\n", id);
-
-			const SnmpProfileData device = RawDataToSnmpProfileData(obj_data.data);
-
-			if (id != device.object_id.value) {
-				printf("Corrupted Entry\n");
-				continue;
-			}
-
-			snmp_profile_data.push_back(device);
-		}
-
-		return snmp_profile_data;
+		return GetObjectData<SnmpProfileData>(DataFormat::SnmpProfile, &DudeDatabase::RawDataToSnmpProfileData);
 	}
 
 	std::vector<Unknown4aData> DudeDatabase::GetUnknown4aData() const {
-		std::vector<Unknown4aData> snmp_profile_data{};
-		Database::SqlData sql_data{};
-		GetObjs(sql_data);
-
-		for (auto& [id, blob] : sql_data) {
-			const RawObjData obj_data = BlobToRawObjData(blob);
-
-			if (GetMainDataFormat(obj_data) != DataFormat::Unknown4a) {
-				continue;
-			}
-
-			printf("Reading row %d\n", id);
-
-			const Unknown4aData device = RawDataToUnknown4aData(obj_data.data);
-
-			if (id != device.object_id.value) {
-				printf("Corrupted Entry\n");
-				continue;
-			}
-
-			snmp_profile_data.push_back(device);
-		}
-
-		return snmp_profile_data;
+		return GetObjectData<Unknown4aData>(DataFormat::Unknown4a, &DudeDatabase::RawDataToUnknown4aData);
 	}
 
 

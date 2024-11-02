@@ -11,7 +11,7 @@ int main() {
 	Database::DudeDatabase db{ db_filename };
 
 	auto formats = db.ListUsedDataFormats();
-	//auto data1 = db.GetDeviceTypeData();
+	auto data1 = db.GetDeviceTypeData();
 	//auto data2 = db.GetDeviceData();
 	//auto data3 = db.GetSnmpProfileData();
 	//auto data4 = db.GetUnknown4aData();

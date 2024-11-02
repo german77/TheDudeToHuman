@@ -36,6 +36,9 @@ namespace Database {
 		std::vector<Unknown4aData> GetUnknown4aData() const;
 
 	private:
+		template <typename T>
+		std::vector<T> GetObjectData(DataFormat format, T(DudeDatabase::* RawToObjData)(std::span<const u8> raw_data) const) const;
+
 		RawObjData BlobToRawObjData(std::span<const u8> blob) const;
 		NotesData RawDataToNotesData(std::span<const u8> raw_data) const;
 		DeviceTypeData RawDataToDeviceTypeData(std::span<const u8> raw_data) const;
