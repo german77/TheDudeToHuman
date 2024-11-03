@@ -20,9 +20,9 @@ enum DataFormat : u32 {
     SnmpProfile = 0x3a,
     Unknown3B = 0x3b,
     Unknown43 = 0x43,
-    Unknown4A = 0x4a,
+    NetworkMapElement = 0x4a,
     Unknown4B = 0x4b,
-    Unknown4D = 0x4d,
+    PanelElement = 0x4d,
 };
 
 
@@ -39,94 +39,754 @@ enum ProveType : u8 {
 
 enum FieldId : u24 {
     None,
-    IpAddress = 0x101f40,
-    DnsNames = 0x101f41,
-    Unknown42 = 0x101f42,
-    DnsLookupInterval = 0x101f43,
-    MacAddress = 0x101f44,
-    Unknown45 = 0x101f45,
-    Username = 0x101f46,
-    Password = 0x101f47,
-    Unknown49 = 0x101f49,
-    RouterOs = 0x101f4a,
-    Unknown4B = 0x101f4b,
-    DeviceTypeId = 0x101f4c,
-    Unknown4D = 0x101f4d,
-    SnmpProfileId = 0x101f4e,
 
-    Unknown51 = 0x101f51,
-    Unknown52 = 0x101f52,
-    Unknown53 = 0x101f53,
-    Unknown54 = 0x101f54,
-    Unknown55 = 0x101f55,
-    Unknown56 = 0x101f56,
-    Unknown57 = 0x101f57,
-    CustomField1 = 0x101f58,
-    CustomField2 = 0x101f59,
-    CustomField3 = 0x101f5a,
+    // Object List
+    ObjectList_Type = 0x1007d0,
+    ObjectList_Ordered = 0x1007d1,
 
-    RequiredServices = 0x102710,
-    AllowedServices = 0x102711,
-    IgnoredServices = 0x102712,
-    ImageId = 0x102713,
-    Scale = 0x102714,
-    UrlAddress = 0x102715,
+    // History Action
+    HistoryAction_Status = 0x100bb8,
+    HistoryAction_Time = 0x100bb9,
 
-    Unknown4A38=0x104a38,
-    Unknown4A39=0x104a39,
-    Unknown4A3A=0x104a3A,
-    Unknown4A3B=0x104a3B,
-    Unknown4A3C=0x104a3C,
-    Unknown4A3D=0x104a3D,
-    Unknown4A3E=0x104a3E,
-    Unknown4A3F= 0x104a3F,
+    // Server Configuration
+    ServerConfig_UniqueID = 0x100fa0,
+    ServerConfig_Version = 0x100fa1,
+    ServerConfig_FirstConnection = 0x100fa2,
+    ServerConfig_LocalAddrs = 0x100fa3,
+    ServerConfig_SnmpProfileID = 0x100fa9,
+    ServerConfig_AgentID = 0x100faa,
+    ServerConfig_ProbeEnabled = 0x100fab,
+    ServerConfig_ProbeInterval = 0x100fac,
+    ServerConfig_ProbeTimeout = 0x100fad,
+    ServerConfig_ProbeDownCount = 0x100fae,
+    ServerConfig_NotifyIDs = 0x100faf,
+    ServerConfig_SyslogEnabled = 0x100fb2,
+    ServerConfig_SyslogPort = 0x100fb3,
+    ServerConfig_SnmpTrapEnabled = 0x100fb4,
+    ServerConfig_SnmpTrapPort = 0x100fb5,
+    ServerConfig_MapBackgroundColor = 0x100fb6,
+    ServerConfig_MapAntialiasedGeometry = 0x100fb9,
+    ServerConfig_MapGradients = 0x100fba,
+    ServerConfig_MapLabelRefreshInterval = 0x100fbb,
+    ServerConfig_MapUpColor = 0x100fbc,
+    ServerConfig_MapDownPartialColor = 0x100fbd,
+    ServerConfig_MapDownCompleteColor = 0x100fbe,
+    ServerConfig_MapUnknownColor = 0x100fbf,
+    ServerConfig_MapAckedColor = 0x100fc0,
+    ServerConfig_MapNetworkColor = 0x100fc1,
+    ServerConfig_MapSubmapColor = 0x100fc2,
+    ServerConfig_MapSubmapUpColor = 0x100fc3,
+    ServerConfig_MapSubmapDownPartialColor = 0x100fc4,
+    ServerConfig_MapSubmapDownCompleteColor = 0x100fc5,
+    ServerConfig_MapSubmapAckedColor = 0x100fc6,
+    ServerConfig_MapStaticColor = 0x100fc7,
+    ServerConfig_MapLinkColor = 0x100fc8,
+    ServerConfig_MapLinkLabelColor = 0x100fc9,
+    ServerConfig_MapLinkFullColor = 0x100fca,
+    ServerConfig_MapDeviceVisible = 0x100fcc,
+    ServerConfig_MapDeviceLabel = 0x100fcd,
+    ServerConfig_MapDeviceTooltip = 0x100fce,
+    ServerConfig_MapDeviceShape = 0x100fcf,
+    ServerConfig_MapDeviceFont = 0x100fd0,
+    ServerConfig_MapNetworkVisible = 0x100fd1,
+    ServerConfig_MapNetworkLabel = 0x100fd2,
+    ServerConfig_MapNetworkTooltip = 0x100fd3,
+    ServerConfig_MapNetworkShape = 0x100fd4,
+    ServerConfig_MapNetworkFont = 0x100fd5,
+    ServerConfig_MapSubmapVisible = 0x100fd6,
+    ServerConfig_MapSubmapLabel = 0x100fd7,
+    ServerConfig_MapSubmapTooltip = 0x100fd8,
+    ServerConfig_MapSubmapShape = 0x100fd9,
+    ServerConfig_MapSubmapFont = 0x100fda,
+    ServerConfig_MapStaticVisible = 0x100fdb,
+    ServerConfig_MapStaticShape = 0x100fdc,
+    ServerConfig_MapStaticFont = 0x100fdd,
+    ServerConfig_MapLinkVisibl = 0x100fde,
+    ServerConfig_MapLinkLabel = 0x100fdf,
+    ServerConfig_MapLinkTooltip = 0x100fe0,
+    ServerConfig_MapLinkFont = 0x100fe1,
+    ServerConfig_MapLinkThickness = 0x100fe2,
+    ServerConfig_MapDepVisible = 0x100fe3,
+    ServerConfig_MapDepColor = 0x100fe4,
+    ServerConfig_MapDepThickness = 0x100fe5,
+    ServerConfig_MapDepStyle = 0x100fe6,
+    ServerConfig_ChartValueKeepTimeRaw = 0x100fe7,
+    ServerConfig_ChartValueKeepTime10min = 0x100fe8,
+    ServerConfig_ChartValueKeepTime2hour = 0x100fe9,
+    ServerConfig_ChartValueKeepTime1day = 0x100fea,
+    ServerConfig_ChartBackgroundColor = 0x100feb,
+    ServerConfig_ChartGridColor = 0x100fec,
+    ServerConfig_ChartTextColor = 0x100fed,
+    ServerConfig_ChartFont = 0x100fee,
+    ServerConfig_ChartLineColors = 0x100fef,
+    ServerConfig_ReportFont = 0x100ff0,
+    ServerConfig_CustomColors = 0x100ff1,
+    ServerConfig_DiscoverBlackList = 0x101018,
+    ServerConfig_DiscoverNamePreference = 0x100ff3,
+    ServerConfig_DiscoverMode = 0x100ff4,
+    ServerConfig_DiscoverIdentification = 0x100ff5,
+    ServerConfig_DiscoverNetworks = 0x100ff6,
+    ServerConfig_DiscoverLinks = 0x100ff7,
+    ServerConfig_DiscoverLayer2 = 0x100ff8,
+    ServerConfig_DiscoverPpp = 0x100ff9,
+    ServerConfig_DiscoverGraphServices = 0x100ffa,
+    ServerConfig_DiscoverGraphLinks = 0x100ffb,
+    ServerConfig_DiscoverServiceLess = 0x100ffc,
+    ServerConfig_DiscoverHops = 0x100ffd,
+    ServerConfig_DiscoverHopNetworkSizeLimit = 0x100ffe,
+    ServerConfig_DiscoverSimultaneous = 0x100fff,
+    ServerConfig_DiscoverInterval = 0x101000,
+    ServerConfig_DiscoverSkipProbes = 0x101001,
+    ServerConfig_DiscoverSkipTypes = 0x101002,
+    ServerConfig_DiscoverItemWidth = 0x101003,
+    ServerConfig_DiscoverItemHeight = 0x101004,
+    ServerConfig_DiscoverBigRow = 0x101005,
+    ServerConfig_DiscoverBigColumn = 0x101006,
+    ServerConfig_DiscoverWholeRow = 0x101007,
+    ServerConfig_DiscoverWholeColumn = 0x101008,
+    ServerConfig_RosConnInterval = 0x10100a,
+    ServerConfig_RosConnIntervalAuthFailed = 0x10100b,
+    ServerConfig_UndoQueueSize = 0x10100c,
+    ServerConfig_ConfirmRemove = 0x10100d,
+    ServerConfig_ResolveMACAddressManufacturer = 0x10100e,
+    ServerConfig_MacMappingRefreshInterval = 0x10100f,
+    ServerConfig_ContentsPaneBehavior = 0x101010,
+    ServerConfig_StatsTx = 0x101011,
+    ServerConfig_StatsRx = 0x101012,
+    ServerConfig_CurrentSeconds = 0x101013,
+    ServerConfig_CurrentMSeconds = 0x101014,
+    ServerConfig_TimeZoneHistory = 0x101015,
+    ServerConfig_LastChartMaintenanceTime = 0x101017,
 
-    Unknown5DCC=0x105dcc,
-    Unknown5DCE=0x105dce,
-    Unknown5DCD=0x105dcd,
-    Unknown5DCF=0x105dcf,
-    Unknown5DD0=0x105dd0,
-    Unknown5DD1=0x105dd1,
-    Unknown5DDE=0x105dde,
-    Unknown5DC8=0x105dc8,
-    Unknown5DC9=0x105dc9,
-    Unknown5DCA=0x105dca,
-    Unknown5DCB=0x105dcb,
-    Unknown5DD2=0x105dd2,
-    Unknown5DD3=0x105dd3,
-    Unknown5DD4=0x105dd4,
-    Unknown5DD5=0x105dd5,
-    Unknown5DD6=0x105dd6,
-    Unknown5DD7=0x105dd7,
-    Unknown5DD9=0x105dd9,
-    Unknown5DDA=0x105dda,
-    Unknown5DDB=0x105ddb,
-    Unknown5DDC=0x105ddc,
-    Unknown5DDD=0x105ddd,
-    Unknown5DDF=0x105ddf,
-    Unknown5DC0=0x105dc0,
-    Unknown5DC2=0x105dc2,
-    Unknown5DC3=0x105dc3,
-    Unknown5DC4=0x105dc4,
-    Unknown5DC5=0x105dc5,
-    Unknown5DD8=0x105dd8,
-    Unknown5DC6=0x105dc6,
-    Unknown5DC7=0x105dc7,
+    // Agent
+    Agent_UniqueID = 0x101388,
+    Agent_ParentID = 0x101389,
+    Agent_OrigID = 0x10138a,
+    Agent_Enabled = 0x10138b,
+    Agent_Address = 0x10138c,
+    Agent_WinboxPort = 0x101393,
+    Agent_User = 0x10138e,
+    Agent_Password = 0x10138f,
+    Agent_Secure = 0x101390,
 
-    SnmpVersion = 0x113c68,
-    Community = 0x113c69,
-    Port = 0x113c6a,
-    Unknown6B = 0x113c6b,
-    Unknown6C = 0x113c6c,
-    CryptPassword = 0x113c6d,
-    Unknown6E = 0x113c6e,
-    AuthPassword = 0x113c6f,
-    Tries = 0x113c71,
-    TryTimeout = 0x113c72,
+    // Syslog Rule
+    SysLogRule_Enabled = 0x101770,
+    SysLogRule_SrcFirst1 = 0x101771,
+    SysLogRule_SrcSecond1 = 0x101772,
+    SysLogRule_Regexp = 0x101773,
+    SysLogRule_SrcNot = 0x101774,
+    SysLogRule_RegexpNot = 0x101775,
+    SysLogRule_SrcSet = 0x101776,
+    SysLogRule_RegexpSet = 0x101777,
+    SysLogRule_Action = 0x101778,
+    SysLogRule_NotifyID = 0x101779,
 
-    ObjectId = 0xfe0001,
-    SecondaryObjectId = 0xfe0005,
-    Name = 0xfe0010,
+    // SNMP Trap Rule
+    SnmpTrapRule_Enabled = 0x101b58,
+    SnmpTrapRule_SrcFirst2 = 0x101b59,
+    SnmpTrapRule_SrcSecond2 = 0x101b5a,
+    SnmpTrapRule_TrapIDs = 0x101b5b,
+    SnmpTrapRule_SrcNot = 0x101b5c,
+    SnmpTrapRule_TrapNot = 0x101b5d,
+    SnmpTrapRule_SrcSet = 0x101b5e,
+    SnmpTrapRule_TrapSet = 0x101b5f,
+    SnmpTrapRule_Action = 0x101b60,
+    SnmpTrapRule_NotifyID = 0x101b61,
+
+    // Device
+    Device_IpAddress = 0x101f40,
+    Device_DnsNames = 0x101f41,
+    Device_Lookup = 0x101f42,
+    Device_LookupInterval = 0x101f43,
+    Device_MacAddress = 0x101f44,
+    Device_MacLookup = 0x101f45,
+    Device_Username = 0x101f46,
+    Device_Password = 0x101f47,
+    Device_PasswordCopy = 0x101f48,
+    Device_SecureMode = 0x101f49,
+    Device_RouterOs = 0x101f4a,
+    Device_DudeServer = 0x101f4b,
+    Device_TypeId = 0x101f4c,
+    Device_AgentId = 0x101f4d,
+    Device_SnmpProfileId = 0x101f4e,
+    Device_NetMapsIds = 0x101f4f,
+    Device_NetMapElementIds = 0x101f50,
+    Device_ProveEnabled = 0x101f51,
+    Device_ProveInterval = 0x101f52,
+    Device_ProveTimeout = 0x101f53,
+    Device_ProveDownCount = 0x101f54,
+    Device_NotifyUse = 0x101f55,
+    Device_NotifyIds = 0x101f56,
+    Device_ParentIds = 0x101f57,
+    Device_CustomField1 = 0x101f58,
+    Device_CustomField2 = 0x101f59,
+    Device_CustomField3 = 0x101f5a,
+    Device_Status = 0x101f5b,
+    Device_ServicesCount = 0x101f5c,
+    Device_ServicesUnknown = 0x101f5d,
+    Device_ServicesUp = 0x101f5e,
+    Device_ServicesUnstable = 0x101f5f,
+    Device_ServicesDown = 0x101f60,
+    Device_ServicesAcked = 0x101f61,
+    Device_RosConnected = 0x101f62,
+    Device_RosAgent = 0x101f69,
+    Device_RosStatus = 0x101f63,
+    Device_RosVersion = 0x101f64,
+    Device_RosArch = 0x101f65,
+    Device_RosBoard = 0x101f66,
+    Device_RosUpgradeStatus = 0x101f67,
+    Device_RosPackages = 0x101f68,
+
+    // Device Group
+    DeviceGroup_DeviceIDs = 0x102328,
+
+    // Device Type
+    DeviceType_RequiredServices = 0x102710,
+    DeviceType_AllowedServices = 0x102711,
+    DeviceType_IgnoredServices = 0x102712,
+    DeviceType_ImageId = 0x102713,
+    DeviceType_ImageScale = 0x102714,
+    DeviceType_Url = 0x102715,
+
+    // Network
+    Network_Subnets = 0x102af8,
+    Network_NetMapID = 0x102af9,
+    Network_NetMapElementID = 0x102afa,
+
+    // Service
+    Service_Enabled = 0x102ee0,
+    Service_DeviceID = 0x102ee1,
+    Service_AgentID = 0x102ee2,
+    Service_probeID = 0x102ee3,
+    Service_ProbePort = 0x102ee4,
+    Service_ProbeInterval = 0x102ee5,
+    Service_ProbeTimeout = 0x102ee6,
+    Service_ProbeDownCount = 0x102ee7,
+    Service_NotifyUse = 0x102ee8,
+    Service_NotifyIDs = 0x102ee9,
+    Service_Acked = 0x102eea,
+    Service_History = 0x102eeb,
+    Service_DataSourceID = 0x102eec,
+    Service_Status = 0x102eed,
+    Service_Value = 0x102eee,
+    Service_TimeSinceChanged = 0x102eef,
+    Service_TimeLastUp = 0x102ef0,
+    Service_TimeLastDown = 0x102ef1,
+    Service_TimePrevUp = 0x102ef2,
+    Service_TimePrevDown = 0x102ef3,
+    Service_ProbesDown = 0x102ef4,
+    Service_ProblemDescription = 0x102ef5,
+
+    // Probe
+    Prove_TypeID = 0x1036b0,
+    Prove_AgentID = 0x1036b1,
+    Prove_DefaultPort = 0x1036b2,
+    Prove_IcmpSize = 0x1036b3,
+    Prove_IcmpTtl = 0x1036b4,
+    Prove_IcmpRetryCount = 0x1036b5,
+    Prove_IcmpRetryInterval = 0x1036b6,
+    Prove_RandomProbability = 0x1036b7,
+    Prove_TcpOnlyConnect = 0x1036b8,
+    Prove_TcpFirstReceive = 0x1036b9,
+    Prove_TcpSend1 = 0x1036ba,
+    Prove_TcpReceive1 = 0x1036bb,
+    Prove_TcpSend2 = 0x1036bc,
+    Prove_TcpReceive2 = 0x1036bd,
+    Prove_TcpSend3 = 0x1036be,
+    Prove_TcpReceive3 = 0x1036bf,
+    Prove_DnsName = 0x1036c0,
+    Prove_DnsAddresses = 0x1036c1,
+    Prove_SnmpProfileID = 0x1036c3,
+    Prove_SnmpAvailIfUp = 0x1036c2,
+    Prove_SnmpOid = 0x1036c4,
+    Prove_SnmpOidType = 0x1036c5,
+    Prove_SnmpCompareMethod = 0x1036c6,
+    Prove_SnmpValueNumber = 0x1036c7,
+    Prove_SnmpValueIP = 0x1036c8,
+    Prove_SnmpValueBigNumber = 0x1036c9,
+    Prove_SnmpValueString = 0x1036ca,
+    Prove_SnmpValueOid = 0x1036cb,
+    Prove_LogicType = 0x1036cc,
+    Prove_LogicProbeIDs = 0x1036cd,
+    Prove_FunctionAvailable = 0x1036ce,
+    Prove_FunctionError = 0x1036cf,
+    Prove_FunctionValue = 0x1036d0,
+    Prove_FunctionUnit = 0x1036d1,
+
+    // Notification
+    Notification_Enabled = 0x103e80,
+    Notification_RypeID = 0x103e81,
+    Notification_Activity = 0x103e82,
+    Notification_TextTemplate = 0x103e83,
+    Notification_MailServer = 0x103e84,
+    Notification_MailServer6 = 0x103e9a,
+    Notification_MailServerDns = 0x103e9b,
+    Notification_MailPort = 0x103e85,
+    Notification_MailUser = 0x103e86,
+    Notification_MailPassword = 0x103e87,
+    Notification_MailTlsMode = 0x103e88,
+    Notification_MailFrom = 0x103e99,
+    Notification_MailTo = 0x103e89,
+    Notification_MailCc = 0x103e8a,
+    Notification_MailSubject = 0x103e8b,
+    Notification_SyslogServer = 0x103e8c,
+    Notification_SyslogPort = 0x103e8d,
+    Notification_SoundFileID = 0x103e8e,
+    Notification_GroupNotifyIDs = 0x103e8f,
+    Notification_LogPrefix = 0x103e90,
+    Notification_LogUseColor = 0x103e91,
+    Notification_LogColor = 0x103e92,
+    Notification_SpeakRate = 0x103e93,
+    Notification_SpeakVolume = 0x103e94,
+    Notification_StatusList = 0x103e95,
+    Notification_DelayInterval = 0x103e96,
+    Notification_RepeatInterval = 0x103e97,
+    Notification_RepeatCount = 0x103e98,
+
+    // Remote Action
+    RemoteAction_Type = 0x104268,
+    RemoteAction_Admin = 0x104269,
+    RemoteAction_DeviceID = 0x10426a,
+    RemoteAction_PopupTime = 0x10426b,
+    RemoteAction_PopupText = 0x10426c,
+    RemoteAction_PopupColor = 0x10426d,
+    RemoteAction_SoundFileID = 0x10426e,
+    RemoteAction_SpeakText = 0x104270,
+    RemoteAction_SpeakRate = 0x104271,
+    RemoteAction_SpeakVolume = 0x104272,
+    RemoteAction_ExecuteCommand = 0x10426f,
+
+    // Log Entry
+    LogEntry_Time = 0x104650,
+
+    // Panel Element
+    PanelElement_PanelID = 0x104a38,
+    PanelElement_Split = 0x104a39,
+    PanelElement_SplitType = 0x104a3a,
+    PanelElement_SplitShare = 0x104a3b,
+    PanelElement_FirstID = 0x104a3c,
+    PanelElement_SecondID = 0x104a3d,
+    PanelElement_ObjID = 0x104a3e,
+    PanelElement_ObjMeta = 0x104a3f,
+
+    // Panel
+    Panel_TopElementID = 0x104e20,
+    Panel_Admin = 0x104e21,
+    Panel_Locked = 0x104e22,
+    Panel_TitleBars = 0x104e23,
+
+    // Note
+    Note_ObjID = 0x105208,
+    Note_TimeAdded = 0x105209,
+
+    // Link
+    Link_MasteringType = 0x1055f0,
+    Link_MasterDevice = 0x1055f1,
+    Link_MasterInterface = 0x1055f2,
+    Link_Speed = 0x1055f3,
+    Link_NetMapID = 0x1055f4,
+    Link_NetMapElementID = 0x1055f5,
+    Link_TypeID = 0x1055f6,
+    Link_History = 0x1055f7,
+    Link_TxDataSourceID = 0x1055f8,
+    Link_RxDataSourceID = 0x1055f9,
+
+    // Link Type
+    LinkType_Style = 0x1059d8,
+    LinkType_Thickness = 0x1059d9,
+    LinkType_SnmpType = 0x1059da,
+    LinkType_SnmpSpeed = 0x1059db,
+
+    // Network Map Element
+    NetworkMapElement_MapID = 0x105dc0,
+    NetworkMapElement_Label = 0x105dc1,
+    NetworkMapElement_Type = 0x105dc2,
+    NetworkMapElement_ItemType = 0x105dc3,
+    NetworkMapElement_ItemID = 0x105dc4,
+    NetworkMapElement_ItemX = 0x105dc5,
+    NetworkMapElement_ItemY = 0x105dc6,
+    NetworkMapElement_LabelRefreshInterval = 0x105dc7,
+    NetworkMapElement_ItemUseUpColor = 0x105dc8,
+    NetworkMapElement_ItemUseDownPartialColor = 0x105dc9,
+    NetworkMapElement_ItemUseDownCompleteColor = 0x105dca,
+    NetworkMapElement_ItemUseUnknownColor = 0x105dcb,
+    NetworkMapElement_ItemUseAckedColor = 0x105dcc,
+    NetworkMapElement_ItemUseLabel = 0x105dcd,
+    NetworkMapElement_ItemUseShape = 0x105dce,
+    NetworkMapElement_ItemUseFont = 0x105dcf,
+    NetworkMapElement_ItemUseImage = 0x105dd0,
+    NetworkMapElement_ItemUseImageScale = 0x105dd1,
+    NetworkMapElement_ItemUpColor = 0x105dd2,
+    NetworkMapElement_ItemDownPartialColor = 0x105dd3,
+    NetworkMapElement_ItemDownCompleteColor = 0x105dd4,
+    NetworkMapElement_ItemUnknownColor = 0x105dd5,
+    NetworkMapElement_ItemAckedColor = 0x105dd6,
+    NetworkMapElement_ItemShape = 0x105dd7,
+    NetworkMapElement_ItemFont = 0x105dd8,
+    NetworkMapElement_ItemImage = 0x105dd9,
+    NetworkMapElement_ItemImageScale = 0x105dda,
+    NetworkMapElement_LinkFrom = 0x105ddb,
+    NetworkMapElement_LinkTo = 0x105ddc,
+    NetworkMapElement_LinkID = 0x105ddd,
+    NetworkMapElement_LinkUsage = 0x105de0,
+    NetworkMapElement_LinkUseWidth = 0x105dde,
+    NetworkMapElement_LinkWidth = 0x105ddf,
+
+    // Network Map
+    NetworkMap_Locked = 0x1061a8,
+    NetworkMap_DefaultZoom = 0x1061a9,
+    NetworkMap_ImageID = 0x1061aa,
+    NetworkMap_ImageScale = 0x1061ab,
+    NetworkMap_ImageTile = 0x1061ac,
+    NetworkMap_LabelRefreshInterval = 0x1061ad,
+    NetworkMap_ColorVisible = 0x1061ae,
+    NetworkMap_DeviceVisible = 0x1061af,
+    NetworkMap_NetworkVisible = 0x1061b0,
+    NetworkMap_SubmapVisible = 0x1061b1,
+    NetworkMap_StaticVisible = 0x1061b2,
+    NetworkMap_LinkVisible = 0x1061b3,
+    NetworkMap_UseBackgroundColor = 0x1061b4,
+    NetworkMap_UseUpColor = 0x1061b5,
+    NetworkMap_UseDownPartialColor = 0x1061b6,
+    NetworkMap_UseDownCompleteColor = 0x1061b7,
+    NetworkMap_UseUnknownColor = 0x1061b8,
+    NetworkMap_UseAckedColor = 0x1061b9,
+    NetworkMap_UseNetworkColor = 0x1061ba,
+    NetworkMap_UseSubmapColor = 0x1061bb,
+    NetworkMap_UseSubmapUpColor = 0x1061bc,
+    NetworkMap_UseSubmapDownPartialColor = 0x1061bd,
+    NetworkMap_UseSubmapDownCompleteColor = 0x1061be,
+    NetworkMap_UseSubmapAckedColor = 0x1061bf,
+    NetworkMap_UseStaticColor = 0x1061c0,
+    NetworkMap_UseLinkColor = 0x1061c1,
+    NetworkMap_UseLinkLabelColor = 0x1061c2,
+    NetworkMap_UseLinkFullColor = 0x1061c3,
+    NetworkMap_UseDeviceLabel = 0x1061c5,
+    NetworkMap_UseDeviceShape = 0x1061c6,
+    NetworkMap_UseDeviceFont = 0x1061c7,
+    NetworkMap_UseNetworkLabel = 0x1061c8,
+    NetworkMap_UseNetworkShape = 0x1061c9,
+    NetworkMap_UseNetworkFont = 0x1061ca,
+    NetworkMap_UseSubmapLabel = 0x1061cb,
+    NetworkMap_UseSubmapShape = 0x1061cc,
+    NetworkMap_UseSubmapFont = 0x1061cd,
+    NetworkMap_UseStaticShape = 0x1061ce,
+    NetworkMap_UseStaticFont = 0x1061cf,
+    NetworkMap_UseLinkLabe = 0x1061d0,
+    NetworkMap_UseLinkFont = 0x1061d1,
+    NetworkMap_UseLinkThickness = 0x1061d2,
+    NetworkMap_BackgroundColor = 0x1061d3,
+    NetworkMap_UpColor = 0x1061d4,
+    NetworkMap_DownPartialColor = 0x1061d5,
+    NetworkMap_DownCompleteColor = 0x1061d6,
+    NetworkMap_UnknownColor = 0x1061d7,
+    NetworkMap_AckedColor = 0x1061d8,
+    NetworkMap_NetworkColor = 0x1061d9,
+    NetworkMap_SubmapColor = 0x1061da,
+    NetworkMap_SubmapUpColor = 0x1061db,
+    NetworkMap_SubmapDownPartialColor = 0x1061dc,
+    NetworkMap_SubmapDownCompleteColor = 0x1061dd,
+    NetworkMap_SubmapAckedColor = 0x1061de,
+    NetworkMap_StaticColor = 0x1061df,
+    NetworkMap_LinkColor = 0x1061e0,
+    NetworkMap_LinkLabelColor = 0x1061e1,
+    NetworkMap_LinkFullColor = 0x1061e2,
+    NetworkMap_DeviceLabel = 0x1061e4,
+    NetworkMap_DeviceShape = 0x1061e5,
+    NetworkMap_DeviceFont = 0x1061e6,
+    NetworkMap_NetworkLabel = 0x1061e7,
+    NetworkMap_NetworkShape = 0x1061e8,
+    NetworkMap_NetworkFont = 0x1061e9,
+    NetworkMap_SubmapLabel = 0x1061ea,
+    NetworkMap_SubmapShape = 0x1061eb,
+    NetworkMap_SubmapFont = 0x1061ec,
+    NetworkMap_StaticShape = 0x1061ed,
+    NetworkMap_StaticFont = 0x1061ee,
+    NetworkMap_LinkLabel = 0x1061ef,
+    NetworkMap_LinkFont = 0x1061f0,
+    NetworkMap_LinkThickness = 0x1061f1,
+    NetworkMap_LayoutDensity = 0x1061f2,
+    NetworkMap_LayoutQuality = 0x1061f3,
+    NetworkMap_ProbeEnabled = 0x1061f4,
+    NetworkMap_ProbeInterval = 0x1061f5,
+    NetworkMap_ProbeTimeout = 0x1061f6,
+    NetworkMap_ProbeDownCount = 0x1061f7,
+    NetworkMap_NotifyUse = 0x1061f8,
+    NetworkMap_NotifyIDs = 0x1061f9,
+    NetworkMap_ReportScanning = 0x1061fa,
+    NetworkMap_Status = 0x1061fb,
+    NetworkMap_DevicesCount = 0x1061fc,
+    NetworkMap_DevicesUnknown = 0x1061fd,
+    NetworkMap_DevicesUp = 0x1061fe,
+    NetworkMap_DevicesPartiallyDown = 0x1061ff,
+    NetworkMap_DevicesDown = 0x106200,
+    NetworkMap_DevicesAcked = 0x106201,
+
+    // Discover Info
+    DiscoverInfo_ScanNetworks = 0x106590,
+    DiscoverInfo_AgentID = 0x106591,
+    DiscoverInfo_AddToAuto = 0x106592,
+    DiscoverInfo_Hops = 0x106593,
+    DiscoverInfo_MaxSimultaneous = 0x106594,
+    DiscoverInfo_Enabled = 0x106596,
+    DiscoverInfo_SingleTime = 0x106597,
+    DiscoverInfo_NetMapID = 0x106598,
+    DiscoverInfo_NetworkFirst = 0x106599,
+    DiscoverInfo_NetworkSecond = 0x10659a,
+    DiscoverInfo_Interval = 0x10659b,
+    DiscoverInfo_BlackList = 0x1065ad,
+    DiscoverInfo_NamePreference = 0x10659d,
+    DiscoverInfo_Mode = 0x10659e,
+    DiscoverInfo_TypeIdentification = 0x10659f,
+    DiscoverInfo_ProbeIDs = 0x1065a0,
+    DiscoverInfo_TypeIDs = 0x1065a1,
+    DiscoverInfo_AddNetworks = 0x1065a2,
+    DiscoverInfo_AddLinks = 0x1065a3,
+    DiscoverInfo_Layer2 = 0x1065a4,
+    DiscoverInfo_Ppp = 0x1065a5,
+    DiscoverInfo_GraphServices = 0x1065a6,
+    DiscoverInfo_GraphLinks = 0x1065a7,
+    DiscoverInfo_AddServiceLess = 0x1065a8,
+    DiscoverInfo_NextScan = 0x1065a9,
+    DiscoverInfo_Scanning = 0x1065aa,
+    DiscoverInfo_ScanString = 0x1065ab,
+    DiscoverInfo_ScanProgress = 0x1065ac,
+
+    // File
+    File_FullName = 0x106979,
+    File_ParentID = 0x10697a,
+    File_Type = 0x10697b,
+    File_Size = 0x10697c,
+    File_CreationTime = 0x10697d,
+    File_ModificationTime = 0x10697e,
+    File_PackageName = 0x106980,
+    File_PackageVersion = 0x106981,
+    File_PackageArch = 0x106982,
+
+    // Version
+    Version_Arch = 0x106d61,
+
+    // Tool
+    Tool_Type = 0x107530,
+    Tool_Builtin = 0x107531,
+    Tool_Command = 0x107532,
+    Tool_DeviceID = 0x107533,
+
+    // Snmp Object
+    SnmpObject_AgentID = 0x1080e8,
+    SnmpObject_Address = 0x1080e9,
+    SnmpObject_Oid = 0x1080ea,
+    SnmpObject_UpdateTime = 0x1080eb,
+
+    // Snmp Interface
+    SnmpInterface_IfIndex = 0x1084d0,
+    SnmpInterface_Type = 0x1084d1,
+    SnmpInterface_Mtu = 0x1084d2,
+    SnmpInterface_Speed = 0x1084d3,
+    SnmpInterface_PhysAddress = 0x1084d4,
+    SnmpInterface_AdminStatus = 0x1084d5,
+    SnmpInterface_OperStatus = 0x1084d6,
+    SnmpInterface_LastChange = 0x1084d7,
+    SnmpInterface_InOctets = 0x1084d8,
+    SnmpInterface_InUnicastPackets = 0x1084d9,
+    SnmpInterface_InNonUnicastPackets = 0x1084da,
+    SnmpInterface_InDiscards = 0x1084db,
+    SnmpInterface_InErrors = 0x1084dc,
+    SnmpInterface_InUnknownProtos = 0x1084dd,
+    SnmpInterface_OutOctets = 0x1084de,
+    SnmpInterface_OutUnicastPackets = 0x1084df,
+    SnmpInterface_OutNonUnicastPackets = 0x1084e0,
+    SnmpInterface_OutDiscards = 0x1084e1,
+    SnmpInterface_OutErrors = 0x1084e2,
+    SnmpInterface_OutQueueLen = 0x1084e3,
+    SnmpInterface_MediaOid = 0x1084e4,
+    SnmpInterface_InOctetsRate = 0x1084e5,
+    SnmpInterface_InUnicastPacketsRate = 0x1084e6,
+    SnmpInterface_InNonUnicastPacketsRate = 0x1084e7,
+    SnmpInterface_InDiscardsRate = 0x1084e8,
+    SnmpInterface_InErrorsRate = 0x1084e9,
+    SnmpInterface_InUnknownProtosRate = 0x1084ea,
+    SnmpInterface_OutOctetsRate = 0x1084eb,
+    SnmpInterface_OutUnicastPacketsRate = 0x1084ec,
+    SnmpInterface_OutNonUnicastPacketsRate = 0x1084ed,
+    SnmpInterface_OutDiscardsRate = 0x1084ee,
+    SnmpInterface_OutErrorsRate = 0x1084ef,
+
+    // Snmp Ip
+    SnmpIp_Address = 0x1088b8,
+    SnmpIp_Netmask = 0x1088b9,
+    SnmpIp_IfIndex = 0x1088ba,
+    SnmpIp_Broadcast = 0x1088bb,
+    SnmpIp_ReasmMaxSize = 0x1088bc,
+
+    // Snmp Route
+    SnmpRoute_Dest = 0x108ca0,
+    SnmpRoute_Mask = 0x108ca1,
+    SnmpRoute_IfIndex = 0x108ca2,
+    SnmpRoute_Metric1 = 0x108ca3,
+    SnmpRoute_Metric2 = 0x108ca4,
+    SnmpRoute_Metric3 = 0x108ca5,
+    SnmpRoute_Metric4 = 0x108ca6,
+    SnmpRoute_NextHop = 0x108ca7,
+    SnmpRoute_Type = 0x108ca8,
+    SnmpRoute_Proto = 0x108ca9,
+    SnmpRoute_Age = 0x108caa,
+    SnmpRoute_Metric5 = 0x108cab,
+    SnmpRoute_Info = 0x108cac,
+
+    // Snmp Arp
+    SnmpArp_IfIndex = 0x109088,
+    SnmpArp_PhysAddress = 0x109089,
+    SnmpArp_Address = 0x10908a,
+    SnmpArp_Type = 0x10908b,
+
+    // Snmp Bridge Fdb Entry
+    SnmpBridgeEntry_Address = 0x109470,
+    SnmpBridgeEntry_Port = 0x109471,
+    SnmpBridgeEntry_Status = 0x109472,
+
+    // Snmp Storage
+    SnmpStorage_Idx = 0x109858,
+    SnmpStorage_Type = 0x109859,
+    SnmpStorage_allocationUnits = 0x10985a,
+    SnmpStorage_Size = 0x10985b,
+    SnmpStorage_Use = 0x10985c,
+    SnmpStorage_AllocationFailures = 0x10985d,
+    SnmpStorage_SizeBytes = 0x10985e,
+    SnmpStorage_UsedBytes = 0x10985f,
+
+    // Snmp Cpu
+    SnmpCpu_Type = 0x109c40,
+    SnmpCpu_Load = 0x109c41,
+
+    // Snmp Wireless Station
+    SnmpWirelessStation_Idx = 0x10a028,
+    SnmpWirelessStation_TxRate = 0x10a029,
+    SnmpWirelessStation_RxRate = 0x10a02a,
+    SnmpWirelessStation_Strength = 0x10a02b,
+    SnmpWirelessStation_Ssid = 0x10a02c,
+    SnmpWirelessStation_Bssid = 0x10a02d,
+    SnmpWirelessStation_Frec = 0x10a02e,
+
+    // Snmp Registration Table Entry
+    SnmpRegistrationTableEntry_Mac = 0x10a410,
+    SnmpRegistrationTableEntry_Iface = 0x10a411,
+    SnmpRegistrationTableEntry_Strength = 0x10a412,
+    SnmpRegistrationTableEntry_TxBytes = 0x10a413,
+    SnmpRegistrationTableEntry_RxBytes = 0x10a414,
+    SnmpRegistrationTableEntry_TxPackets = 0x10a415,
+    SnmpRegistrationTableEntry_RxPackets = 0x10a416,
+    SnmpRegistrationTableEntry_TxRate = 0x10a417,
+    SnmpRegistrationTableEntry_RxRate = 0x10a418,
+
+    // Snmp Queue
+    SnmpQueue_Src = 0x10a7f8,
+    SnmpQueue_SrcMask = 0x10a7f9,
+    SnmpQueue_Dst = 0x10a7fa,
+    SnmpQueue_DstMask = 0x10a7fb,
+    SnmpQueue_Iface = 0x10a7fc,
+    SnmpQueue_BytesIn = 0x10a7fd,
+    SnmpQueue_BytesOut = 0x10a7fe,
+    SnmpQueue_PacketsIn = 0x10a7ff,
+    SnmpQueue_PacketsOut = 0x10a800,
+
+    // Snmp Dhcp Lease
+    SnmpDhcpLease_Address = 0x10abe0,
+    SnmpDhcpLease_Subnet = 0x10abe1,
+    SnmpDhcpLease_Range = 0x10abe2,
+    SnmpDhcpLease_Type = 0x10abe3,
+    SnmpDhcpLease_TimeRemaining = 0x10abe4,
+    SnmpDhcpLease_AllowedProtocol = 0x10abe5,
+    SnmpDhcpLease_ServedProtocol = 0x10abe6,
+    SnmpDhcpLease_PhysicalAddress = 0x10abe7,
+    SnmpDhcpLease_ClientID = 0x10abe8,
+    SnmpDhcpLease_HostName = 0x10abe9,
+    SnmpDhcpLease_DomainName = 0x10abea,
+
+    // Mib Node
+    MibNode_ParentID = 0x10afc8,
+    MibNode_ChildrenIDs = 0x10afc9,
+    MibNode_DenseName = 0x10afca,
+    MibNode_DenseParentID = 0x10afcb,
+    MibNode_Oid = 0x10afcc,
+    MibNode_ModuleIDs = 0x10afcd,
+    MibNode_Type = 0x10afce,
+    MibNode_Access = 0x10afcf,
+    MibNode_Status = 0x10afd0,
+    MibNode_EnumIDs = 0x10afd1,
+    MibNode_EnumStrings = 0x10afd2,
+    MibNode_Ranges = 0x10afd3,
+    MibNode_Indexes = 0x10afd4,
+    MibNode_Augments = 0x10afd5,
+    MibNode_Varbinds = 0x10afd6,
+    MibNode_Hint = 0x10afd7,
+    MibNode_Unit = 0x10afd8,
+    MibNode_Description = 0x10afd9,
+    MibNode_DefaultValue = 0x10afda,
+
+    // Mib Module
+    MibModule_ImportIDs = 0x10b3b1,
+    MibModule_MissingImports = 0x10b3b2,
+
+    // Address List Entry
+    AddressListEntry_ListID = 0x10b798,
+    AddressListEntry_AddressFirst = 0x10b799,
+    AddressListEntry_AddressSecond = 0x10b79a,
+
+    // Data Source
+    DataSource_Enabled = 0x10bf68,
+    DataSource_Type = 0x10bf69,
+    DataSource_Unit = 0x10bf6a,
+    DataSource_KeepTimeRaw = 0x10bf6b,
+    DataSource_KeepTime10min = 0x10bf6c,
+    DataSource_KeepTime2hour = 0x10bf6d,
+    DataSource_KeepTime1day = 0x10bf6e,
+    DataSource_FunctionDevice = 0x10bf6f,
+    DataSource_FunctionCode = 0x10bf70,
+    DataSource_FunctionInterval = 0x10bf71,
+    DataSource_LastValueTime = 0x10bf72,
+    DataSource_LastValue = 0x10bf73,
+
+    // Chart Line
+    ChartLine_ChartID = 0x10c350,
+    ChartLine_SourceID = 0x10c351,
+    ChartLine_LineStyle = 0x10c352,
+    ChartLine_LineColor = 0x10c353,
+    ChartLine_LineOpacity = 0x10c354,
+    ChartLine_FillColor = 0x10c355,
+    ChartLine_FillOpacity = 0x10c356,
+
+    // Function
+    Function_Builtin = 0x10cb20,
+    Function_Code = 0x10cb21,
+    Function_Descr = 0x10cb22,
+    Function_MinArguments = 0x10cb23,
+    Function_MaxArguments = 0x10cb24,
+    Function_ArgumentDescrs = 0x10cb25,
+    Function_Error = 0x10cb26,
+
+    // Mac Mapping
+    MacMapping_Address = 0x10d2f0,
+    MacMapping_Mac = 0x10d2f1,
+    MacMapping_SourceDeviceID = 0x10d2f2,
+    MacMapping_SourceType = 0x10d2f3,
+
+    // Snmp profile
+    SnmpProfile_Version = 0x113c68,
+    SnmpProfile_Community = 0x113c69,
+    SnmpProfile_Port = 0x113c6a,
+    SnmpProfile_V3Security = 0x113c6b,
+    SnmpProfile_V3AuthMethod = 0x113c6c,
+    SnmpProfile_V3AuthPassword = 0x113c6d,
+    SnmpProfile_V3CryptMethod = 0x113c6e,
+    SnmpProfile_V3CryptPassword = 0x113c6f,
+    SnmpProfile_TryCount = 0x113c71,
+    SnmpProfile_TryTimeout = 0x113c72,
+
+    // System
+    SysId = 0xfe0001,
+    SysNextId = 0xfe0005,
+    SysName = 0xfe0010,
 
     DataFormat = 0xff0001,
 };
@@ -170,10 +830,16 @@ struct IntField {
     }
 };
 
+// This is FieldType::Int
+struct TimeField {
+    FieldInfo info;
+    u32 date;
+};
+
 // This is FieldType::ShortString or FieldType::LongString
 struct TextField {
     FieldInfo info;
-    
+
     if(info.type == FieldType::LongString){
        u16 data_size;
     }else{
@@ -223,125 +889,135 @@ struct StringArrayField {
 };
 
 struct Map {
-    IntArrayField unk1;
-    BoolField unk2;
-    BoolField unk3;
-    BoolField unk4;
-    BoolField unk5;
-    BoolField unk6;
-    BoolField unk7;
-    BoolField unk8;
-    BoolField unk9;
-    BoolField unk10;
-    BoolField unk11;
-    BoolField unk12;
-    BoolField unk13;
-    BoolField unk14;
-    BoolField unk15;
-    BoolField unk16;
-    BoolField unk17;
-    BoolField unk18;
-    BoolField unk19;
-    BoolField unk20;
-    BoolField unk21;
-    BoolField unk22;
-    BoolField unk23;
-    BoolField unk24;
-    BoolField unk25;
-    BoolField unk26;
-    BoolField unk27;
-    BoolField unk28;
-    BoolField unk29;
-    BoolField unk30;
-    BoolField unk31;
-    BoolField unk32;
-    BoolField unk33;
-    BoolField unk34;
-    BoolField unk35;
-    BoolField unk36;
-    BoolField unk37;
-    BoolField unk38;
-    BoolField unk39;
-    BoolField unk40;
-    BoolField unk41;
-    BoolField unk42;
-    BoolField unk43;
-    ByteField unk44;
-    ByteField unk45;
-    ByteField unk46;
-    ByteField unk47;
-    ByteField unk48;
-    ByteField unk49;
-    IntField unk50;
-    ByteField unk51;
-    IntField unk52;
-    ByteField unk53;
-    ByteField unk54;
-    IntField unk55;
-    IntField unk56;
-    IntField unk57;
-    IntField unk58;
-    IntField unk59;
-    IntField unk60;
-    IntField unk61;
-    IntField unk62;
-    IntField unk63;
-    IntField unk64;
-    IntField unk65;
-    IntField unk66;
-    IntField unk67;
-    ByteField unk68;
-    IntField unk69;
-    ByteField unk70;
-    ByteField unk71;
-    ByteField unk72;
-    ByteField unk73;
-    ByteField unk74;
-    LongArrayField unk75;
-    TextField unk76;
-    LongArrayField unk77;
-    LongArrayField unk78;
-    TextField unk79;
-    LongArrayField unk80;
-    TextField unk81;
-    LongArrayField unk82;
-    TextField unk83;
-    TextField unk84;
+    IntArrayField notify_ids;
+    BoolField use_static_color;
+    BoolField use_link_color;
+    BoolField use_link_label_color;
+    BoolField use_link_full_color;
+    BoolField use_device_label;
+    BoolField use_device_shape;
+    BoolField use_device_font;
+    BoolField use_network_label;
+    BoolField use_network_shape;
+    BoolField use_network_font;
+    BoolField use_submap_label;
+    BoolField use_submap_shape;
+    BoolField use_submap_font;
+    BoolField use_static_shape;
+    BoolField use_static_font;
+    BoolField use_link_label;
+    BoolField use_link_font;
+    BoolField use_link_thickness;
+    BoolField ordered;
+    BoolField prove_enabled;
+    BoolField notify_use;
+    BoolField report_scanning;
+    BoolField locked;
+    BoolField image_tile;
+    BoolField color_visible;
+    BoolField device_visible;
+    BoolField network_visible;
+    BoolField submap_visible;
+    BoolField static_visible;
+    BoolField link_visible;
+    BoolField use_background_color;
+    BoolField use_up_color;
+    BoolField use_down_partial_color;
+    BoolField use_down_complete_color;
+    BoolField use_unknown_color;
+    BoolField use_acked_color;
+    BoolField use_network_color;
+    BoolField use_submap_color;
+    BoolField use_submap_up_color;
+    BoolField use_submap_down_partial_color;
+    BoolField use_submap_down_complete_color;
+    BoolField use_submap_acked_color;
+    IntField link_thickness;
+    IntField layout_density;
+    IntField layout_quality;
+    IntField prove_interval;
+    IntField prove_timeout;
+    IntField prove_down_count;
+    IntField object_id;
+    IntField default_zoom;
+    IntField image_id;
+    IntField image_scale;
+    IntField label_refresh_interval;
+    IntField background_color;
+    IntField up_color;
+    IntField down_partial_color;
+    IntField down_complete_color;
+    IntField unknown_color;
+    IntField acked_color;
+    IntField network_color;
+    IntField submap_color;
+    IntField submap_up_color;
+    IntField submap_down_partial_color;
+    IntField submap_down_complete_color;
+    IntField submap_acked_color;
+    IntField static_color;
+    IntField link_color;
+    IntField link_label_color;
+    IntField link_full_color;
+    IntField device_shape;
+    IntField network_shape;
+    IntField submap_shape;
+    IntField static_shape;
+    LongArrayField link_font;
+    TextField link_label;
+    LongArrayField static_font;
+    LongArrayField submap_font;
+    TextField submap_label;
+    LongArrayField network_font;
+    TextField network_label;
+    LongArrayField device_font;
+    TextField device_label;
+    TextField list_type;
     TextField name;
 };
 
+// This is type 0x09 data
+struct NotesData {
+    IntField object_id;
+    IntField parent_id;
+    TimeField time_added;
+    TextField name;
+};
+
+// This is type 0x0E data
 struct DeviceType {
     IntArrayField ignored_services;
     IntArrayField allowed_services;
     IntArrayField required_services;
     IntField image_id;
-    ByteField scale;
+    ByteField image_scale;
     IntField object_id;
-    IntField secondary_object_id;
+    IntField next_id;
     TextField url;
     TextField name;
 };
 
-struct Device{
-    IntArrayField unk1;
-    IntArrayField unk2;
-    StringArrayField dns;
+// This is type 0x0F data
+struct Device {
+    IntArrayField parent_ids;
+    IntArrayField notify_ids;
+    StringArrayField dns_names;
     IpAddressField ip;
-    BoolField unk3;
+    BoolField secure_mode;
     BoolField router_os;
-    BoolField unk5;
-    BoolField unk6;
-    BoolField unk7;
-    ByteField unk8;
+    BoolField dude_server;
+    BoolField notify_use;
+    BoolField prove_enabled;
+    ByteField lookup;
     ByteField dns_lookup_interval;
-    ByteField unk10;
-    IntField device_type_id;
-    IntField unk12;
+    ByteField mac_lookup;
+    IntField type_id;
+    IntField agent_id;
     IntField snmp_profile_id;
     IntField object_id;
-    ByteField unk14;
-    ByteField unk15;
-    ByteField unk16;
+    IntField prove_interval;
+    ByteField prove_timeout;
+    ByteField prove_down_count;
     TextField custom_field_3;
     TextField custom_field_2;
     TextField custom_field_1;
@@ -351,67 +1027,86 @@ struct Device{
     TextField name;
 };
 
+// This is type 0x29 data
+struct DataSourceData {
+    BoolField enabled;
+    IntField function_device_id;
+    ByteField function_interval;
+    ByteField data_source_type;
+    IntField object_id;
+    ByteField keep_time_raw;
+    ByteField keep_time_10min;
+    ByteField keep_time_2hour;
+    ByteField keep_time_1Day;
+    TextField function_code;
+    TextField unit;
+    TextField name;
+};
+
+// This is type 0x3A data
 struct SnmpProfile {
     IntField version;
     IntField port;
-    ByteField unk3; // Security
-    ByteField unk4; // AuthMethod
-    ByteField unk5; // CryptMethod
-    ByteField tries;
+    ByteField security;
+    ByteField auth_method;
+    ByteField crypth_method;
+    ByteField try_count;
     IntField try_timeout;
     IntField object_id;
-    TextField auth_password;
     TextField crypt_password;
+    TextField auth_password;
     TextField community;
     TextField name;
 };
 
-struct Unknown4a {
-    BoolField unk1;
-    BoolField unk2;
-    BoolField unk3;
-    BoolField unk4;
-    BoolField unk5;
-    BoolField unk6;
-    BoolField unk7;
-    BoolField unk8;
-    BoolField unk9;
-    BoolField unk10;
-    BoolField unk11;
-    IntField unk12;
-    IntField unk13;
-    IntField unk14;
-    IntField unk15;
-    IntField unk16;
-    ByteField unk17;
-    IntField unk18;
-    ByteField unk19;
-    IntField unk20;
-    IntField unk21;
-    IntField unk22;
-    ByteField unk23;
+// This is type 0x4A data
+struct NetworkMapElement {
+    BoolField item_use_acked_color;
+    BoolField item_use_label;
+    BoolField item_use_shapes;
+    BoolField item_use_font;
+    BoolField item_use_image;
+    BoolField item_use_image_scale;
+    BoolField item_use_width;
+    BoolField item_use_up_color;
+    BoolField item_use_down_partial_color;
+    BoolField item_use_down_complete_color;
+    BoolField item_use_unknown_color;
+    IntField item_up_color;
+    IntField item_down_partial_color;
+    IntField item_down_complete_color;
+    IntField item_unknown_color;
+    IntField item_acked_color;
+    ByteField item_shape;
+    IntField item_image;
+    ByteField item_image_scale;
+    IntField link_from;
+    IntField link_to;
+    IntField link_id;
+    ByteField link_width;
     IntField object_id;
-    IntField unk25;
-    ByteField unk26;
-    ByteField unk27;
-    IntField unk28;
-    IntField unk29;
-    IntField unk30;
-    IntField unk31;
-    LongArrayField unk32;
+    IntField map_id;
+    ByteField type;
+    ByteField item_type;
+    IntField item_id;
+    IntField item_x;
+    IntField item_y;
+    IntField label_refresh_interval;
+    LongArrayField item_font;
     TextField name;
 };
 
-struct Unknown4d {
-    BoolField unk1;
-    IntField unk2;
-    ByteField unk3;
-    IntField unk4;
-    IntField unk5;
-    IntField unk6;
-    IntField unk7;
+// This is type 0x4D data
+struct PanelElement {
+    BoolField split;
+    IntField panel_id;
+    ByteField split_type;
+    IntField split_share;
+    IntField first_id;
+    IntField second_id;
+    IntField obj_id;
     IntField object_id;
-    TextField unk9;
+    LongArrayField obj_meta;
     TextField name;
 };
 
@@ -430,11 +1125,11 @@ struct Data{
     if (format.data[0] == DataFormat::SnmpProfile){
         SnmpProfile context;
     }
-    if (format.data[0] == DataFormat::Unknown4A){
-        Unknown4a context;
+    if (format.data[0] == DataFormat::NetworkMapElement){
+        NetworkMapElement context;
     }
-    if (format.data[0] == DataFormat::Unknown4D){
-        Unknown4d context;
+    if (format.data[0] == DataFormat::PanelElement){
+        PanelElement context;
     }
 };
 
