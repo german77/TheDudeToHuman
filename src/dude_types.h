@@ -8,6 +8,7 @@
 #include "common/bit_field.h"
 #include "common/common_funcs.h"
 #include "common/common_types.h"
+#include "dude_field_id.h"
 
 namespace Database {
 	using IpAddress = std::array<u8, 4>;
@@ -20,7 +21,7 @@ namespace Database {
 		Unknown4 = 0x04,
 		Unknown5 = 0x05,
 		Notes = 0x09,
-		UnknownA = 0x0a,
+		Map = 0x0a,
 		UnknownD = 0x0d,
 		DeviceType = 0x0e,
 		Device = 0x0f,
@@ -29,104 +30,16 @@ namespace Database {
 		Unknown18 = 0x18,
 		Unknown1f = 0x1f,
 		Unknown22 = 0x22,
-		Link = 0x29,
+		DataSource = 0x29,
 		Unknown2a = 0x2a,
 		Unknown31 = 0x31,
 		Unknown39 = 0x39,
 		SnmpProfile = 0x3a,
 		Unknown3b = 0x3b,
 		Unknown43 = 0x43,
-		Unknown4a = 0x4a,
+		NetworkMapElement = 0x4a,
 		Unknown4b = 0x4b,
 		Unknown3d = 0x4d,
-	};
-
-	enum class FieldId : u32 {
-		None,
-		IpAddress = 0x101f40,
-		DnsNames = 0x101f41,
-		Unknown42 = 0x101f42,
-		DnsLookupInterval = 0x101f43,
-		MacAddress = 0x101f44,
-		Unknown45 = 0x101f45,
-		Username = 0x101f46,
-		Password = 0x101f47,
-		Unknown49 = 0x101f49,
-		RouterOs = 0x101f4a,
-		Unknown4B = 0x101f4b,
-		DeviceTypeId = 0x101f4c,
-		Unknown4D = 0x101f4d,
-		SnmpProfileId = 0x101f4e,
-
-		Unknown51 = 0x101f51,
-		Unknown52 = 0x101f52,
-		Unknown53 = 0x101f53,
-		Unknown54 = 0x101f54,
-		Unknown55 = 0x101f55,
-		Unknown56 = 0x101f56,
-		Unknown57 = 0x101f57,
-		CustomField1 = 0x101f58,
-		CustomField2 = 0x101f59,
-		CustomField3 = 0x101f5a,
-
-		RequiredServices = 0x102710,
-		AllowedServices = 0x102711,
-		IgnoredServices = 0x102712,
-		ImageId = 0x102713,
-		Scale = 0x102714,
-		UrlAddress = 0x102715,
-
-		Unknown5DCC = 0x105dcc,
-		Unknown5DCE = 0x105dce,
-		Unknown5DCD = 0x105dcd,
-		Unknown5DCF = 0x105dcf,
-		Unknown5DD0 = 0x105dd0,
-		Unknown5DD1 = 0x105dd1,
-		Unknown5DDE = 0x105dde,
-		Unknown5DC8 = 0x105dc8,
-		Unknown5DC9 = 0x105dc9,
-		Unknown5DCA = 0x105dca,
-		Unknown5DCB = 0x105dcb,
-		Unknown5DD2 = 0x105dd2,
-		Unknown5DD3 = 0x105dd3,
-		Unknown5DD4 = 0x105dd4,
-		Unknown5DD5 = 0x105dd5,
-		Unknown5DD6 = 0x105dd6,
-		Unknown5DD7 = 0x105dd7,
-		Unknown5DD9 = 0x105dd9,
-		Unknown5DDA = 0x105dda,
-		Unknown5DDB = 0x105ddb,
-		Unknown5DDC = 0x105ddc,
-		Unknown5DDD = 0x105ddd,
-		Unknown5DDF = 0x105ddf,
-		Unknown5DC0 = 0x105dc0,
-		Unknown5DC2 = 0x105dc2,
-		Unknown5DC3 = 0x105dc3,
-		Unknown5DC4 = 0x105dc4,
-		Unknown5DC5 = 0x105dc5,
-		Unknown5DD8 = 0x105dd8,
-		Unknown5DC6 = 0x105dc6,
-		Unknown5DC7 = 0x105dc7,
-
-		ParentId = 0x105208,
-		Time = 0x105209,
-
-		SnmpVersion = 0x113c68,
-		Community = 0x113c69,
-		Port = 0x113c6a,
-		Unknown6B = 0x113c6b,
-		Unknown6C = 0x113c6c,
-		CryptPassword = 0x113c6d,
-		Unknown6E = 0x113c6e,
-		AuthPassword = 0x113c6f,
-		Tries = 0x113c71,
-		TryTimeout = 0x113c72,
-
-		ObjectId = 0xfe0001,
-		SecondaryObjectId = 0xfe0005,
-		Name = 0xfe0010,
-
-		DataFormat = 0xff0001,
 	};
 
 	enum class FieldType : u32 {
@@ -234,7 +147,7 @@ namespace Database {
 	struct NotesData {
 		IntField object_id;
 		IntField parent_id;
-		TimeField time;
+		TimeField time_added;
 		TextField name;
 	};
 
@@ -244,34 +157,34 @@ namespace Database {
 		IntArrayField allowed_services;
 		IntArrayField required_services;
 		IntField image_id;
-		ByteField scale;
+		ByteField image_scale;
 		IntField object_id;
-		IntField secondary_object_id;
+		IntField next_id;
 		TextField url;
 		TextField name;
 	};
 
 	// This is type 0x0F data
 	struct DeviceData {
-		IntArrayField unk1;
-		IntArrayField unk2;
-		StringArrayField dns;
+		IntArrayField parent_ids;
+		IntArrayField notify_ids;
+		StringArrayField dns_names;
 		IpAddressField ip;
-		BoolField unk3;
+		BoolField secure_mode;
 		BoolField router_os;
-		BoolField unk5;
-		BoolField unk6;
-		BoolField unk7;
-		ByteField unk8;
+		BoolField dude_server;
+		BoolField notify_use;
+		BoolField prove_enabled;
+		ByteField lookup;
 		ByteField dns_lookup_interval;
-		ByteField unk10;
-		IntField device_type_id;
-		IntField unk12;
+		ByteField mac_lookup;
+		IntField type_id;
+		IntField agent_id;
 		IntField snmp_profile_id;
 		IntField object_id;
-		IntField unk14;
-		ByteField unk15;
-		ByteField unk16;
+		IntField prove_interval;
+		ByteField prove_timeout;
+		ByteField prove_down_count;
 		TextField custom_field_3;
 		TextField custom_field_2;
 		TextField custom_field_1;
@@ -282,17 +195,17 @@ namespace Database {
 	};
 
 	// This is type 0x29 data
-	struct LinkData {
-		BoolField unk1;
-		IntField unk2;
-		ByteField unk3;
-		ByteField unk4;
+	struct DataSourceData {
+		BoolField enabled;
+		IntField function_device_id;
+		ByteField function_interval;
+		ByteField data_source_type;
 		IntField object_id;
-		ByteField unk6;
-		ByteField unk7;
-		ByteField unk8;
-		ByteField unk9;
-		TextField unk10;
+		ByteField keep_time_raw;
+		ByteField keep_time_10min;
+		ByteField keep_time_2hour;
+		ByteField keep_time_1Day;
+		TextField function_code;
 		TextField unit;
 		TextField name;
 	};
@@ -301,52 +214,52 @@ namespace Database {
 	struct SnmpProfileData {
 		IntField version;
 		IntField port;
-		ByteField unk3; // Security
-		ByteField unk4; // AuthMethod
-		ByteField unk5; // CryptMethod
-		ByteField tries;
+		ByteField security;
+		ByteField auth_method;
+		ByteField crypth_method;
+		ByteField try_count;
 		IntField try_timeout;
 		IntField object_id;
-		TextField auth_password;
 		TextField crypt_password;
+		TextField auth_password;
 		TextField community;
 		TextField name;
 	};
 
 	// This is type 0x4A data
-	struct Unknown4aData {
-		BoolField unk1;
-		BoolField unk2;
-		BoolField unk3;
-		BoolField unk4;
-		BoolField unk5;
-		BoolField unk6;
-		BoolField unk7;
-		BoolField unk8;
-		BoolField unk9;
-		BoolField unk10;
-		BoolField unk11;
-		IntField unk12;
-		IntField unk13;
-		IntField unk14;
-		IntField unk15;
-		IntField unk16;
-		ByteField unk17;
-		IntField unk18;
-		ByteField unk19;
-		IntField unk20;
-		IntField unk21;
-		IntField unk22;
-		ByteField unk23;
+	struct NetworkMapElementData {
+		BoolField item_use_acked_color;
+		BoolField item_use_label;
+		BoolField item_use_shapes;
+		BoolField item_use_font;
+		BoolField item_use_image;
+		BoolField item_use_image_scale;
+		BoolField item_use_width;
+		BoolField item_use_up_color;
+		BoolField item_use_down_partial_color;
+		BoolField item_use_down_complete_color;
+		BoolField item_use_unknown_color;
+		IntField item_up_color;
+		IntField item_down_partial_color;
+		IntField item_down_complete_color;
+		IntField item_unknown_color;
+		IntField item_acked_color;
+		ByteField item_shape;
+		IntField item_image;
+		ByteField item_image_scale;
+		IntField link_from;
+		IntField link_to;
+		IntField link_id;
+		ByteField link_width;
 		IntField object_id;
-		IntField unk25;
-		ByteField unk26;
-		ByteField unk27;
-		IntField unk28;
-		IntField unk29;
-		IntField unk30;
-		IntField unk31;
-		LongArrayField unk32;
+		IntField map_id;
+		ByteField type;
+		ByteField item_type;
+		IntField item_id;
+		IntField item_x;
+		IntField item_y;
+		IntField label_refresh_interval;
+		LongArrayField item_font;
 		TextField name;
 	};
 

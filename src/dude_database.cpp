@@ -10,7 +10,7 @@ namespace Database {
 	DudeDatabase::DudeDatabase(const std::string& db_file) : db{ db_file } {
 		int rc = db.OpenDatabase();
 		if (rc != 0) {
-			printf("Can't open database: %s\n", db_file);
+			printf("Can't open database: %s\n", db_file.c_str());
 		}
 		printf("Opened database successfully\n");
 	}
@@ -103,16 +103,16 @@ namespace Database {
 		return GetObjectData<DeviceData>(DataFormat::Device, &DudeDatabase::RawDataToDeviceData);
 	}
 
-	std::vector<LinkData> DudeDatabase::GetLinkData() const {
-		return GetObjectData<LinkData>(DataFormat::Link, &DudeDatabase::RawDataToLinkData);
+	std::vector<DataSourceData> DudeDatabase::GetDataSourceData() const {
+		return GetObjectData<DataSourceData>(DataFormat::DataSource, &DudeDatabase::RawDataToDataSourceData);
 	}
 
 	std::vector<SnmpProfileData> DudeDatabase::GetSnmpProfileData() const {
 		return GetObjectData<SnmpProfileData>(DataFormat::SnmpProfile, &DudeDatabase::RawDataToSnmpProfileData);
 	}
 
-	std::vector<Unknown4aData> DudeDatabase::GetUnknown4aData() const {
-		return GetObjectData<Unknown4aData>(DataFormat::Unknown4a, &DudeDatabase::RawDataToUnknown4aData);
+	std::vector<NetworkMapElementData> DudeDatabase::GetNetworkMapElementData() const {
+		return GetObjectData<NetworkMapElementData>(DataFormat::NetworkMapElement, &DudeDatabase::RawDataToNetworkMapElementData);
 	}
 
 
@@ -121,7 +121,7 @@ namespace Database {
 		RawObjData data{};
 
 		if (blob.size() < header_size) {
-			printf("Invalid blob size: %d\n", blob.size());
+			printf("Invalid blob size: %zu\n", blob.size());
 			return {};
 		}
 
@@ -140,10 +140,11 @@ namespace Database {
 		std::size_t offset = 0;
 		NotesData data{};
 
-		data.object_id = GetIntField(raw_data, offset, FieldId::ObjectId);
-		data.parent_id = GetIntField(raw_data, offset, FieldId::ParentId);
-		data.time = GetTimeField(raw_data, offset, FieldId::Time);
-		data.name = GetTextField(raw_data, offset, FieldId::Name);
+		data.object_id = GetIntField(raw_data, offset, FieldId::SysId);
+		data.parent_id = GetIntField(raw_data, offset, FieldId::Note_ObjID);
+		data.time_added = GetTimeField(raw_data, offset, FieldId::Note_TimeAdded);
+		data.name = GetTextField(raw_data, offset, FieldId::SysName);
+		ValidateEndOfBlob(raw_data, offset);
 
 		return data;
 	}
@@ -152,15 +153,16 @@ namespace Database {
 		std::size_t offset = 0;
 		DeviceTypeData data{};
 
-		data.ignored_services = GetIntArrayField(raw_data, offset, FieldId::IgnoredServices);
-		data.allowed_services = GetIntArrayField(raw_data, offset, FieldId::AllowedServices);
-		data.required_services = GetIntArrayField(raw_data, offset, FieldId::RequiredServices);
-		data.image_id = GetIntField(raw_data, offset, FieldId::ImageId);
-		data.scale = GetByteField(raw_data, offset, FieldId::Scale);
-		data.object_id = GetIntField(raw_data, offset, FieldId::ObjectId);
-		data.secondary_object_id = GetIntField(raw_data, offset, FieldId::SecondaryObjectId);
-		data.url = GetTextField(raw_data, offset, FieldId::UrlAddress);
-		data.name = GetTextField(raw_data, offset, FieldId::Name);
+		data.ignored_services = GetIntArrayField(raw_data, offset, FieldId::DeviceType_IgnoredServices);
+		data.allowed_services = GetIntArrayField(raw_data, offset, FieldId::DeviceType_AllowedServices);
+		data.required_services = GetIntArrayField(raw_data, offset, FieldId::DeviceType_RequiredServices);
+		data.image_id = GetIntField(raw_data, offset, FieldId::DeviceType_ImageId);
+		data.image_scale = GetByteField(raw_data, offset, FieldId::DeviceType_ImageScale);
+		data.object_id = GetIntField(raw_data, offset, FieldId::SysId);
+		data.next_id = GetIntField(raw_data, offset, FieldId::SysNextId);
+		data.url = GetTextField(raw_data, offset, FieldId::DeviceType_Url);
+		data.name = GetTextField(raw_data, offset, FieldId::SysName);
+		ValidateEndOfBlob(raw_data, offset);
 
 		return data;
 	}
@@ -169,52 +171,54 @@ namespace Database {
 		std::size_t offset = 0;
 		DeviceData data{};
 
-		data.unk1 = GetIntArrayField(raw_data, offset, FieldId::Unknown57);
-		data.unk2 = GetIntArrayField(raw_data, offset, FieldId::Unknown56);
-		data.dns = GetStringArrayField(raw_data, offset, FieldId::DnsNames);
-		data.ip = GetIpAddressField(raw_data, offset, FieldId::IpAddress);
-		data.unk3 = GetBoolField(raw_data, offset, FieldId::Unknown49);
-		data.router_os = GetBoolField(raw_data, offset, FieldId::RouterOs);
-		data.unk5 = GetBoolField(raw_data, offset, FieldId::Unknown4B);
-		data.unk6 = GetBoolField(raw_data, offset, FieldId::Unknown55);
-		data.unk7 = GetBoolField(raw_data, offset, FieldId::Unknown51);
-		data.unk8 = GetByteField(raw_data, offset, FieldId::Unknown42);
-		data.dns_lookup_interval = GetByteField(raw_data, offset, FieldId::DnsLookupInterval);
-		data.unk10 = GetByteField(raw_data, offset, FieldId::Unknown45);
-		data.device_type_id = GetIntField(raw_data, offset, FieldId::DeviceTypeId);
-		data.unk12 = GetIntField(raw_data, offset, FieldId::Unknown4D);
-		data.snmp_profile_id = GetIntField(raw_data, offset, FieldId::SnmpProfileId);
-		data.object_id = GetIntField(raw_data, offset, FieldId::ObjectId);
-		data.unk14 = GetIntField(raw_data, offset, FieldId::Unknown52);
-		data.unk15 = GetByteField(raw_data, offset, FieldId::Unknown53);
-		data.unk16 = GetByteField(raw_data, offset, FieldId::Unknown54);
-		data.custom_field_3 = GetTextField(raw_data, offset, FieldId::CustomField3);
-		data.custom_field_2 = GetTextField(raw_data, offset, FieldId::CustomField2);
-		data.custom_field_1 = GetTextField(raw_data, offset, FieldId::CustomField1);
-		data.password = GetTextField(raw_data, offset, FieldId::Password);
-		data.username = GetTextField(raw_data, offset, FieldId::Username);
-		data.mac = GetMacAddressField(raw_data, offset, FieldId::MacAddress);
-		data.name = GetTextField(raw_data, offset, FieldId::Name);
+		data.parent_ids = GetIntArrayField(raw_data, offset, FieldId::Device_ParentIds);
+		data.notify_ids = GetIntArrayField(raw_data, offset, FieldId::Device_NotifyIds);
+		data.dns_names = GetStringArrayField(raw_data, offset, FieldId::Device_DnsNames);
+		data.ip = GetIpAddressField(raw_data, offset, FieldId::Device_IpAddress);
+		data.secure_mode = GetBoolField(raw_data, offset, FieldId::Device_SecureMode);
+		data.router_os = GetBoolField(raw_data, offset, FieldId::Device_RouterOs);
+		data.dude_server = GetBoolField(raw_data, offset, FieldId::Device_DudeServer);
+		data.notify_use = GetBoolField(raw_data, offset, FieldId::Device_NotifyUse);
+		data.prove_enabled = GetBoolField(raw_data, offset, FieldId::Device_ProveEnabled);
+		data.lookup = GetByteField(raw_data, offset, FieldId::Device_Lookup);
+		data.dns_lookup_interval = GetByteField(raw_data, offset, FieldId::Device_LookupInterval);
+		data.mac_lookup = GetByteField(raw_data, offset, FieldId::Device_MacLookup);
+		data.type_id = GetIntField(raw_data, offset, FieldId::Device_TypeId);
+		data.agent_id = GetIntField(raw_data, offset, FieldId::Device_AgentId);
+		data.snmp_profile_id = GetIntField(raw_data, offset, FieldId::Device_SnmpProfileId);
+		data.object_id = GetIntField(raw_data, offset, FieldId::SysId);
+		data.prove_interval = GetIntField(raw_data, offset, FieldId::Device_ProveInterval);
+		data.prove_timeout = GetByteField(raw_data, offset, FieldId::Device_ProveTimeout);
+		data.prove_down_count = GetByteField(raw_data, offset, FieldId::Device_ProveDownCount);
+		data.custom_field_3 = GetTextField(raw_data, offset, FieldId::Device_CustomField3);
+		data.custom_field_2 = GetTextField(raw_data, offset, FieldId::Device_CustomField2);
+		data.custom_field_1 = GetTextField(raw_data, offset, FieldId::Device_CustomField1);
+		data.password = GetTextField(raw_data, offset, FieldId::Device_Password);
+		data.username = GetTextField(raw_data, offset, FieldId::Device_Username);
+		data.mac = GetMacAddressField(raw_data, offset, FieldId::Device_MacAddress);
+		data.name = GetTextField(raw_data, offset, FieldId::SysName);
+		ValidateEndOfBlob(raw_data, offset);
 
 		return data;
 	}
 
-	LinkData DudeDatabase::RawDataToLinkData(std::span<const u8> raw_data) const {
+	DataSourceData DudeDatabase::RawDataToDataSourceData(std::span<const u8> raw_data) const {
 		std::size_t offset = 0;
-		LinkData data{};
+		DataSourceData data{};
 
-		data.unk1 = GetBoolField(raw_data, offset, FieldId::None);
-		data.unk2 = GetIntField(raw_data, offset, FieldId::None);
-		data.unk3 = GetByteField(raw_data, offset, FieldId::None);
-		data.unk4 = GetByteField(raw_data, offset, FieldId::None);
-		data.object_id = GetIntField(raw_data, offset, FieldId::ObjectId);
-		data.unk6 = GetByteField(raw_data, offset, FieldId::None);
-		data.unk7 = GetByteField(raw_data, offset, FieldId::None);
-		data.unk8 = GetByteField(raw_data, offset, FieldId::None);
-		data.unk9 = GetByteField(raw_data, offset, FieldId::None);
-		data.unk10 = GetTextField(raw_data, offset, FieldId::None);
-		data.unit = GetTextField(raw_data, offset, FieldId::None);
-		data.name = GetTextField(raw_data, offset, FieldId::Name);
+		data.enabled = GetBoolField(raw_data, offset, FieldId::DataSource_Enabled);
+		data.function_device_id = GetIntField(raw_data, offset, FieldId::DataSource_FunctionDevice);
+		data.function_interval = GetByteField(raw_data, offset, FieldId::DataSource_FunctionInterval);
+		data.data_source_type = GetByteField(raw_data, offset, FieldId::DataSource_Type);
+		data.object_id = GetIntField(raw_data, offset, FieldId::SysId);
+		data.keep_time_raw = GetByteField(raw_data, offset, FieldId::DataSource_KeepTimeRaw);
+		data.keep_time_10min = GetByteField(raw_data, offset, FieldId::DataSource_KeepTime10min);
+		data.keep_time_2hour = GetByteField(raw_data, offset, FieldId::DataSource_KeepTime2hour);
+		data.keep_time_1Day = GetByteField(raw_data, offset, FieldId::DataSource_KeepTime1day);
+		data.function_code = GetTextField(raw_data, offset, FieldId::DataSource_FunctionCode);
+		data.unit = GetTextField(raw_data, offset, FieldId::DataSource_Unit);
+		data.name = GetTextField(raw_data, offset, FieldId::SysName);
+		ValidateEndOfBlob(raw_data, offset);
 
 		return data;
 	}
@@ -223,59 +227,61 @@ namespace Database {
 		std::size_t offset = 0;
 		SnmpProfileData data{};
 
-		data.version = GetIntField(raw_data, offset, FieldId::SnmpVersion);
-		data.port = GetIntField(raw_data, offset, FieldId::Port);
-		data.unk3 = GetByteField(raw_data, offset, FieldId::Unknown6B);
-		data.unk4 = GetByteField(raw_data, offset, FieldId::Unknown6C);
-		data.unk5 = GetByteField(raw_data, offset, FieldId::Unknown6E);
-		data.tries = GetByteField(raw_data, offset, FieldId::Tries);
-		data.try_timeout = GetIntField(raw_data, offset, FieldId::TryTimeout);
-		data.object_id = GetIntField(raw_data, offset, FieldId::ObjectId);
-		data.auth_password = GetTextField(raw_data, offset, FieldId::AuthPassword);
-		data.crypt_password = GetTextField(raw_data, offset, FieldId::CryptPassword);
-		data.community = GetTextField(raw_data, offset, FieldId::Community);
-		data.name = GetTextField(raw_data, offset, FieldId::Name);
+		data.version = GetIntField(raw_data, offset, FieldId::SnmpProfile_Version);
+		data.port = GetIntField(raw_data, offset, FieldId::SnmpProfile_Port);
+		data.security = GetByteField(raw_data, offset, FieldId::SnmpProfile_V3Security);
+		data.auth_method = GetByteField(raw_data, offset, FieldId::SnmpProfile_V3AuthMethod);
+		data.crypth_method = GetByteField(raw_data, offset, FieldId::SnmpProfile_V3CryptMethod);
+		data.try_count = GetByteField(raw_data, offset, FieldId::SnmpProfile_TryCount);
+		data.try_timeout = GetIntField(raw_data, offset, FieldId::SnmpProfile_TryTimeout);
+		data.object_id = GetIntField(raw_data, offset, FieldId::SysId);
+		data.crypt_password = GetTextField(raw_data, offset, FieldId::SnmpProfile_V3CryptPassword);
+		data.auth_password = GetTextField(raw_data, offset, FieldId::SnmpProfile_V3AuthPassword);
+		data.community = GetTextField(raw_data, offset, FieldId::SnmpProfile_Community);
+		data.name = GetTextField(raw_data, offset, FieldId::SysName);
+		ValidateEndOfBlob(raw_data, offset);
 
 		return data;
 	}
 
-	Unknown4aData DudeDatabase::RawDataToUnknown4aData(std::span<const u8> raw_data) const {
+	NetworkMapElementData DudeDatabase::RawDataToNetworkMapElementData(std::span<const u8> raw_data) const {
 		std::size_t offset = 0;
-		Unknown4aData data{};
+		NetworkMapElementData data{};
 
-		data.unk1 = GetBoolField(raw_data, offset, FieldId::Unknown5DCC);
-		data.unk2 = GetBoolField(raw_data, offset, FieldId::Unknown5DCD);
-		data.unk3 = GetBoolField(raw_data, offset, FieldId::Unknown5DCE);
-		data.unk4 = GetBoolField(raw_data, offset, FieldId::Unknown5DCF);
-		data.unk5 = GetBoolField(raw_data, offset, FieldId::Unknown5DD0);
-		data.unk6 = GetBoolField(raw_data, offset, FieldId::Unknown5DD1);
-		data.unk7 = GetBoolField(raw_data, offset, FieldId::Unknown5DDE);
-		data.unk8 = GetBoolField(raw_data, offset, FieldId::Unknown5DC8);
-		data.unk9 = GetBoolField(raw_data, offset, FieldId::Unknown5DC9);
-		data.unk10 = GetBoolField(raw_data, offset, FieldId::Unknown5DCA);
-		data.unk11 = GetBoolField(raw_data, offset, FieldId::Unknown5DCB);
-		data.unk12 = GetIntField(raw_data, offset, FieldId::Unknown5DD2);
-		data.unk13 = GetIntField(raw_data, offset, FieldId::Unknown5DD3);
-		data.unk14 = GetIntField(raw_data, offset, FieldId::Unknown5DD4);
-		data.unk15 = GetIntField(raw_data, offset, FieldId::Unknown5DD5);
-		data.unk16 = GetIntField(raw_data, offset, FieldId::Unknown5DD6);
-		data.unk17 = GetByteField(raw_data, offset, FieldId::Unknown5DD7);
-		data.unk18 = GetIntField(raw_data, offset, FieldId::Unknown5DD9);
-		data.unk19 = GetByteField(raw_data, offset, FieldId::Unknown5DDA);
-		data.unk20 = GetIntField(raw_data, offset, FieldId::Unknown5DDB);
-		data.unk21 = GetIntField(raw_data, offset, FieldId::Unknown5DDC);
-		data.unk22 = GetIntField(raw_data, offset, FieldId::Unknown5DDD);
-		data.unk23 = GetByteField(raw_data, offset, FieldId::Unknown5DDF);
-		data.object_id = GetIntField(raw_data, offset, FieldId::ObjectId);
-		data.unk25 = GetIntField(raw_data, offset, FieldId::Unknown5DC0);
-		data.unk26 = GetByteField(raw_data, offset, FieldId::Unknown5DC2);
-		data.unk27 = GetByteField(raw_data, offset, FieldId::Unknown5DC3);
-		data.unk28 = GetIntField(raw_data, offset, FieldId::Unknown5DC4);
-		data.unk29 = GetIntField(raw_data, offset, FieldId::Unknown5DC5);
-		data.unk30 = GetIntField(raw_data, offset, FieldId::Unknown5DC6);
-		data.unk31 = GetIntField(raw_data, offset, FieldId::Unknown5DC7);
-		data.unk32 = GetLongArrayField(raw_data, offset, FieldId::Unknown5DD8);
-		data.name = GetTextField(raw_data, offset, FieldId::Name);
+		data.item_use_acked_color = GetBoolField(raw_data, offset, FieldId::NetworkMapElement_ItemUseAckedColor);
+		data.item_use_label = GetBoolField(raw_data, offset, FieldId::NetworkMapElement_ItemUseLabel);
+		data.item_use_shapes = GetBoolField(raw_data, offset, FieldId::NetworkMapElement_ItemUseShape);
+		data.item_use_font = GetBoolField(raw_data, offset, FieldId::NetworkMapElement_ItemUseFont);
+		data.item_use_image = GetBoolField(raw_data, offset, FieldId::NetworkMapElement_ItemUseImage);
+		data.item_use_image_scale = GetBoolField(raw_data, offset, FieldId::NetworkMapElement_ItemUseImageScale);
+		data.item_use_width = GetBoolField(raw_data, offset, FieldId::NetworkMapElement_LinkUseWidth);
+		data.item_use_up_color = GetBoolField(raw_data, offset, FieldId::NetworkMapElement_ItemUseUpColor);
+		data.item_use_down_partial_color = GetBoolField(raw_data, offset, FieldId::NetworkMapElement_ItemUseDownPartialColor);
+		data.item_use_down_complete_color = GetBoolField(raw_data, offset, FieldId::NetworkMapElement_ItemUseDownCompleteColor);
+		data.item_use_unknown_color = GetBoolField(raw_data, offset, FieldId::NetworkMapElement_ItemUseUnknownColor);
+		data.item_up_color = GetIntField(raw_data, offset, FieldId::NetworkMapElement_ItemUpColor);
+		data.item_down_partial_color = GetIntField(raw_data, offset, FieldId::NetworkMapElement_ItemDownPartialColor);
+		data.item_down_complete_color = GetIntField(raw_data, offset, FieldId::NetworkMapElement_ItemDownCompleteColor);
+		data.item_unknown_color = GetIntField(raw_data, offset, FieldId::NetworkMapElement_ItemUnknownColor);
+		data.item_acked_color = GetIntField(raw_data, offset, FieldId::NetworkMapElement_ItemAckedColor);
+		data.item_shape = GetByteField(raw_data, offset, FieldId::NetworkMapElement_ItemShape);
+		data.item_image = GetIntField(raw_data, offset, FieldId::NetworkMapElement_ItemImage);
+		data.item_image_scale = GetByteField(raw_data, offset, FieldId::NetworkMapElement_ItemImageScale);
+		data.link_from = GetIntField(raw_data, offset, FieldId::NetworkMapElement_LinkFrom);
+		data.link_to = GetIntField(raw_data, offset, FieldId::NetworkMapElement_LinkTo);
+		data.link_id = GetIntField(raw_data, offset, FieldId::NetworkMapElement_LinkID);
+		data.link_width = GetByteField(raw_data, offset, FieldId::NetworkMapElement_LinkWidth);
+		data.object_id = GetIntField(raw_data, offset, FieldId::SysId);
+		data.map_id = GetIntField(raw_data, offset, FieldId::NetworkMapElement_MapID);
+		data.type = GetByteField(raw_data, offset, FieldId::NetworkMapElement_Type);
+		data.item_type = GetByteField(raw_data, offset, FieldId::NetworkMapElement_ItemType);
+		data.item_id = GetIntField(raw_data, offset, FieldId::NetworkMapElement_ItemID);
+		data.item_x = GetIntField(raw_data, offset, FieldId::NetworkMapElement_ItemX);
+		data.item_y = GetIntField(raw_data, offset, FieldId::NetworkMapElement_ItemY);
+		data.label_refresh_interval = GetIntField(raw_data, offset, FieldId::NetworkMapElement_LabelRefreshInterval);
+		data.item_font = GetLongArrayField(raw_data, offset, FieldId::NetworkMapElement_ItemFont);
+		data.name = GetTextField(raw_data, offset, FieldId::SysName);
+		ValidateEndOfBlob(raw_data, offset);
 
 		return data;
 	}
@@ -300,7 +306,7 @@ namespace Database {
 			field.value = true;
 		}
 		else {
-			printf("Invalid data type, expected 0/1, found %d\n", field.info.type);
+			printf("Invalid data type, expected 0/1, found %u\n", field.info.type.Value());
 			return {};
 		}
 
@@ -553,11 +559,18 @@ namespace Database {
 
 	bool DudeDatabase::CheckSize(std::size_t raw_data_size, std::size_t offset, std::size_t header_size) const {
 		if (raw_data_size < header_size + offset) {
-			printf("Invalid data type, expected %d, found %d\n", header_size + offset, raw_data_size);
+			printf("Invalid data type, expected %zu, found %zu\n", header_size + offset, raw_data_size);
 			return false;
 		}
 		return true;
+	}
 
+	bool DudeDatabase::ValidateEndOfBlob(std::span<const u8> raw_data, std::size_t offset) const {
+		if (raw_data.size() != offset) {
+			printf("Data size mismatch, expected %zu, found %zu\n", raw_data.size(), offset);
+			return false;
+		}
+		return true;
 	}
 
 	bool DudeDatabase::ValidateId(FieldId a, FieldId b) const {

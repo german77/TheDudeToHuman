@@ -15,36 +15,45 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="../src/SqliteReader.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="../src/TheDudeToHuman.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="../src/sqlite3.c">
+    <ClCompile Include="../src/dude_database.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="../src/DudeDatabase.cpp">
+    <ClCompile Include="../src/sqlite_reader.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="../src/sqlite/sqlite3.c">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="../src/SqliteReader.h">
+    <ClInclude Include="../src/common/bit_field.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="../src/sqlite3.h">
+    <ClInclude Include="../src/common/common_funcs.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="../src/DudeDatabase.h">
+    <ClInclude Include="../src/common/common_types.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="../src/common_types.h">
+    <ClInclude Include="../src/common/swap.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\DudeTypes.h">
+    <ClInclude Include="../src/dude_database.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\common_funcs.h">
+    <ClInclude Include="../src/dude_types.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="../src/sqlite_reader.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="../src/sqlite/sqlite3.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\dude_field_id.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>

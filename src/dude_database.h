@@ -31,9 +31,9 @@ namespace Database {
 		std::vector<NotesData> GetNotesData() const;
 		std::vector<DeviceTypeData> GetDeviceTypeData() const;
 		std::vector<DeviceData> GetDeviceData() const;
-		std::vector<LinkData> GetLinkData() const;
+		std::vector<DataSourceData> GetDataSourceData() const;
 		std::vector<SnmpProfileData> GetSnmpProfileData() const;
-		std::vector<Unknown4aData> GetUnknown4aData() const;
+		std::vector<NetworkMapElementData> GetNetworkMapElementData() const;
 
 	private:
 		template <typename T>
@@ -43,9 +43,9 @@ namespace Database {
 		NotesData RawDataToNotesData(std::span<const u8> raw_data) const;
 		DeviceTypeData RawDataToDeviceTypeData(std::span<const u8> raw_data) const;
 		DeviceData RawDataToDeviceData(std::span<const u8> raw_data) const;
-		LinkData RawDataToLinkData(std::span<const u8> raw_data) const;
+		DataSourceData RawDataToDataSourceData(std::span<const u8> raw_data) const;
 		SnmpProfileData RawDataToSnmpProfileData(std::span<const u8> raw_data) const;
-		Unknown4aData RawDataToUnknown4aData(std::span<const u8> raw_data) const;
+		NetworkMapElementData RawDataToNetworkMapElementData(std::span<const u8> raw_data) const;
 
 		BoolField GetBoolField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;
 		ByteField GetByteField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;
@@ -59,6 +59,7 @@ namespace Database {
 		StringArrayField GetStringArrayField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;
 
 		bool CheckSize(std::size_t raw_data_size, std::size_t offset, std::size_t header_size) const;
+		bool ValidateEndOfBlob(std::span<const u8> raw_data, std::size_t offset) const;
 		bool ValidateId(FieldId a, FieldId b) const;
 		bool ValidateType(FieldType a, FieldType b) const;
 		DataFormat GetMainDataFormat(const RawObjData& obj_data) const;

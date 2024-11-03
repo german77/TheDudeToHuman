@@ -143,6 +143,7 @@
     <ClInclude Include="../src/dude_types.h" />
     <ClInclude Include="../src/sqlite_reader.h" />
     <ClInclude Include="../src/sqlite/sqlite3.h" />
+    <ClInclude Include="..\src\dude_field_id.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
