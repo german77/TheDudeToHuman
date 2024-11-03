@@ -128,7 +128,7 @@ namespace Database {
 		memcpy(&data, blob.data(), header_size);
 
 		std::size_t offset = header_size;
-		data.data_format = GetIntArrayField(blob, offset, FieldId::DataFormat);
+		SetField(data.data_format, FieldId::DataFormat, blob, offset);
 
 		data.data.resize(blob.size() - offset);
 		memcpy(data.data.data(), blob.data() + offset, data.data.size());
@@ -138,157 +138,186 @@ namespace Database {
 
 	NotesData DudeDatabase::RawDataToNotesData(std::span<const u8> raw_data) const {
 		std::size_t offset = 0;
+		bool is_valid = true;
 		NotesData data{};
 
-		data.object_id = GetIntField(raw_data, offset, FieldId::SysId);
-		data.parent_id = GetIntField(raw_data, offset, FieldId::Note_ObjID);
-		data.time_added = GetTimeField(raw_data, offset, FieldId::Note_TimeAdded);
-		data.name = GetTextField(raw_data, offset, FieldId::SysName);
-		ValidateEndOfBlob(raw_data, offset);
+		is_valid &= SetField(data.object_id, FieldId::SysId, raw_data, offset);
+		is_valid &= SetField(data.parent_id, FieldId::Note_ObjID, raw_data, offset);
+		is_valid &= SetField(data.time_added, FieldId::Note_TimeAdded, raw_data, offset);
+		is_valid &= SetField(data.name, FieldId::SysName, raw_data, offset);
+		is_valid &= ValidateEndOfBlob(raw_data, offset);
+
+		if (!is_valid) {
+			return {};
+		}
 
 		return data;
 	}
 
 	DeviceTypeData DudeDatabase::RawDataToDeviceTypeData(std::span<const u8> raw_data) const {
 		std::size_t offset = 0;
+		bool is_valid = true;
 		DeviceTypeData data{};
 
-		data.ignored_services = GetIntArrayField(raw_data, offset, FieldId::DeviceType_IgnoredServices);
-		data.allowed_services = GetIntArrayField(raw_data, offset, FieldId::DeviceType_AllowedServices);
-		data.required_services = GetIntArrayField(raw_data, offset, FieldId::DeviceType_RequiredServices);
-		data.image_id = GetIntField(raw_data, offset, FieldId::DeviceType_ImageId);
-		data.image_scale = GetByteField(raw_data, offset, FieldId::DeviceType_ImageScale);
-		data.object_id = GetIntField(raw_data, offset, FieldId::SysId);
-		data.next_id = GetIntField(raw_data, offset, FieldId::SysNextId);
-		data.url = GetTextField(raw_data, offset, FieldId::DeviceType_Url);
-		data.name = GetTextField(raw_data, offset, FieldId::SysName);
-		ValidateEndOfBlob(raw_data, offset);
+		is_valid &= SetField(data.ignored_services, FieldId::DeviceType_IgnoredServices, raw_data, offset);
+		is_valid &= SetField(data.allowed_services, FieldId::DeviceType_AllowedServices, raw_data, offset);
+		is_valid &= SetField(data.required_services, FieldId::DeviceType_RequiredServices, raw_data, offset);
+		is_valid &= SetField(data.image_id, FieldId::DeviceType_ImageId, raw_data, offset);
+		is_valid &= SetField(data.image_scale, FieldId::DeviceType_ImageScale, raw_data, offset);
+		is_valid &= SetField(data.object_id, FieldId::SysId, raw_data, offset);
+		is_valid &= SetField(data.next_id, FieldId::SysNextId, raw_data, offset);
+		is_valid &= SetField(data.url, FieldId::DeviceType_Url, raw_data, offset);
+		is_valid &= SetField(data.name, FieldId::SysName, raw_data, offset);
+		is_valid &= ValidateEndOfBlob(raw_data, offset);
+
+		if (!is_valid) {
+			return {};
+		}
 
 		return data;
 	}
 
 	DeviceData DudeDatabase::RawDataToDeviceData(std::span<const u8> raw_data) const {
 		std::size_t offset = 0;
+		bool is_valid = true;
 		DeviceData data{};
 
-		data.parent_ids = GetIntArrayField(raw_data, offset, FieldId::Device_ParentIds);
-		data.notify_ids = GetIntArrayField(raw_data, offset, FieldId::Device_NotifyIds);
-		data.dns_names = GetStringArrayField(raw_data, offset, FieldId::Device_DnsNames);
-		data.ip = GetIpAddressField(raw_data, offset, FieldId::Device_IpAddress);
-		data.secure_mode = GetBoolField(raw_data, offset, FieldId::Device_SecureMode);
-		data.router_os = GetBoolField(raw_data, offset, FieldId::Device_RouterOs);
-		data.dude_server = GetBoolField(raw_data, offset, FieldId::Device_DudeServer);
-		data.notify_use = GetBoolField(raw_data, offset, FieldId::Device_NotifyUse);
-		data.prove_enabled = GetBoolField(raw_data, offset, FieldId::Device_ProveEnabled);
-		data.lookup = GetByteField(raw_data, offset, FieldId::Device_Lookup);
-		data.dns_lookup_interval = GetByteField(raw_data, offset, FieldId::Device_LookupInterval);
-		data.mac_lookup = GetByteField(raw_data, offset, FieldId::Device_MacLookup);
-		data.type_id = GetIntField(raw_data, offset, FieldId::Device_TypeId);
-		data.agent_id = GetIntField(raw_data, offset, FieldId::Device_AgentId);
-		data.snmp_profile_id = GetIntField(raw_data, offset, FieldId::Device_SnmpProfileId);
-		data.object_id = GetIntField(raw_data, offset, FieldId::SysId);
-		data.prove_interval = GetIntField(raw_data, offset, FieldId::Device_ProveInterval);
-		data.prove_timeout = GetByteField(raw_data, offset, FieldId::Device_ProveTimeout);
-		data.prove_down_count = GetByteField(raw_data, offset, FieldId::Device_ProveDownCount);
-		data.custom_field_3 = GetTextField(raw_data, offset, FieldId::Device_CustomField3);
-		data.custom_field_2 = GetTextField(raw_data, offset, FieldId::Device_CustomField2);
-		data.custom_field_1 = GetTextField(raw_data, offset, FieldId::Device_CustomField1);
-		data.password = GetTextField(raw_data, offset, FieldId::Device_Password);
-		data.username = GetTextField(raw_data, offset, FieldId::Device_Username);
-		data.mac = GetMacAddressField(raw_data, offset, FieldId::Device_MacAddress);
-		data.name = GetTextField(raw_data, offset, FieldId::SysName);
-		ValidateEndOfBlob(raw_data, offset);
+		is_valid &= SetField(data.parent_ids, FieldId::Device_ParentIds, raw_data, offset);
+		is_valid &= SetField(data.notify_ids, FieldId::Device_NotifyIds, raw_data, offset);
+		is_valid &= SetField(data.dns_names, FieldId::Device_DnsNames, raw_data, offset);
+		is_valid &= SetField(data.ip, FieldId::Device_IpAddress, raw_data, offset);
+		is_valid &= SetField(data.secure_mode, FieldId::Device_SecureMode, raw_data, offset);
+		is_valid &= SetField(data.router_os, FieldId::Device_RouterOs, raw_data, offset);
+		is_valid &= SetField(data.dude_server, FieldId::Device_DudeServer, raw_data, offset);
+		is_valid &= SetField(data.notify_use, FieldId::Device_NotifyUse, raw_data, offset);
+		is_valid &= SetField(data.prove_enabled, FieldId::Device_ProveEnabled, raw_data, offset);
+		is_valid &= SetField(data.lookup, FieldId::Device_Lookup, raw_data, offset);
+		is_valid &= SetField(data.dns_lookup_interval, FieldId::Device_LookupInterval, raw_data, offset);
+		is_valid &= SetField(data.mac_lookup, FieldId::Device_MacLookup, raw_data, offset);
+		is_valid &= SetField(data.type_id, FieldId::Device_TypeId, raw_data, offset);
+		is_valid &= SetField(data.agent_id, FieldId::Device_AgentId, raw_data, offset);
+		is_valid &= SetField(data.snmp_profile_id, FieldId::Device_SnmpProfileId, raw_data, offset);
+		is_valid &= SetField(data.object_id, FieldId::SysId, raw_data, offset);
+		is_valid &= SetField(data.prove_interval, FieldId::Device_ProveInterval, raw_data, offset);
+		is_valid &= SetField(data.prove_timeout, FieldId::Device_ProveTimeout, raw_data, offset);
+		is_valid &= SetField(data.prove_down_count, FieldId::Device_ProveDownCount, raw_data, offset);
+		is_valid &= SetField(data.custom_field_3, FieldId::Device_CustomField3, raw_data, offset);
+		is_valid &= SetField(data.custom_field_2, FieldId::Device_CustomField2, raw_data, offset);
+		is_valid &= SetField(data.custom_field_1, FieldId::Device_CustomField1, raw_data, offset);
+		is_valid &= SetField(data.password, FieldId::Device_Password, raw_data, offset);
+		is_valid &= SetField(data.username, FieldId::Device_Username, raw_data, offset);
+		is_valid &= SetField(data.mac, FieldId::Device_MacAddress, raw_data, offset);
+		is_valid &= SetField(data.name, FieldId::SysName, raw_data, offset);
+		is_valid &= ValidateEndOfBlob(raw_data, offset);
+
+		if (!is_valid) {
+			return {};
+		}
 
 		return data;
 	}
 
 	DataSourceData DudeDatabase::RawDataToDataSourceData(std::span<const u8> raw_data) const {
 		std::size_t offset = 0;
+		bool is_valid = true;
 		DataSourceData data{};
 
-		data.enabled = GetBoolField(raw_data, offset, FieldId::DataSource_Enabled);
-		data.function_device_id = GetIntField(raw_data, offset, FieldId::DataSource_FunctionDevice);
-		data.function_interval = GetByteField(raw_data, offset, FieldId::DataSource_FunctionInterval);
-		data.data_source_type = GetByteField(raw_data, offset, FieldId::DataSource_Type);
-		data.object_id = GetIntField(raw_data, offset, FieldId::SysId);
-		data.keep_time_raw = GetByteField(raw_data, offset, FieldId::DataSource_KeepTimeRaw);
-		data.keep_time_10min = GetByteField(raw_data, offset, FieldId::DataSource_KeepTime10min);
-		data.keep_time_2hour = GetByteField(raw_data, offset, FieldId::DataSource_KeepTime2hour);
-		data.keep_time_1Day = GetByteField(raw_data, offset, FieldId::DataSource_KeepTime1day);
-		data.function_code = GetTextField(raw_data, offset, FieldId::DataSource_FunctionCode);
-		data.unit = GetTextField(raw_data, offset, FieldId::DataSource_Unit);
-		data.name = GetTextField(raw_data, offset, FieldId::SysName);
-		ValidateEndOfBlob(raw_data, offset);
+		is_valid &= SetField(data.enabled, FieldId::DataSource_Enabled, raw_data, offset);
+		is_valid &= SetField(data.function_device_id, FieldId::DataSource_FunctionDevice, raw_data, offset);
+		is_valid &= SetField(data.function_interval, FieldId::DataSource_FunctionInterval, raw_data, offset);
+		is_valid &= SetField(data.data_source_type, FieldId::DataSource_Type, raw_data, offset);
+		is_valid &= SetField(data.object_id, FieldId::SysId, raw_data, offset);
+		is_valid &= SetField(data.keep_time_raw, FieldId::DataSource_KeepTimeRaw, raw_data, offset);
+		is_valid &= SetField(data.keep_time_10min, FieldId::DataSource_KeepTime10min, raw_data, offset);
+		is_valid &= SetField(data.keep_time_2hour, FieldId::DataSource_KeepTime2hour, raw_data, offset);
+		is_valid &= SetField(data.keep_time_1Day, FieldId::DataSource_KeepTime1day, raw_data, offset);
+		is_valid &= SetField(data.function_code, FieldId::DataSource_FunctionCode, raw_data, offset);
+		is_valid &= SetField(data.unit, FieldId::DataSource_Unit, raw_data, offset);
+		is_valid &= SetField(data.name, FieldId::SysName, raw_data, offset);
+		is_valid &= ValidateEndOfBlob(raw_data, offset);
+
+		if (!is_valid) {
+			return {};
+		}
 
 		return data;
 	}
 
 	SnmpProfileData DudeDatabase::RawDataToSnmpProfileData(std::span<const u8> raw_data) const {
 		std::size_t offset = 0;
+		bool is_valid = true;
 		SnmpProfileData data{};
 
-		data.version = GetIntField(raw_data, offset, FieldId::SnmpProfile_Version);
-		data.port = GetIntField(raw_data, offset, FieldId::SnmpProfile_Port);
-		data.security = GetByteField(raw_data, offset, FieldId::SnmpProfile_V3Security);
-		data.auth_method = GetByteField(raw_data, offset, FieldId::SnmpProfile_V3AuthMethod);
-		data.crypth_method = GetByteField(raw_data, offset, FieldId::SnmpProfile_V3CryptMethod);
-		data.try_count = GetByteField(raw_data, offset, FieldId::SnmpProfile_TryCount);
-		data.try_timeout = GetIntField(raw_data, offset, FieldId::SnmpProfile_TryTimeout);
-		data.object_id = GetIntField(raw_data, offset, FieldId::SysId);
-		data.crypt_password = GetTextField(raw_data, offset, FieldId::SnmpProfile_V3CryptPassword);
-		data.auth_password = GetTextField(raw_data, offset, FieldId::SnmpProfile_V3AuthPassword);
-		data.community = GetTextField(raw_data, offset, FieldId::SnmpProfile_Community);
-		data.name = GetTextField(raw_data, offset, FieldId::SysName);
-		ValidateEndOfBlob(raw_data, offset);
+		is_valid &= SetField(data.version, FieldId::SnmpProfile_Version, raw_data, offset);
+		is_valid &= SetField(data.port, FieldId::SnmpProfile_Port, raw_data, offset);
+		is_valid &= SetField(data.security, FieldId::SnmpProfile_V3Security, raw_data, offset);
+		is_valid &= SetField(data.auth_method, FieldId::SnmpProfile_V3AuthMethod, raw_data, offset);
+		is_valid &= SetField(data.crypth_method, FieldId::SnmpProfile_V3CryptMethod, raw_data, offset);
+		is_valid &= SetField(data.try_count, FieldId::SnmpProfile_TryCount, raw_data, offset);
+		is_valid &= SetField(data.try_timeout, FieldId::SnmpProfile_TryTimeout, raw_data, offset);
+		is_valid &= SetField(data.object_id, FieldId::SysId, raw_data, offset);
+		is_valid &= SetField(data.crypt_password, FieldId::SnmpProfile_V3CryptPassword, raw_data, offset);
+		is_valid &= SetField(data.auth_password, FieldId::SnmpProfile_V3AuthPassword, raw_data, offset);
+		is_valid &= SetField(data.community, FieldId::SnmpProfile_Community, raw_data, offset);
+		is_valid &= SetField(data.name, FieldId::SysName, raw_data, offset);
+		is_valid &= ValidateEndOfBlob(raw_data, offset);
+
+		if (!is_valid) {
+			return {};
+		}
 
 		return data;
 	}
 
 	NetworkMapElementData DudeDatabase::RawDataToNetworkMapElementData(std::span<const u8> raw_data) const {
 		std::size_t offset = 0;
+		bool is_valid = true;
 		NetworkMapElementData data{};
 
-		data.item_use_acked_color = GetBoolField(raw_data, offset, FieldId::NetworkMapElement_ItemUseAckedColor);
-		data.item_use_label = GetBoolField(raw_data, offset, FieldId::NetworkMapElement_ItemUseLabel);
-		data.item_use_shapes = GetBoolField(raw_data, offset, FieldId::NetworkMapElement_ItemUseShape);
-		data.item_use_font = GetBoolField(raw_data, offset, FieldId::NetworkMapElement_ItemUseFont);
-		data.item_use_image = GetBoolField(raw_data, offset, FieldId::NetworkMapElement_ItemUseImage);
-		data.item_use_image_scale = GetBoolField(raw_data, offset, FieldId::NetworkMapElement_ItemUseImageScale);
-		data.item_use_width = GetBoolField(raw_data, offset, FieldId::NetworkMapElement_LinkUseWidth);
-		data.item_use_up_color = GetBoolField(raw_data, offset, FieldId::NetworkMapElement_ItemUseUpColor);
-		data.item_use_down_partial_color = GetBoolField(raw_data, offset, FieldId::NetworkMapElement_ItemUseDownPartialColor);
-		data.item_use_down_complete_color = GetBoolField(raw_data, offset, FieldId::NetworkMapElement_ItemUseDownCompleteColor);
-		data.item_use_unknown_color = GetBoolField(raw_data, offset, FieldId::NetworkMapElement_ItemUseUnknownColor);
-		data.item_up_color = GetIntField(raw_data, offset, FieldId::NetworkMapElement_ItemUpColor);
-		data.item_down_partial_color = GetIntField(raw_data, offset, FieldId::NetworkMapElement_ItemDownPartialColor);
-		data.item_down_complete_color = GetIntField(raw_data, offset, FieldId::NetworkMapElement_ItemDownCompleteColor);
-		data.item_unknown_color = GetIntField(raw_data, offset, FieldId::NetworkMapElement_ItemUnknownColor);
-		data.item_acked_color = GetIntField(raw_data, offset, FieldId::NetworkMapElement_ItemAckedColor);
-		data.item_shape = GetByteField(raw_data, offset, FieldId::NetworkMapElement_ItemShape);
-		data.item_image = GetIntField(raw_data, offset, FieldId::NetworkMapElement_ItemImage);
-		data.item_image_scale = GetByteField(raw_data, offset, FieldId::NetworkMapElement_ItemImageScale);
-		data.link_from = GetIntField(raw_data, offset, FieldId::NetworkMapElement_LinkFrom);
-		data.link_to = GetIntField(raw_data, offset, FieldId::NetworkMapElement_LinkTo);
-		data.link_id = GetIntField(raw_data, offset, FieldId::NetworkMapElement_LinkID);
-		data.link_width = GetByteField(raw_data, offset, FieldId::NetworkMapElement_LinkWidth);
-		data.object_id = GetIntField(raw_data, offset, FieldId::SysId);
-		data.map_id = GetIntField(raw_data, offset, FieldId::NetworkMapElement_MapID);
-		data.type = GetByteField(raw_data, offset, FieldId::NetworkMapElement_Type);
-		data.item_type = GetByteField(raw_data, offset, FieldId::NetworkMapElement_ItemType);
-		data.item_id = GetIntField(raw_data, offset, FieldId::NetworkMapElement_ItemID);
-		data.item_x = GetIntField(raw_data, offset, FieldId::NetworkMapElement_ItemX);
-		data.item_y = GetIntField(raw_data, offset, FieldId::NetworkMapElement_ItemY);
-		data.label_refresh_interval = GetIntField(raw_data, offset, FieldId::NetworkMapElement_LabelRefreshInterval);
-		data.item_font = GetLongArrayField(raw_data, offset, FieldId::NetworkMapElement_ItemFont);
-		data.name = GetTextField(raw_data, offset, FieldId::SysName);
-		ValidateEndOfBlob(raw_data, offset);
+		is_valid &= SetField(data.item_use_acked_color, FieldId::NetworkMapElement_ItemUseAckedColor, raw_data, offset);
+		is_valid &= SetField(data.item_use_label, FieldId::NetworkMapElement_ItemUseLabel, raw_data, offset);
+		is_valid &= SetField(data.item_use_shapes, FieldId::NetworkMapElement_ItemUseShape, raw_data, offset);
+		is_valid &= SetField(data.item_use_font, FieldId::NetworkMapElement_ItemUseFont, raw_data, offset);
+		is_valid &= SetField(data.item_use_image, FieldId::NetworkMapElement_ItemUseImage, raw_data, offset);
+		is_valid &= SetField(data.item_use_image_scale, FieldId::NetworkMapElement_ItemUseImageScale, raw_data, offset);
+		is_valid &= SetField(data.item_use_width, FieldId::NetworkMapElement_LinkUseWidth, raw_data, offset);
+		is_valid &= SetField(data.item_use_up_color, FieldId::NetworkMapElement_ItemUseUpColor, raw_data, offset);
+		is_valid &= SetField(data.item_use_down_partial_color, FieldId::NetworkMapElement_ItemUseDownPartialColor, raw_data, offset);
+		is_valid &= SetField(data.item_use_down_complete_color, FieldId::NetworkMapElement_ItemUseDownCompleteColor, raw_data, offset);
+		is_valid &= SetField(data.item_use_unknown_color, FieldId::NetworkMapElement_ItemUseUnknownColor, raw_data, offset);
+		is_valid &= SetField(data.item_up_color, FieldId::NetworkMapElement_ItemUpColor, raw_data, offset);
+		is_valid &= SetField(data.item_down_partial_color, FieldId::NetworkMapElement_ItemDownPartialColor, raw_data, offset);
+		is_valid &= SetField(data.item_down_complete_color, FieldId::NetworkMapElement_ItemDownCompleteColor, raw_data, offset);
+		is_valid &= SetField(data.item_unknown_color, FieldId::NetworkMapElement_ItemUnknownColor, raw_data, offset);
+		is_valid &= SetField(data.item_acked_color, FieldId::NetworkMapElement_ItemAckedColor, raw_data, offset);
+		is_valid &= SetField(data.item_shape, FieldId::NetworkMapElement_ItemShape, raw_data, offset);
+		is_valid &= SetField(data.item_image, FieldId::NetworkMapElement_ItemImage, raw_data, offset);
+		is_valid &= SetField(data.item_image_scale, FieldId::NetworkMapElement_ItemImageScale, raw_data, offset);
+		is_valid &= SetField(data.link_from, FieldId::NetworkMapElement_LinkFrom, raw_data, offset);
+		is_valid &= SetField(data.link_to, FieldId::NetworkMapElement_LinkTo, raw_data, offset);
+		is_valid &= SetField(data.link_id, FieldId::NetworkMapElement_LinkID, raw_data, offset);
+		is_valid &= SetField(data.link_width, FieldId::NetworkMapElement_LinkWidth, raw_data, offset);
+		is_valid &= SetField(data.object_id, FieldId::SysId, raw_data, offset);
+		is_valid &= SetField(data.map_id, FieldId::NetworkMapElement_MapID, raw_data, offset);
+		is_valid &= SetField(data.type, FieldId::NetworkMapElement_Type, raw_data, offset);
+		is_valid &= SetField(data.item_type, FieldId::NetworkMapElement_ItemType, raw_data, offset);
+		is_valid &= SetField(data.item_id, FieldId::NetworkMapElement_ItemID, raw_data, offset);
+		is_valid &= SetField(data.item_x, FieldId::NetworkMapElement_ItemX, raw_data, offset);
+		is_valid &= SetField(data.item_y, FieldId::NetworkMapElement_ItemY, raw_data, offset);
+		is_valid &= SetField(data.label_refresh_interval, FieldId::NetworkMapElement_LabelRefreshInterval, raw_data, offset);
+		is_valid &= SetField(data.item_font, FieldId::NetworkMapElement_ItemFont, raw_data, offset);
+		is_valid &= SetField(data.name, FieldId::SysName, raw_data, offset);
+		is_valid &= ValidateEndOfBlob(raw_data, offset);
+
+		if (!is_valid) {
+			return {};
+		}
 
 		return data;
 	}
 
-	BoolField DudeDatabase::GetBoolField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const {
+	bool DudeDatabase::SetField(BoolField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const {
 		constexpr std::size_t header_size = sizeof(BoolField::info);
-		BoolField field{};
 
 		if (!CheckSize(raw_data.size(), offset, header_size)) {
 			return {};
@@ -299,23 +328,23 @@ namespace Database {
 
 		ValidateId(field.info.id.Value(), id);
 
-		if (field.info.type == FieldType::BoolFalse) {
+		switch (field.info.type) {
+		case FieldType::BoolFalse:
 			field.value = false;
-		}
-		else if (field.info.type == FieldType::BoolTrue) {
+			break;
+		case FieldType::BoolTrue:
 			field.value = true;
-		}
-		else {
+			break;
+		default:
 			printf("Invalid data type, expected 0/1, found %u\n", field.info.type.Value());
 			return {};
 		}
 
-		return field;
+		return true;
 	}
 
-	ByteField DudeDatabase::GetByteField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const {
+	bool DudeDatabase::SetField(ByteField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const {
 		constexpr std::size_t header_size = sizeof(ByteField::info) + sizeof(ByteField::value);
-		ByteField field{};
 
 		if (!CheckSize(raw_data.size(), offset, header_size)) {
 			return {};
@@ -325,14 +354,15 @@ namespace Database {
 		offset += header_size;
 
 		ValidateId(field.info.id.Value(), id);
-		ValidateType(field.info.type.Value(), FieldType::Byte);
+		if (!ValidateType(field.info.type.Value(), FieldType::Byte)) {
+			return {};
+		}
 
-		return field;
+		return true;
 	}
 
-	IntField DudeDatabase::GetIntField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const {
+	bool DudeDatabase::SetField(IntField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const {
 		constexpr std::size_t header_size = sizeof(IntField::info);
-		IntField field{};
 
 		if (!CheckSize(raw_data.size(), offset, header_size)) {
 			return {};
@@ -349,21 +379,19 @@ namespace Database {
 			offset += sizeof(IntField::value);
 			break;
 		case FieldType::Byte:
-			// Int sometimes are saved as byte to save space
 			memcpy(&field.value, raw_data.data() + offset, sizeof(ByteField::value));
 			offset += sizeof(ByteField::value);
 			break;
 		default:
-			ValidateType(field.info.type.Value(), FieldType::Int);
-			break;
+			printf("Invalid data type, expected 8/9, found %u\n", field.info.type.Value());
+			return {};
 		}
 
-		return field;
+		return true;
 	}
 
-	TimeField DudeDatabase::GetTimeField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const {
+	bool DudeDatabase::SetField(TimeField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const {
 		constexpr std::size_t header_size = sizeof(TimeField::info) + sizeof(TimeField::date);
-		TimeField field{};
 
 		if (!CheckSize(raw_data.size(), offset, header_size)) {
 			return {};
@@ -373,14 +401,15 @@ namespace Database {
 		offset += header_size;
 
 		ValidateId(field.info.id.Value(), id);
-		ValidateType(field.info.type.Value(), FieldType::Int);
+		if (!ValidateType(field.info.type.Value(), FieldType::Int)) {
+			return {};
+		}
 
-		return field;
+		return true;
 	}
 
-	TextField DudeDatabase::GetTextField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const {
+	bool DudeDatabase::SetField(TextField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const {
 		constexpr std::size_t header_size = sizeof(TextField::info);
-		TextField field{};
 
 		if (!CheckSize(raw_data.size(), offset, header_size)) {
 			return {};
@@ -401,8 +430,8 @@ namespace Database {
 			offset += sizeof(u16);
 			break;
 		default:
-			ValidateType(field.info.type.Value(), FieldType::ShortString);
-			break;
+			printf("Invalid data type, expected 32/33, found %u\n", field.info.type.Value());
+			return {};
 		}
 
 		if (!CheckSize(raw_data.size(), offset, field.data_size)) {
@@ -414,12 +443,11 @@ namespace Database {
 		field.text = std::string(raw_text.begin(), raw_text.end());
 		offset += field.data_size;
 
-		return field;
+		return true;
 	}
 
-	IntArrayField DudeDatabase::GetIntArrayField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const {
+	bool DudeDatabase::SetField(IntArrayField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const {
 		constexpr std::size_t header_size = sizeof(IntArrayField::info) + sizeof(IntArrayField::entries);
-		IntArrayField field{};
 
 		if (!CheckSize(raw_data.size(), offset, header_size)) {
 			return {};
@@ -429,7 +457,9 @@ namespace Database {
 		offset += header_size;
 
 		ValidateId(field.info.id.Value(), id);
-		ValidateType(field.info.type.Value(), FieldType::IntArray);
+		if (!ValidateType(field.info.type.Value(), FieldType::IntArray)) {
+			return {};
+		}
 
 		if (!CheckSize(raw_data.size(), offset, field.entries * sizeof(u32))) {
 			return {};
@@ -439,12 +469,11 @@ namespace Database {
 		memcpy(field.data.data(), raw_data.data() + offset, field.entries * sizeof(u32));
 		offset += field.entries * sizeof(u32);
 
-		return field;
+		return true;
 	}
 
-	IpAddressField DudeDatabase::GetIpAddressField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const {
+	bool DudeDatabase::SetField(IpAddressField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const {
 		constexpr std::size_t header_size = sizeof(IpAddressField::info) + sizeof(IpAddressField::entries);
-		IpAddressField field{};
 
 		if (!CheckSize(raw_data.size(), offset, header_size)) {
 			return {};
@@ -454,7 +483,9 @@ namespace Database {
 		offset += header_size;
 
 		ValidateId(field.info.id.Value(), id);
-		ValidateType(field.info.type.Value(), FieldType::IntArray);
+		if (!ValidateType(field.info.type.Value(), FieldType::IntArray)) {
+			return {};
+		}
 
 		if (!CheckSize(raw_data.size(), offset, field.entries * sizeof(u32))) {
 			return {};
@@ -464,12 +495,11 @@ namespace Database {
 		memcpy(field.ip_address.data(), raw_data.data() + offset, field.entries * sizeof(u32));
 		offset += field.entries * sizeof(u32);
 
-		return field;
+		return true;
 	}
 
-	LongArrayField DudeDatabase::GetLongArrayField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const {
+	bool DudeDatabase::SetField(LongArrayField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const {
 		constexpr std::size_t header_size = sizeof(LongArrayField::info) + sizeof(LongArrayField::data_size);
-		LongArrayField field{};
 
 		if (!CheckSize(raw_data.size(), offset, header_size)) {
 			return {};
@@ -479,7 +509,9 @@ namespace Database {
 		offset += header_size;
 
 		ValidateId(field.info.id.Value(), id);
-		ValidateType(field.info.type.Value(), FieldType::LongArray);
+		if (!ValidateType(field.info.type.Value(), FieldType::LongArray)) {
+			return {};
+		}
 
 		if (!CheckSize(raw_data.size(), offset, field.data_size)) {
 			return {};
@@ -489,12 +521,11 @@ namespace Database {
 		memcpy(field.data.data(), raw_data.data() + offset, field.data_size);
 		offset += field.data_size;
 
-		return field;
+		return true;
 	}
 
-	MacAddressField DudeDatabase::GetMacAddressField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const {
+	bool DudeDatabase::SetField(MacAddressField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const {
 		constexpr std::size_t header_size = sizeof(MacAddressField::info) + sizeof(MacAddressField::data_size);
-		MacAddressField field{};
 
 		if (!CheckSize(raw_data.size(), offset, header_size)) {
 			return {};
@@ -504,7 +535,9 @@ namespace Database {
 		offset += header_size;
 
 		ValidateId(field.info.id.Value(), id);
-		ValidateType(field.info.type.Value(), FieldType::LongArray);
+		if (!ValidateType(field.info.type.Value(), FieldType::LongArray)) {
+			return {};
+		}
 
 		if (!CheckSize(raw_data.size(), offset, field.data_size)) {
 			return {};
@@ -514,12 +547,11 @@ namespace Database {
 		memcpy(field.mac_address.data(), raw_data.data() + offset, field.data_size);
 		offset += field.data_size;
 
-		return field;
+		return true;
 	}
 
-	StringArrayField DudeDatabase::GetStringArrayField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const {
+	bool DudeDatabase::SetField(StringArrayField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const {
 		constexpr std::size_t header_size = sizeof(StringArrayField::info) + sizeof(StringArrayField::entry_count);
-		StringArrayField field{};
 
 		if (!CheckSize(raw_data.size(), offset, header_size)) {
 			return {};
@@ -529,7 +561,9 @@ namespace Database {
 		offset += header_size;
 
 		ValidateId(field.info.id.Value(), id);
-		ValidateType(field.info.type.Value(), FieldType::StringArray);
+		if (!ValidateType(field.info.type.Value(), FieldType::StringArray)) {
+			return {};
+		}
 
 		for (std::size_t i = 0; i < field.entry_count; ++i) {
 			constexpr std::size_t entry_header_size = sizeof(StringArrayEntry::data_size);
@@ -554,7 +588,7 @@ namespace Database {
 			field.entries.push_back(entry);
 		}
 
-		return field;
+		return true;
 	}
 
 	bool DudeDatabase::CheckSize(std::size_t raw_data_size, std::size_t offset, std::size_t header_size) const {

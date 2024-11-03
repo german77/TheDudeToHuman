@@ -47,16 +47,16 @@ namespace Database {
 		SnmpProfileData RawDataToSnmpProfileData(std::span<const u8> raw_data) const;
 		NetworkMapElementData RawDataToNetworkMapElementData(std::span<const u8> raw_data) const;
 
-		BoolField GetBoolField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;
-		ByteField GetByteField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;
-		IntField GetIntField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;
-		TimeField GetTimeField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;
-		TextField GetTextField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;
-		IntArrayField GetIntArrayField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;
-		IpAddressField GetIpAddressField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;
-		LongArrayField GetLongArrayField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;
-		MacAddressField GetMacAddressField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;
-		StringArrayField GetStringArrayField(std::span<const u8> raw_data, std::size_t& offset, FieldId id) const;
+		bool SetField(BoolField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const;
+		bool SetField(ByteField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const;
+		bool SetField(IntField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const;
+		bool SetField(TimeField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const;
+		bool SetField(TextField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const;
+		bool SetField(IntArrayField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const;
+		bool SetField(IpAddressField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const;
+		bool SetField(LongArrayField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const;
+		bool SetField(MacAddressField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const;
+		bool SetField(StringArrayField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const;
 
 		bool CheckSize(std::size_t raw_data_size, std::size_t offset, std::size_t header_size) const;
 		bool ValidateEndOfBlob(std::span<const u8> raw_data, std::size_t offset) const;
