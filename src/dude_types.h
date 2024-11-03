@@ -39,7 +39,7 @@ namespace Database {
 		Unknown43 = 0x43,
 		NetworkMapElement = 0x4a,
 		Unknown4b = 0x4b,
-		Unknown3d = 0x4d,
+		PanelElement = 0x4d,
 	};
 
 	enum class FieldType : u32 {
@@ -142,6 +142,95 @@ namespace Database {
 		std::vector<u8> data{};
 	};
 #pragma pack(pop)
+
+	// This is type 0x0A data
+	struct MapData {
+		IntArrayField notify_ids;
+		BoolField use_static_color;
+		BoolField use_link_color;
+		BoolField use_link_label_color;
+		BoolField use_link_full_color;
+		BoolField use_device_label;
+		BoolField use_device_shape;
+		BoolField use_device_font;
+		BoolField use_network_label;
+		BoolField use_network_shape;
+		BoolField use_network_font;
+		BoolField use_submap_label;
+		BoolField use_submap_shape;
+		BoolField use_submap_font;
+		BoolField use_static_shape;
+		BoolField use_static_font;
+		BoolField use_link_label;
+		BoolField use_link_font;
+		BoolField use_link_thickness;
+		BoolField ordered;
+		BoolField prove_enabled;
+		BoolField notify_use;
+		BoolField report_scanning;
+		BoolField locked;
+		BoolField image_tile;
+		BoolField color_visible;
+		BoolField device_visible;
+		BoolField network_visible;
+		BoolField submap_visible;
+		BoolField static_visible;
+		BoolField link_visible;
+		BoolField use_background_color;
+		BoolField use_up_color;
+		BoolField use_down_partial_color;
+		BoolField use_down_complete_color;
+		BoolField use_unknown_color;
+		BoolField use_acked_color;
+		BoolField use_network_color;
+		BoolField use_submap_color;
+		BoolField use_submap_up_color;
+		BoolField use_submap_down_partial_color;
+		BoolField use_submap_down_complete_color;
+		BoolField use_submap_acked_color;
+		IntField link_thickness;
+		IntField layout_density;
+		IntField layout_quality;
+		IntField prove_interval;
+		IntField prove_timeout;
+		IntField prove_down_count;
+		IntField object_id;
+		IntField default_zoom;
+		IntField image_id;
+		IntField image_scale;
+		IntField label_refresh_interval;
+		IntField background_color;
+		IntField up_color;
+		IntField down_partial_color;
+		IntField down_complete_color;
+		IntField unknown_color;
+		IntField acked_color;
+		IntField network_color;
+		IntField submap_color;
+		IntField submap_up_color;
+		IntField submap_down_partial_color;
+		IntField submap_down_complete_color;
+		IntField submap_acked_color;
+		IntField static_color;
+		IntField link_color;
+		IntField link_label_color;
+		IntField link_full_color;
+		IntField device_shape;
+		IntField network_shape;
+		IntField submap_shape;
+		IntField static_shape;
+		LongArrayField link_font;
+		TextField link_label;
+		LongArrayField static_font;
+		LongArrayField submap_font;
+		TextField submap_label;
+		LongArrayField network_font;
+		TextField network_label;
+		LongArrayField device_font;
+		TextField device_label;
+		TextField list_type;
+		TextField name;
+	};
 
 	// This is type 0x09 data
 	struct NotesData {
@@ -263,4 +352,17 @@ namespace Database {
 		TextField name;
 	};
 
+	// This is type 0x4D data
+	struct PanelElementData {
+		BoolField split;
+		IntField panel_id;
+		ByteField split_type;
+		IntField split_share;
+		IntField first_id;
+		IntField second_id;
+		IntField obj_id;
+		IntField object_id;
+		LongArrayField obj_meta;
+		TextField name;
+	};
 }

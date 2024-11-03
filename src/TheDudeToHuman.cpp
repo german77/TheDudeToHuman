@@ -14,7 +14,9 @@ int main() {
 	//auto data1 = db.GetDeviceTypeData();
 	//auto data2 = db.GetDeviceData();
 	//auto data3 = db.GetSnmpProfileData();
-	auto data4 = db.GetNetworkMapElementData();
+	//auto data4 = db.GetNetworkMapElementData();
 	//auto data5 = db.GetNotesData();
 	//auto data6 = db.GetDataSourceData();
+	auto data7 = db.GetMapData();
+	//auto data8 = db.GetPanelElementData();
 }

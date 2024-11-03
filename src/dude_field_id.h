@@ -441,7 +441,7 @@ namespace Database {
 		NetworkMap_UseSubmapFont = 0x1061cd,
 		NetworkMap_UseStaticShape = 0x1061ce,
 		NetworkMap_UseStaticFont = 0x1061cf,
-		NetworkMap_UseLinkLabe = 0x1061d0,
+		NetworkMap_UseLinkLabel = 0x1061d0,
 		NetworkMap_UseLinkFont = 0x1061d1,
 		NetworkMap_UseLinkThickness = 0x1061d2,
 		NetworkMap_BackgroundColor = 0x1061d3,

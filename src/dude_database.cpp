@@ -91,6 +91,10 @@ namespace Database {
 		return data;
 	}
 
+	std::vector<MapData> DudeDatabase::GetMapData() const {
+		return GetObjectData<MapData>(DataFormat::Map, &DudeDatabase::RawDataToMapData);
+	}
+
 	std::vector<NotesData> DudeDatabase::GetNotesData() const {
 		return GetObjectData<NotesData>(DataFormat::Notes, &DudeDatabase::RawDataToNotesData);
 	}
@@ -115,6 +119,10 @@ namespace Database {
 		return GetObjectData<NetworkMapElementData>(DataFormat::NetworkMapElement, &DudeDatabase::RawDataToNetworkMapElementData);
 	}
 
+	std::vector<PanelElementData> DudeDatabase::GetPanelElementData() const {
+		return GetObjectData<PanelElementData>(DataFormat::PanelElement, &DudeDatabase::RawDataToPanelElementData);
+	}
+
 
 	RawObjData DudeDatabase::BlobToRawObjData(std::span<const u8> blob) const {
 		constexpr std::size_t header_size = sizeof(RawObjData::magic);
@@ -132,6 +140,105 @@ namespace Database {
 
 		data.data.resize(blob.size() - offset);
 		memcpy(data.data.data(), blob.data() + offset, data.data.size());
+
+		return data;
+	}
+
+	MapData DudeDatabase::RawDataToMapData(std::span<const u8> raw_data) const {
+		std::size_t offset = 0;
+		bool is_valid = true;
+		MapData data{};
+
+		is_valid &= SetField(data.notify_ids, FieldId::NetworkMap_NotifyIDs, raw_data, offset);
+		is_valid &= SetField(data.use_static_color, FieldId::NetworkMap_UseStaticColor, raw_data, offset);
+		is_valid &= SetField(data.use_link_color, FieldId::NetworkMap_UseLinkColor, raw_data, offset);
+		is_valid &= SetField(data.use_link_label_color, FieldId::NetworkMap_UseLinkLabelColor, raw_data, offset);
+		is_valid &= SetField(data.use_link_full_color, FieldId::NetworkMap_UseLinkFullColor, raw_data, offset);
+		is_valid &= SetField(data.use_device_label, FieldId::NetworkMap_UseDeviceLabel, raw_data, offset);
+		is_valid &= SetField(data.use_device_shape, FieldId::NetworkMap_UseDeviceShape, raw_data, offset);
+		is_valid &= SetField(data.use_device_font, FieldId::NetworkMap_UseDeviceFont, raw_data, offset);
+		is_valid &= SetField(data.use_network_label, FieldId::NetworkMap_UseNetworkLabel, raw_data, offset);
+		is_valid &= SetField(data.use_network_shape, FieldId::NetworkMap_UseNetworkShape, raw_data, offset);
+		is_valid &= SetField(data.use_network_font, FieldId::NetworkMap_UseNetworkFont, raw_data, offset);
+		is_valid &= SetField(data.use_submap_label, FieldId::NetworkMap_UseSubmapLabel, raw_data, offset);
+		is_valid &= SetField(data.use_submap_shape, FieldId::NetworkMap_UseSubmapShape, raw_data, offset);
+		is_valid &= SetField(data.use_submap_font, FieldId::NetworkMap_UseSubmapFont, raw_data, offset);
+		is_valid &= SetField(data.use_static_shape, FieldId::NetworkMap_UseStaticShape, raw_data, offset);
+		is_valid &= SetField(data.use_static_font, FieldId::NetworkMap_UseStaticFont, raw_data, offset);
+		is_valid &= SetField(data.use_link_label, FieldId::NetworkMap_UseLinkLabel, raw_data, offset);
+		is_valid &= SetField(data.use_link_font, FieldId::NetworkMap_UseLinkFont, raw_data, offset);
+		is_valid &= SetField(data.use_link_thickness, FieldId::NetworkMap_UseLinkThickness, raw_data, offset);
+		is_valid &= SetField(data.ordered, FieldId::ObjectList_Ordered, raw_data, offset);
+		is_valid &= SetField(data.prove_enabled, FieldId::NetworkMap_ProbeEnabled, raw_data, offset);
+		is_valid &= SetField(data.notify_use, FieldId::NetworkMap_NotifyUse, raw_data, offset);
+		is_valid &= SetField(data.report_scanning, FieldId::NetworkMap_ReportScanning, raw_data, offset);
+		is_valid &= SetField(data.locked, FieldId::NetworkMap_Locked, raw_data, offset);
+		is_valid &= SetField(data.image_tile, FieldId::NetworkMap_ImageTile, raw_data, offset);
+		is_valid &= SetField(data.color_visible, FieldId::NetworkMap_ColorVisible, raw_data, offset);
+		is_valid &= SetField(data.device_visible, FieldId::NetworkMap_DeviceVisible, raw_data, offset);
+		is_valid &= SetField(data.network_visible, FieldId::NetworkMap_NetworkVisible, raw_data, offset);
+		is_valid &= SetField(data.submap_visible, FieldId::NetworkMap_SubmapVisible, raw_data, offset);
+		is_valid &= SetField(data.static_visible, FieldId::NetworkMap_StaticVisible, raw_data, offset);
+		is_valid &= SetField(data.link_visible, FieldId::NetworkMap_LinkVisible, raw_data, offset);
+		is_valid &= SetField(data.use_background_color, FieldId::NetworkMap_UseBackgroundColor, raw_data, offset);
+		is_valid &= SetField(data.use_up_color, FieldId::NetworkMap_UseUpColor, raw_data, offset);
+		is_valid &= SetField(data.use_down_partial_color, FieldId::NetworkMap_UseDownPartialColor, raw_data, offset);
+		is_valid &= SetField(data.use_down_complete_color, FieldId::NetworkMap_UseDownCompleteColor, raw_data, offset);
+		is_valid &= SetField(data.use_unknown_color, FieldId::NetworkMap_UseUnknownColor, raw_data, offset);
+		is_valid &= SetField(data.use_acked_color, FieldId::NetworkMap_UseAckedColor, raw_data, offset);
+		is_valid &= SetField(data.use_network_color, FieldId::NetworkMap_UseNetworkColor, raw_data, offset);
+		is_valid &= SetField(data.use_submap_color, FieldId::NetworkMap_UseSubmapColor, raw_data, offset);
+		is_valid &= SetField(data.use_submap_up_color, FieldId::NetworkMap_UseSubmapUpColor, raw_data, offset);
+		is_valid &= SetField(data.use_submap_down_partial_color, FieldId::NetworkMap_UseSubmapDownPartialColor, raw_data, offset);
+		is_valid &= SetField(data.use_submap_down_complete_color, FieldId::NetworkMap_UseSubmapDownCompleteColor, raw_data, offset);
+		is_valid &= SetField(data.use_submap_acked_color, FieldId::NetworkMap_UseSubmapAckedColor, raw_data, offset);
+		is_valid &= SetField(data.link_thickness, FieldId::NetworkMap_LinkThickness, raw_data, offset);
+		is_valid &= SetField(data.layout_density, FieldId::NetworkMap_LayoutDensity, raw_data, offset);
+		is_valid &= SetField(data.layout_quality, FieldId::NetworkMap_LayoutQuality, raw_data, offset);
+		is_valid &= SetField(data.prove_interval, FieldId::NetworkMap_ProbeInterval, raw_data, offset);
+		is_valid &= SetField(data.prove_timeout, FieldId::NetworkMap_ProbeTimeout, raw_data, offset);
+		is_valid &= SetField(data.prove_down_count, FieldId::NetworkMap_ProbeDownCount, raw_data, offset);
+		is_valid &= SetField(data.object_id, FieldId::SysId, raw_data, offset);
+		is_valid &= SetField(data.default_zoom, FieldId::NetworkMap_DefaultZoom, raw_data, offset);
+		is_valid &= SetField(data.image_id, FieldId::NetworkMap_ImageID, raw_data, offset);
+		is_valid &= SetField(data.image_scale, FieldId::NetworkMap_ImageScale, raw_data, offset);
+		is_valid &= SetField(data.label_refresh_interval, FieldId::NetworkMap_LabelRefreshInterval, raw_data, offset);
+		is_valid &= SetField(data.background_color, FieldId::NetworkMap_BackgroundColor, raw_data, offset);
+		is_valid &= SetField(data.up_color, FieldId::NetworkMap_UpColor, raw_data, offset);
+		is_valid &= SetField(data.down_partial_color, FieldId::NetworkMap_DownPartialColor, raw_data, offset);
+		is_valid &= SetField(data.down_complete_color, FieldId::NetworkMap_DownCompleteColor, raw_data, offset);
+		is_valid &= SetField(data.unknown_color, FieldId::NetworkMap_UnknownColor, raw_data, offset);
+		is_valid &= SetField(data.acked_color, FieldId::NetworkMap_AckedColor, raw_data, offset);
+		is_valid &= SetField(data.network_color, FieldId::NetworkMap_NetworkColor, raw_data, offset);
+		is_valid &= SetField(data.submap_color, FieldId::NetworkMap_SubmapColor, raw_data, offset);
+		is_valid &= SetField(data.submap_up_color, FieldId::NetworkMap_SubmapUpColor, raw_data, offset);
+		is_valid &= SetField(data.submap_down_partial_color, FieldId::NetworkMap_SubmapDownPartialColor, raw_data, offset);
+		is_valid &= SetField(data.submap_down_complete_color, FieldId::NetworkMap_SubmapDownCompleteColor, raw_data, offset);
+		is_valid &= SetField(data.submap_acked_color, FieldId::NetworkMap_SubmapAckedColor, raw_data, offset);
+		is_valid &= SetField(data.static_color, FieldId::NetworkMap_StaticColor, raw_data, offset);
+		is_valid &= SetField(data.link_color, FieldId::NetworkMap_LinkColor, raw_data, offset);
+		is_valid &= SetField(data.link_label_color, FieldId::NetworkMap_LinkLabelColor, raw_data, offset);
+		is_valid &= SetField(data.link_full_color, FieldId::NetworkMap_LinkFullColor, raw_data, offset);
+		is_valid &= SetField(data.device_shape, FieldId::NetworkMap_DeviceShape, raw_data, offset);
+		is_valid &= SetField(data.network_shape, FieldId::NetworkMap_NetworkShape, raw_data, offset);
+		is_valid &= SetField(data.submap_shape, FieldId::NetworkMap_SubmapShape, raw_data, offset);
+		is_valid &= SetField(data.static_shape, FieldId::NetworkMap_StaticShape, raw_data, offset);
+		is_valid &= SetField(data.link_font, FieldId::NetworkMap_LinkFont, raw_data, offset);
+		is_valid &= SetField(data.link_label, FieldId::NetworkMap_LinkLabel, raw_data, offset);
+		is_valid &= SetField(data.static_font, FieldId::NetworkMap_StaticFont, raw_data, offset);
+		is_valid &= SetField(data.submap_font, FieldId::NetworkMap_SubmapFont, raw_data, offset);
+		is_valid &= SetField(data.submap_label, FieldId::NetworkMap_SubmapLabel, raw_data, offset);
+		is_valid &= SetField(data.network_font, FieldId::NetworkMap_NetworkFont, raw_data, offset);
+		is_valid &= SetField(data.network_label, FieldId::NetworkMap_NetworkLabel, raw_data, offset);
+		is_valid &= SetField(data.device_font, FieldId::NetworkMap_DeviceFont, raw_data, offset);
+		is_valid &= SetField(data.device_label, FieldId::NetworkMap_DeviceLabel, raw_data, offset);
+		is_valid &= SetField(data.list_type, FieldId::ObjectList_Type, raw_data, offset);
+		is_valid &= SetField(data.name, FieldId::SysName, raw_data, offset);
+		is_valid &= ValidateEndOfBlob(raw_data, offset);
+
+		if (!is_valid) {
+			return {};
+		}
 
 		return data;
 	}
@@ -306,6 +413,30 @@ namespace Database {
 		is_valid &= SetField(data.item_y, FieldId::NetworkMapElement_ItemY, raw_data, offset);
 		is_valid &= SetField(data.label_refresh_interval, FieldId::NetworkMapElement_LabelRefreshInterval, raw_data, offset);
 		is_valid &= SetField(data.item_font, FieldId::NetworkMapElement_ItemFont, raw_data, offset);
+		is_valid &= SetField(data.name, FieldId::SysName, raw_data, offset);
+		is_valid &= ValidateEndOfBlob(raw_data, offset);
+
+		if (!is_valid) {
+			return {};
+		}
+
+		return data;
+	}
+
+	PanelElementData DudeDatabase::RawDataToPanelElementData(std::span<const u8> raw_data) const {
+		std::size_t offset = 0;
+		bool is_valid = true;
+		PanelElementData data{};
+
+		is_valid &= SetField(data.split, FieldId::PanelElement_Split, raw_data, offset);
+		is_valid &= SetField(data.panel_id, FieldId::PanelElement_PanelID, raw_data, offset);
+		is_valid &= SetField(data.split_type, FieldId::PanelElement_SplitType, raw_data, offset);
+		is_valid &= SetField(data.split_share, FieldId::PanelElement_SplitShare, raw_data, offset);
+		is_valid &= SetField(data.first_id, FieldId::PanelElement_FirstID, raw_data, offset);
+		is_valid &= SetField(data.second_id, FieldId::PanelElement_SecondID, raw_data, offset);
+		is_valid &= SetField(data.obj_id, FieldId::PanelElement_ObjID, raw_data, offset);
+		is_valid &= SetField(data.object_id, FieldId::SysId, raw_data, offset);
+		is_valid &= SetField(data.obj_meta, FieldId::PanelElement_ObjMeta, raw_data, offset);
 		is_valid &= SetField(data.name, FieldId::SysName, raw_data, offset);
 		is_valid &= ValidateEndOfBlob(raw_data, offset);
 

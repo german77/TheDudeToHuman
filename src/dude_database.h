@@ -28,24 +28,28 @@ namespace Database {
 		// Usefull to find new unsuported types
 		std::vector<DataFormat> ListUsedDataFormats() const;
 
+		std::vector<MapData> GetMapData() const;
 		std::vector<NotesData> GetNotesData() const;
 		std::vector<DeviceTypeData> GetDeviceTypeData() const;
 		std::vector<DeviceData> GetDeviceData() const;
 		std::vector<DataSourceData> GetDataSourceData() const;
 		std::vector<SnmpProfileData> GetSnmpProfileData() const;
 		std::vector<NetworkMapElementData> GetNetworkMapElementData() const;
+		std::vector<PanelElementData> GetPanelElementData() const;
 
 	private:
 		template <typename T>
 		std::vector<T> GetObjectData(DataFormat format, T(DudeDatabase::* RawToObjData)(std::span<const u8> raw_data) const) const;
 
 		RawObjData BlobToRawObjData(std::span<const u8> blob) const;
+		MapData RawDataToMapData(std::span<const u8> raw_data) const;
 		NotesData RawDataToNotesData(std::span<const u8> raw_data) const;
 		DeviceTypeData RawDataToDeviceTypeData(std::span<const u8> raw_data) const;
 		DeviceData RawDataToDeviceData(std::span<const u8> raw_data) const;
 		DataSourceData RawDataToDataSourceData(std::span<const u8> raw_data) const;
 		SnmpProfileData RawDataToSnmpProfileData(std::span<const u8> raw_data) const;
 		NetworkMapElementData RawDataToNetworkMapElementData(std::span<const u8> raw_data) const;
+		PanelElementData RawDataToPanelElementData(std::span<const u8> raw_data) const;
 
 		bool SetField(BoolField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const;
 		bool SetField(ByteField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const;
