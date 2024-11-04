@@ -672,7 +672,11 @@ namespace Database {
 		memcpy(&field, raw_data.data() + offset, header_size);
 		offset += header_size;
 
-		ValidateId(field.info.id.Value(), id);
+		if (!ValidateId(field.info.id.Value(), id)) {
+			offset -= header_size;
+			field = {};
+			return true;
+		}
 
 		switch (field.info.type) {
 		case FieldType::BoolFalse:
@@ -699,7 +703,12 @@ namespace Database {
 		memcpy(&field, raw_data.data() + offset, header_size);
 		offset += header_size;
 
-		ValidateId(field.info.id.Value(), id);
+		if (!ValidateId(field.info.id.Value(), id)) {
+			offset -= header_size;
+			field = {};
+			return true;
+		}
+
 		if (!ValidateType(field.info.type.Value(), FieldType::Byte)) {
 			return {};
 		}
@@ -717,7 +726,10 @@ namespace Database {
 		memcpy(&field, raw_data.data() + offset, header_size);
 		offset += header_size;
 
-		ValidateId(field.info.id.Value(), id);
+		if (!ValidateId(field.info.id.Value(), id)) {
+			offset -= header_size;
+			return {};
+		}
 
 		switch (field.info.type.Value()) {
 		case FieldType::Int:
@@ -746,7 +758,12 @@ namespace Database {
 		memcpy(&field, raw_data.data() + offset, header_size);
 		offset += header_size;
 
-		ValidateId(field.info.id.Value(), id);
+		if (!ValidateId(field.info.id.Value(), id)) {
+			offset -= header_size;
+			field = {};
+			return true;
+		}
+
 		if (!ValidateType(field.info.type.Value(), FieldType::Int)) {
 			return {};
 		}
@@ -764,7 +781,12 @@ namespace Database {
 		memcpy(&field, raw_data.data() + offset, header_size);
 		offset += header_size;
 
-		ValidateId(field.info.id.Value(), id);
+		if (!ValidateId(field.info.id.Value(), id)) {
+			offset -= header_size;
+			field = {};
+			return true;
+		}
+
 		if (!ValidateType(field.info.type.Value(), FieldType::Long)) {
 			return {};
 		}
@@ -782,7 +804,12 @@ namespace Database {
 		memcpy(&field, raw_data.data() + offset, header_size);
 		offset += header_size;
 
-		ValidateId(field.info.id.Value(), id);
+		if (!ValidateId(field.info.id.Value(), id)) {
+			offset -= header_size;
+			field = {};
+			return true;
+		}
+
 		if (!ValidateType(field.info.type.Value(), FieldType::LongLong)) {
 			return {};
 		}
@@ -800,7 +827,11 @@ namespace Database {
 		memcpy(&field, raw_data.data() + offset, header_size);
 		offset += header_size;
 
-		ValidateId(field.info.id.Value(), id);
+		if (!ValidateId(field.info.id.Value(), id)) {
+			offset -= header_size;
+			field = {};
+			return true;
+		}
 
 		switch (field.info.type.Value()) {
 		case FieldType::ShortString:
@@ -838,7 +869,12 @@ namespace Database {
 		memcpy(&field, raw_data.data() + offset, header_size);
 		offset += header_size;
 
-		ValidateId(field.info.id.Value(), id);
+		if (!ValidateId(field.info.id.Value(), id)) {
+			offset -= header_size;
+			field = {};
+			return true;
+		}
+
 		if (!ValidateType(field.info.type.Value(), FieldType::IntArray)) {
 			return {};
 		}
@@ -864,7 +900,12 @@ namespace Database {
 		memcpy(&field, raw_data.data() + offset, header_size);
 		offset += header_size;
 
-		ValidateId(field.info.id.Value(), id);
+		if (!ValidateId(field.info.id.Value(), id)) {
+			offset -= header_size;
+			field = {};
+			return true;
+		}
+
 		if (!ValidateType(field.info.type.Value(), FieldType::IntArray)) {
 			return {};
 		}
@@ -890,7 +931,12 @@ namespace Database {
 		memcpy(&field, raw_data.data() + offset, header_size);
 		offset += header_size;
 
-		ValidateId(field.info.id.Value(), id);
+		if (!ValidateId(field.info.id.Value(), id)) {
+			offset -= header_size;
+			field = {};
+			return true;
+		}
+
 		if (!ValidateType(field.info.type.Value(), FieldType::LongArray)) {
 			return {};
 		}
@@ -916,7 +962,12 @@ namespace Database {
 		memcpy(&field, raw_data.data() + offset, header_size);
 		offset += header_size;
 
-		ValidateId(field.info.id.Value(), id);
+		if (!ValidateId(field.info.id.Value(), id)) {
+			offset -= header_size;
+			field = {};
+			return true;
+		}
+
 		if (!ValidateType(field.info.type.Value(), FieldType::LongArray)) {
 			return {};
 		}
@@ -942,7 +993,12 @@ namespace Database {
 		memcpy(&field, raw_data.data() + offset, header_size);
 		offset += header_size;
 
-		ValidateId(field.info.id.Value(), id);
+		if (!ValidateId(field.info.id.Value(), id)) {
+			offset -= header_size;
+			field = {};
+			return true;
+		}
+
 		if (!ValidateType(field.info.type.Value(), FieldType::StringArray)) {
 			return {};
 		}
