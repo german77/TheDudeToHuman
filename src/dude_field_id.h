@@ -70,7 +70,7 @@ namespace Database {
 		ServerConfig_MapStaticVisible = 0x100fdb,
 		ServerConfig_MapStaticShape = 0x100fdc,
 		ServerConfig_MapStaticFont = 0x100fdd,
-		ServerConfig_MapLinkVisibl = 0x100fde,
+		ServerConfig_MapLinkVisible = 0x100fde,
 		ServerConfig_MapLinkLabel = 0x100fdf,
 		ServerConfig_MapLinkTooltip = 0x100fe0,
 		ServerConfig_MapLinkFont = 0x100fe1,

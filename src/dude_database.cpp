@@ -93,6 +93,10 @@ namespace Database {
 		return data;
 	}
 
+	std::vector<ServerConfigurationData> DudeDatabase::GetServerConfigurationData() const {
+		return GetObjectData<ServerConfigurationData>(DataFormat::ServerConfiguration, &DudeDatabase::RawDataToServerConfigurationData);
+	}
+
 	std::vector<ToolData> DudeDatabase::GetToolData() const {
 		return GetObjectData<ToolData>(DataFormat::Tool, &DudeDatabase::RawDataToToolData);
 	}
@@ -170,6 +174,125 @@ namespace Database {
 
 		data.data.resize(blob.size() - offset);
 		memcpy(data.data.data(), blob.data() + offset, data.data.size());
+
+		return data;
+	}
+
+	ServerConfigurationData DudeDatabase::RawDataToServerConfigurationData(std::span<const u8> raw_data) const {
+		std::size_t offset = 0;
+		bool is_valid = true;
+		ServerConfigurationData data{};
+
+		is_valid &= SetField(data.time_zone_history, FieldId::ServerConfig_TimeZoneHistory, raw_data, offset);
+		is_valid &= SetField(data.discover_skip_types, FieldId::ServerConfig_DiscoverSkipTypes, raw_data, offset);
+		is_valid &= SetField(data.discover_skip_probes, FieldId::ServerConfig_DiscoverSkipProbes, raw_data, offset);
+		is_valid &= SetField(data.custom_colors, FieldId::ServerConfig_CustomColors, raw_data, offset);
+		is_valid &= SetField(data.chart_line_colors, FieldId::ServerConfig_ChartLineColors, raw_data, offset);
+		is_valid &= SetField(data.notify_ids, FieldId::ServerConfig_NotifyIDs, raw_data, offset);
+		is_valid &= SetField(data.discover_identification, FieldId::ServerConfig_DiscoverIdentification, raw_data, offset);
+		is_valid &= SetField(data.discover_networks, FieldId::ServerConfig_DiscoverNetworks, raw_data, offset);
+		is_valid &= SetField(data.discover_links, FieldId::ServerConfig_DiscoverLinks, raw_data, offset);
+		is_valid &= SetField(data.map_device_visible, FieldId::ServerConfig_MapDeviceVisible, raw_data, offset);
+		is_valid &= SetField(data.discover_layer_2, FieldId::ServerConfig_DiscoverLayer2, raw_data, offset);
+		is_valid &= SetField(data.first_connection, FieldId::ServerConfig_FirstConnection, raw_data, offset);
+		is_valid &= SetField(data.discover_ppp, FieldId::ServerConfig_DiscoverPpp, raw_data, offset);
+		is_valid &= SetField(data.discover_graph_services, FieldId::ServerConfig_DiscoverGraphServices, raw_data, offset);
+		is_valid &= SetField(data.map_network_visible, FieldId::ServerConfig_MapNetworkVisible, raw_data, offset);
+		is_valid &= SetField(data.discover_graph_links, FieldId::ServerConfig_DiscoverGraphLinks, raw_data, offset);
+		is_valid &= SetField(data.discover_service_less, FieldId::ServerConfig_DiscoverServiceLess, raw_data, offset);
+		is_valid &= SetField(data.map_submap_visible, FieldId::ServerConfig_MapSubmapVisible, raw_data, offset);
+		is_valid &= SetField(data.probe_enabled, FieldId::ServerConfig_ProbeEnabled, raw_data, offset);
+		is_valid &= SetField(data.map_static_visible, FieldId::ServerConfig_MapStaticVisible, raw_data, offset);
+		is_valid &= SetField(data.syslog_enabled, FieldId::ServerConfig_SyslogEnabled, raw_data, offset);
+		is_valid &= SetField(data.map_link_visible, FieldId::ServerConfig_MapLinkVisible, raw_data, offset);
+		is_valid &= SetField(data.snmp_trap_enabled, FieldId::ServerConfig_SnmpTrapEnabled, raw_data, offset);
+		is_valid &= SetField(data.confirm_remove, FieldId::ServerConfig_ConfirmRemove, raw_data, offset);
+		is_valid &= SetField(data.resolve_mac_address_manufacturer, FieldId::ServerConfig_ResolveMACAddressManufacturer, raw_data, offset);
+		is_valid &= SetField(data.map_dep_visible, FieldId::ServerConfig_MapDepVisible, raw_data, offset);
+		is_valid &= SetField(data.map_antialiased_geometry, FieldId::ServerConfig_MapAntialiasedGeometry, raw_data, offset);
+		is_valid &= SetField(data.map_gradients, FieldId::ServerConfig_MapGradients, raw_data, offset);
+		is_valid &= SetField(data.object_id, FieldId::SysId, raw_data, offset);
+		is_valid &= SetField(data.version, FieldId::ServerConfig_Version, raw_data, offset);
+		is_valid &= SetField(data.snmp_profile_id, FieldId::ServerConfig_SnmpProfileID, raw_data, offset);
+		is_valid &= SetField(data.agent_id, FieldId::ServerConfig_AgentID, raw_data, offset);
+		is_valid &= SetField(data.probe_interval, FieldId::ServerConfig_ProbeInterval, raw_data, offset);
+		is_valid &= SetField(data.probe_timeout, FieldId::ServerConfig_ProbeTimeout, raw_data, offset);
+		is_valid &= SetField(data.probe_down_count, FieldId::ServerConfig_ProbeDownCount, raw_data, offset);
+		is_valid &= SetField(data.syslog_port, FieldId::ServerConfig_SyslogPort, raw_data, offset);
+		is_valid &= SetField(data.snmp_trap_port, FieldId::ServerConfig_SnmpTrapPort, raw_data, offset);
+		is_valid &= SetField(data.map_background_color, FieldId::ServerConfig_MapBackgroundColor, raw_data, offset);
+		is_valid &= SetField(data.map_label_refresh_interval, FieldId::ServerConfig_MapLabelRefreshInterval, raw_data, offset);
+		is_valid &= SetField(data.map_up_color, FieldId::ServerConfig_MapUpColor, raw_data, offset);
+		is_valid &= SetField(data.map_down_partial_color, FieldId::ServerConfig_MapDownPartialColor, raw_data, offset);
+		is_valid &= SetField(data.map_down_complete_color, FieldId::ServerConfig_MapDownCompleteColor, raw_data, offset);
+		is_valid &= SetField(data.map_unknown_color, FieldId::ServerConfig_MapUnknownColor, raw_data, offset);
+		is_valid &= SetField(data.map_acked_color, FieldId::ServerConfig_MapAckedColor, raw_data, offset);
+		is_valid &= SetField(data.map_network_color, FieldId::ServerConfig_MapNetworkColor, raw_data, offset);
+		is_valid &= SetField(data.map_submap_color, FieldId::ServerConfig_MapSubmapColor, raw_data, offset);
+		is_valid &= SetField(data.map_submap_up_color, FieldId::ServerConfig_MapSubmapUpColor, raw_data, offset);
+		is_valid &= SetField(data.map_submap_down_partial_color, FieldId::ServerConfig_MapSubmapDownPartialColor, raw_data, offset);
+		is_valid &= SetField(data.map_submap_down_complete_color, FieldId::ServerConfig_MapSubmapDownCompleteColor, raw_data, offset);
+		is_valid &= SetField(data.map_submap_acked_color, FieldId::ServerConfig_MapSubmapAckedColor, raw_data, offset);
+		is_valid &= SetField(data.map_static_color, FieldId::ServerConfig_MapStaticColor, raw_data, offset);
+		is_valid &= SetField(data.map_link_color, FieldId::ServerConfig_MapLinkColor, raw_data, offset);
+		is_valid &= SetField(data.map_link_label_color, FieldId::ServerConfig_MapLinkLabelColor, raw_data, offset);
+		is_valid &= SetField(data.map_link_full_color, FieldId::ServerConfig_MapLinkFullColor, raw_data, offset);
+		is_valid &= SetField(data.map_device_shape, FieldId::ServerConfig_MapDeviceShape, raw_data, offset);
+		is_valid &= SetField(data.map_network_shape, FieldId::ServerConfig_MapNetworkShape, raw_data, offset);
+		is_valid &= SetField(data.map_submap_shape, FieldId::ServerConfig_MapSubmapShape, raw_data, offset);
+		is_valid &= SetField(data.map_static_shape, FieldId::ServerConfig_MapStaticShape, raw_data, offset);
+		is_valid &= SetField(data.map_link_thickness, FieldId::ServerConfig_MapLinkThickness, raw_data, offset);
+		is_valid &= SetField(data.map_dep_color, FieldId::ServerConfig_MapDepColor, raw_data, offset);
+		is_valid &= SetField(data.map_dep_thickness, FieldId::ServerConfig_MapDepThickness, raw_data, offset);
+		is_valid &= SetField(data.map_dep_style, FieldId::ServerConfig_MapDepStyle, raw_data, offset);
+		is_valid &= SetField(data.chart_value_keep_time_raw, FieldId::ServerConfig_ChartValueKeepTimeRaw, raw_data, offset);
+		is_valid &= SetField(data.chart_value_keep_time_10_min, FieldId::ServerConfig_ChartValueKeepTime10min, raw_data, offset);
+		is_valid &= SetField(data.chart_value_keep_time_2_hour, FieldId::ServerConfig_ChartValueKeepTime2hour, raw_data, offset);
+		is_valid &= SetField(data.chart_value_keep_time_1_day, FieldId::ServerConfig_ChartValueKeepTime1day, raw_data, offset);
+		is_valid &= SetField(data.chart_background_color, FieldId::ServerConfig_ChartBackgroundColor, raw_data, offset);
+		is_valid &= SetField(data.chart_grid_color, FieldId::ServerConfig_ChartGridColor, raw_data, offset);
+		is_valid &= SetField(data.chart_text_color, FieldId::ServerConfig_ChartTextColor, raw_data, offset);
+		is_valid &= SetField(data.discover_name_preference, FieldId::ServerConfig_DiscoverNamePreference, raw_data, offset);
+		is_valid &= SetField(data.discover_mode, FieldId::ServerConfig_DiscoverMode, raw_data, offset);
+		is_valid &= SetField(data.discover_hops, FieldId::ServerConfig_DiscoverHops, raw_data, offset);
+		is_valid &= SetField(data.discover_hop_network_size_limit, FieldId::ServerConfig_DiscoverHopNetworkSizeLimit, raw_data, offset);
+		is_valid &= SetField(data.discover_simultaneous, FieldId::ServerConfig_DiscoverSimultaneous, raw_data, offset);
+		is_valid &= SetField(data.discover_interval, FieldId::ServerConfig_DiscoverInterval, raw_data, offset);
+		is_valid &= SetField(data.discover_item_width, FieldId::ServerConfig_DiscoverItemWidth, raw_data, offset);
+		is_valid &= SetField(data.discover_item_height, FieldId::ServerConfig_DiscoverItemHeight, raw_data, offset);
+		is_valid &= SetField(data.discover_big_row, FieldId::ServerConfig_DiscoverBigRow, raw_data, offset);
+		is_valid &= SetField(data.discover_big_column, FieldId::ServerConfig_DiscoverBigColumn, raw_data, offset);
+		is_valid &= SetField(data.discover_whole_row, FieldId::ServerConfig_DiscoverWholeRow, raw_data, offset);
+		is_valid &= SetField(data.discover_whole_column, FieldId::ServerConfig_DiscoverWholeColumn, raw_data, offset);
+		is_valid &= SetField(data.ros_conn_interval, FieldId::ServerConfig_RosConnInterval, raw_data, offset);
+		is_valid &= SetField(data.ros_conn_interval_auth_failed, FieldId::ServerConfig_RosConnIntervalAuthFailed, raw_data, offset);
+		is_valid &= SetField(data.undo_queue_size, FieldId::ServerConfig_UndoQueueSize, raw_data, offset);
+		is_valid &= SetField(data.mac_mapping_refresh_interval, FieldId::ServerConfig_MacMappingRefreshInterval, raw_data, offset);
+		is_valid &= SetField(data.contents_pane_behavior, FieldId::ServerConfig_ContentsPaneBehavior, raw_data, offset);
+		is_valid &= SetField(data.last_chart_maintenance_time, FieldId::ServerConfig_LastChartMaintenanceTime, raw_data, offset);
+		is_valid &= SetField(data.discover_black_list, FieldId::ServerConfig_DiscoverBlackList, raw_data, offset);
+		is_valid &= SetField(data.report_font, FieldId::ServerConfig_ReportFont, raw_data, offset);
+		is_valid &= SetField(data.chart_font, FieldId::ServerConfig_ChartFont, raw_data, offset);
+		is_valid &= SetField(data.map_link_font, FieldId::ServerConfig_MapLinkFont, raw_data, offset);
+		is_valid &= SetField(data.map_link_tooltip, FieldId::ServerConfig_MapLinkTooltip, raw_data, offset);
+		is_valid &= SetField(data.map_link_label, FieldId::ServerConfig_MapLinkLabel, raw_data, offset);
+		is_valid &= SetField(data.map_static_font, FieldId::ServerConfig_MapStaticFont, raw_data, offset);
+		is_valid &= SetField(data.map_submap_font, FieldId::ServerConfig_MapSubmapFont, raw_data, offset);
+		is_valid &= SetField(data.map_submap_tooltip, FieldId::ServerConfig_MapSubmapTooltip, raw_data, offset);
+		is_valid &= SetField(data.map_submap_label, FieldId::ServerConfig_MapSubmapLabel, raw_data, offset);
+		is_valid &= SetField(data.map_network_font, FieldId::ServerConfig_MapNetworkFont, raw_data, offset);
+		is_valid &= SetField(data.map_network_tooltip, FieldId::ServerConfig_MapNetworkTooltip, raw_data, offset);
+		is_valid &= SetField(data.map_network_label, FieldId::ServerConfig_MapNetworkLabel, raw_data, offset);
+		is_valid &= SetField(data.map_device_font, FieldId::ServerConfig_MapDeviceFont, raw_data, offset);
+		is_valid &= SetField(data.map_device_tooltip, FieldId::ServerConfig_MapDeviceTooltip, raw_data, offset);
+		is_valid &= SetField(data.map_device_label, FieldId::ServerConfig_MapDeviceLabel, raw_data, offset);
+		is_valid &= SetField(data.unique_id, FieldId::ServerConfig_UniqueID, raw_data, offset);
+		is_valid &= SetField(data.name, FieldId::SysName, raw_data, offset);
+		is_valid &= ValidateEndOfBlob(raw_data, offset);
+
+		if (!is_valid) {
+			return {};
+		}
 
 		return data;
 	}

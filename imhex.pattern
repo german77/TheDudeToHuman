@@ -1,6 +1,6 @@
 enum DataFormat : u32 {
     None,
-    Unknown3 = 0x03,
+    ServerConfiguration = 0x03,
     Tool = 0x04,
     File = 0x05,
     Notes = 0x09,
@@ -903,6 +903,115 @@ struct StringArrayField {
     StringArrayEntry entries[entry_count];
 };
 
+// This is type 0x03 data
+struct ServerConfiguration {
+    IntArrayField time_zone_history;
+    IntArrayField discover_skip_types;
+    IntArrayField discover_skip_probes;
+    IntArrayField custom_colors;
+    IntArrayField chart_line_colors;
+    IntArrayField notify_ids;
+    BoolField discover_identification;
+    BoolField discover_networks;
+    BoolField discover_links;
+    BoolField map_device_visible;
+    BoolField discover_layer_2;
+    BoolField first_connection;
+    BoolField discover_ppp;
+    BoolField discover_graph_services;
+    BoolField map_network_visible;
+    BoolField discover_graph_links;
+    BoolField discover_service_less;
+    BoolField map_submap_visible;
+    BoolField probe_enabled;
+    BoolField map_static_visible;
+    BoolField syslog_enabled;
+    BoolField map_link_visible;
+    BoolField snmp_trap_enabled;
+    BoolField confirm_remove;
+    BoolField resolve_mac_address_manufacturer;
+    BoolField map_dep_visible;
+    BoolField map_antialiased_geometry;
+    BoolField map_gradients;
+    IntField object_id;
+    ByteField version;
+    IntField snmp_profile_id;
+    ByteField agent_id;
+    ByteField probe_interval;
+    ByteField probe_timeout;
+    ByteField probe_down_count;
+    IntField syslog_port;
+    ByteField snmp_trap_port;
+    IntField map_background_color;
+    ByteField map_label_refresh_interval;
+    IntField map_up_color;
+    IntField map_down_partial_color;
+    IntField map_down_complete_color;
+    IntField map_unknown_color;
+    IntField map_acked_color;
+    IntField map_network_color;
+    IntField map_submap_color;
+    IntField map_submap_up_color;
+    IntField map_submap_down_partial_color;
+    IntField map_submap_down_complete_color;
+    IntField map_submap_acked_color;
+    IntField map_static_color;
+    IntField map_link_color;
+    IntField map_link_label_color;
+    IntField map_link_full_color;
+    ByteField map_device_shape;
+    ByteField map_network_shape;
+    ByteField map_submap_shape;
+    ByteField map_static_shape;
+    ByteField map_link_thickness;
+    IntField map_dep_color;
+    ByteField map_dep_thickness;
+    ByteField map_dep_style;
+    IntField chart_value_keep_time_raw;
+    IntField chart_value_keep_time_10_min;
+    IntField chart_value_keep_time_2_hour;
+    IntField chart_value_keep_time_1_day;
+    IntField chart_background_color;
+    IntField chart_grid_color;
+    IntField chart_text_color;
+    ByteField discover_name_preference;
+    ByteField discover_mode;
+    ByteField discover_hops;
+    ByteField discover_hop_network_size_limit;
+    ByteField discover_simultaneous;
+    IntField discover_interval;
+    ByteField discover_item_width;
+    ByteField discover_item_height;
+    ByteField discover_big_row;
+    ByteField discover_big_column;
+    ByteField discover_whole_row;
+    ByteField discover_whole_column;
+    IntField ros_conn_interval;
+    IntField ros_conn_interval_auth_failed;
+    ByteField undo_queue_size;
+    IntField mac_mapping_refresh_interval;
+    ByteField contents_pane_behavior;
+    IntField last_chart_maintenance_time;
+    TextField discover_black_list;
+    LongArrayField report_font;
+    LongArrayField chart_font;
+    LongArrayField map_link_font;
+    TextField map_link_tooltip;
+    TextField map_link_label;
+    LongArrayField map_static_font;
+    LongArrayField map_submap_font;
+    TextField map_submap_tooltip;
+    TextField map_submap_label;
+    LongArrayField map_network_font;
+    TextField map_network_tooltip;
+    TextField map_network_label;
+    LongArrayField map_device_font;
+    TextField map_device_tooltip;
+    TextField map_device_label;
+    LongArrayField unique_id;
+    TextField name;
+};
+
 // This is type 0x04 data
 struct Tool {
     BoolField builtin;
@@ -1242,6 +1351,10 @@ struct PanelElement {
 
 struct Data{
     IntArrayField format;
+    
+    if (format.data[0] == DataFormat::ServerConfiguration){
+        ServerConfiguration context;
+    }
     
     if (format.data[0] == DataFormat::Tool){
         Tool context;

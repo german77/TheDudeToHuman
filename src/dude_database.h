@@ -28,6 +28,7 @@ namespace Database {
 		// Usefull to find new unsuported types
 		std::vector<DataFormat> ListUsedDataFormats() const;
 
+		std::vector<ServerConfigurationData> GetServerConfigurationData() const;
 		std::vector<ToolData> GetToolData() const;
 		std::vector<FileData> GetFileData() const;
 		std::vector<NotesData> GetNotesData() const;
@@ -49,6 +50,7 @@ namespace Database {
 		std::vector<T> GetObjectData(DataFormat format, T(DudeDatabase::* RawToObjData)(std::span<const u8> raw_data) const) const;
 
 		RawObjData BlobToRawObjData(std::span<const u8> blob) const;
+		ServerConfigurationData RawDataToServerConfigurationData(std::span<const u8> blob) const;
 		ToolData RawDataToToolData(std::span<const u8> blob) const;
 		FileData RawDataToFileData(std::span<const u8> blob) const;
 		NotesData RawDataToNotesData(std::span<const u8> raw_data) const;
