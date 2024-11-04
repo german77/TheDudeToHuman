@@ -159,6 +159,14 @@ namespace Database {
 		TextField name;
 	};
 
+	// This is type 0x09 data
+	struct NotesData {
+		IntField object_id;
+		IntField parent_id;
+		TimeField time_added;
+		TextField name;
+	};
+
 	// This is type 0x0A data
 	struct MapData {
 		IntArrayField notify_ids;
@@ -245,14 +253,6 @@ namespace Database {
 		LongArrayField device_font;
 		TextField device_label;
 		TextField list_type;
-		TextField name;
-	};
-
-	// This is type 0x09 data
-	struct NotesData {
-		IntField object_id;
-		IntField parent_id;
-		TimeField time_added;
 		TextField name;
 	};
 

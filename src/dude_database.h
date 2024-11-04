@@ -29,8 +29,8 @@ namespace Database {
 		std::vector<DataFormat> ListUsedDataFormats() const;
 
 		std::vector<ToolData> GetToolData() const;
-		std::vector<MapData> GetMapData() const;
 		std::vector<NotesData> GetNotesData() const;
+		std::vector<MapData> GetMapData() const;
 		std::vector<DeviceTypeData> GetDeviceTypeData() const;
 		std::vector<DeviceData> GetDeviceData() const;
 		std::vector<ServiceData> GetServiceData() const;
@@ -46,8 +46,8 @@ namespace Database {
 
 		RawObjData BlobToRawObjData(std::span<const u8> blob) const;
 		ToolData RawDataToToolData(std::span<const u8> blob) const;
-		MapData RawDataToMapData(std::span<const u8> raw_data) const;
 		NotesData RawDataToNotesData(std::span<const u8> raw_data) const;
+		MapData RawDataToMapData(std::span<const u8> raw_data) const;
 		DeviceTypeData RawDataToDeviceTypeData(std::span<const u8> raw_data) const;
 		DeviceData RawDataToDeviceData(std::span<const u8> raw_data) const;
 		ServiceData RawDataToServiceData(std::span<const u8> raw_data) const;
