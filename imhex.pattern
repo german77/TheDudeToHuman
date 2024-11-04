@@ -1,9 +1,8 @@
 enum DataFormat : u32 {
     None,
-    Unknown1 = 0x01,
     Unknown3 = 0x03,
     Tool = 0x04,
-    Unknown5 = 0x05,
+    File = 0x05,
     Notes = 0x09,
     Map = 0x0a,
     UnknownD = 0x0d,
@@ -554,6 +553,7 @@ enum FieldId : u24 {
     DiscoverInfo_ScanProgress = 0x1065ac,
 
     // File
+    File_UnknownText = 0x106978,
     File_FullName = 0x106979,
     File_ParentID = 0x10697a,
     File_Type = 0x10697b,
@@ -913,6 +913,14 @@ struct Tool {
     TextField name;
 };
 
+// This is type 0x05 data
+struct File {
+    IntField parent_id;
+    IntField object_id;
+    //TextField unknown;
+    TextField name;
+};
+
 // This is type 0x09 data
 struct Notes {
     IntField object_id;
@@ -1237,6 +1245,9 @@ struct Data{
     
     if (format.data[0] == DataFormat::Tool){
         Tool context;
+    }
+    if (format.data[0] == DataFormat::File){
+        File context;
     }
     if (format.data[0] == DataFormat::Notes){
         Notes context;

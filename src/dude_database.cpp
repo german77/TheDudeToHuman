@@ -97,6 +97,10 @@ namespace Database {
 		return GetObjectData<ToolData>(DataFormat::Tool, &DudeDatabase::RawDataToToolData);
 	}
 
+	std::vector<FileData> DudeDatabase::GetFileData() const {
+		return GetObjectData<FileData>(DataFormat::File, &DudeDatabase::RawDataToFileData);
+	}
+
 	std::vector<NotesData> DudeDatabase::GetNotesData() const {
 		return GetObjectData<NotesData>(DataFormat::Notes, &DudeDatabase::RawDataToNotesData);
 	}
@@ -118,7 +122,7 @@ namespace Database {
 	}
 
 	std::vector<NotificationData> DudeDatabase::GetNotificationData() const {
-		return GetObjectData<NotificationData>(DataFormat::Unknown1, &DudeDatabase::RawDataToNotificationData);
+		return GetObjectData<NotificationData>(DataFormat::Notification, &DudeDatabase::RawDataToNotificationData);
 	}
 
 	std::vector<LinkTypeData> DudeDatabase::GetLinkTypeData() const {
@@ -180,6 +184,24 @@ namespace Database {
 		is_valid &= SetField(data.device_id, FieldId::Tool_DeviceID, raw_data, offset);
 		is_valid &= SetField(data.object_id, FieldId::SysId, raw_data, offset);
 		is_valid &= SetField(data.command, FieldId::Tool_Command, raw_data, offset);
+		is_valid &= SetField(data.name, FieldId::SysName, raw_data, offset);
+		is_valid &= ValidateEndOfBlob(raw_data, offset);
+
+		if (!is_valid) {
+			return {};
+		}
+
+		return data;
+	}
+
+	FileData DudeDatabase::RawDataToFileData(std::span<const u8> raw_data) const {
+		std::size_t offset = 0;
+		bool is_valid = true;
+		FileData data{};
+
+		is_valid &= SetField(data.parent_id, FieldId::File_ParentID, raw_data, offset);
+		is_valid &= SetField(data.object_id, FieldId::SysId, raw_data, offset);
+		is_valid &= SetField(data.file_name, FieldId::File_FileName, raw_data, offset);
 		is_valid &= SetField(data.name, FieldId::SysName, raw_data, offset);
 		is_valid &= ValidateEndOfBlob(raw_data, offset);
 
@@ -953,7 +975,7 @@ namespace Database {
 
 	bool DudeDatabase::CheckSize(std::size_t raw_data_size, std::size_t offset, std::size_t header_size) const {
 		if (raw_data_size < header_size + offset) {
-			printf("Invalid data type, expected %zu, found %zu\n", header_size + offset, raw_data_size);
+			printf("Invalid data size, expected %zu, found %zu\n", header_size + offset, raw_data_size);
 			return false;
 		}
 		return true;

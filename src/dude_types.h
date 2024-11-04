@@ -18,7 +18,7 @@ namespace Database {
 		None,
 		Unknown3 = 0x03,
 		Tool = 0x04,
-		Unknown5 = 0x05,
+		File = 0x05,
 		Notes = 0x09,
 		Map = 0x0a,
 		UnknownD = 0x0d,
@@ -162,6 +162,14 @@ namespace Database {
 		IntField device_id;
 		IntField object_id;
 		TextField command;
+		TextField name;
+	};
+
+	// This is type 0x05 data
+	struct FileData {
+		IntField parent_id;
+		IntField object_id;
+		TextField file_name;
 		TextField name;
 	};
 

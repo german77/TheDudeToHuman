@@ -522,6 +522,7 @@ namespace Database {
 		DiscoverInfo_ScanProgress = 0x1065ac,
 
 		// File
+		File_FileName = 0x106978,
 		File_FullName = 0x106979,
 		File_ParentID = 0x10697a,
 		File_Type = 0x10697b,
