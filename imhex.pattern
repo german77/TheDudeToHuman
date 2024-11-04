@@ -11,7 +11,7 @@ enum DataFormat : u32 {
     Unknown10 = 0x10,
     Service = 0x11,
     Notification = 0x18,
-    Unknown1f = 0x1f,
+    Link = 0x1f,
     LinkType = 0x22,
     DataSource = 0x29,
     Unknown2a = 0x2a,
@@ -903,6 +903,7 @@ struct StringArrayField {
     StringArrayEntry entries[entry_count];
 };
 
+
 // This is type 0x03 data
 struct ServerConfiguration {
     IntArrayField time_zone_history;
@@ -1231,6 +1232,22 @@ struct Notification {
     TextField name;
 };
 
+// This is type 0x1c data
+struct Link {
+    BoolField history;
+    ByteField mastering_type;
+    IntField master_device;
+    IntField master_interface;
+    IntField net_map_id;
+    IntField net_map_element_id;
+    IntField type_id;
+    IntField tx_data_source_id;
+    IntField object_id;
+    IntField rx_data_source_id;
+    LongField speed;
+    TextField name;
+};
+
 // This is type 0x22 data
 struct LinkType {
     IntField object_id;
@@ -1355,7 +1372,6 @@ struct Data{
     if (format.data[0] == DataFormat::ServerConfiguration){
         ServerConfiguration context;
     }
-    
     if (format.data[0] == DataFormat::Tool){
         Tool context;
     }
@@ -1379,6 +1395,9 @@ struct Data{
     }
     if (format.data[0] == DataFormat::Notification){
         Notification context;
+    }
+    if (format.data[0] == DataFormat::Link){
+        Link context;
     }
     if (format.data[0] == DataFormat::LinkType){
         LinkType context;

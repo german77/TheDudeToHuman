@@ -37,6 +37,7 @@ namespace Database {
 		std::vector<DeviceData> GetDeviceData() const;
 		std::vector<ServiceData> GetServiceData() const;
 		std::vector<NotificationData> GetNotificationData() const;
+		std::vector<LinkData> GetLinkData() const;
 		std::vector<LinkTypeData> GetLinkTypeData() const;
 		std::vector<DataSourceData> GetDataSourceData() const;
 		std::vector<FunctionData> GetFunctionData() const;
@@ -59,6 +60,7 @@ namespace Database {
 		DeviceData RawDataToDeviceData(std::span<const u8> raw_data) const;
 		ServiceData RawDataToServiceData(std::span<const u8> raw_data) const;
 		NotificationData RawDataToNotificationData(std::span<const u8> raw_data) const;
+		LinkData RawDataToLinkData(std::span<const u8> raw_data) const;
 		LinkTypeData RawDataToLinkTypeData(std::span<const u8> raw_data) const;
 		DataSourceData RawDataToDataSourceData(std::span<const u8> raw_data) const;
 		FunctionData RawDataToFunctionData(std::span<const u8> raw_data) const;

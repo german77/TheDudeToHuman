@@ -27,7 +27,7 @@ namespace Database {
 		Unknown10 = 0x10,
 		Service = 0x11,
 		Notification = 0x18,
-		Unknown1f = 0x1f,
+		Link = 0x1f,
 		LinkType = 0x22,
 		DataSource = 0x29,
 		Unknown2a = 0x2a,
@@ -480,6 +480,22 @@ namespace Database {
 		TextField mail_server_dns;
 		LongLongField mail_server6;
 		TextField text_template;
+		TextField name;
+	};
+
+	// This is type 0x1c data
+	struct LinkData {
+		BoolField history;
+		ByteField mastering_type;
+		IntField master_device;
+		IntField master_interface;
+		IntField net_map_id;
+		IntField net_map_element_id;
+		IntField type_id;
+		IntField tx_data_source_id;
+		IntField object_id;
+		IntField rx_data_source_id;
+		LongField speed;
 		TextField name;
 	};
 

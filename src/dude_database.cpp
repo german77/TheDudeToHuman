@@ -129,6 +129,10 @@ namespace Database {
 		return GetObjectData<NotificationData>(DataFormat::Notification, &DudeDatabase::RawDataToNotificationData);
 	}
 
+	std::vector<LinkData> DudeDatabase::GetLinkData() const {
+		return GetObjectData<LinkData>(DataFormat::Link, &DudeDatabase::RawDataToLinkData);
+	}
+
 	std::vector<LinkTypeData> DudeDatabase::GetLinkTypeData() const {
 		return GetObjectData<LinkTypeData>(DataFormat::LinkType, &DudeDatabase::RawDataToLinkTypeData);
 	}
@@ -587,6 +591,32 @@ namespace Database {
 		is_valid &= SetField(data.mail_server_dns, FieldId::Notification_MailServerDns, raw_data, offset);
 		is_valid &= SetField(data.mail_server6, FieldId::Notification_MailServer6, raw_data, offset);
 		is_valid &= SetField(data.text_template, FieldId::Notification_TextTemplate, raw_data, offset);
+		is_valid &= SetField(data.name, FieldId::SysName, raw_data, offset);
+		is_valid &= ValidateEndOfBlob(raw_data, offset);
+
+		if (!is_valid) {
+			return {};
+		}
+
+		return data;
+	}
+
+	LinkData DudeDatabase::RawDataToLinkData(std::span<const u8> raw_data) const {
+		std::size_t offset = 0;
+		bool is_valid = true;
+		LinkData data{};
+
+		is_valid &= SetField(data.history, FieldId::Link_History, raw_data, offset);
+		is_valid &= SetField(data.mastering_type, FieldId::Link_MasteringType, raw_data, offset);
+		is_valid &= SetField(data.master_device, FieldId::Link_MasterDevice, raw_data, offset);
+		is_valid &= SetField(data.master_interface, FieldId::Link_MasterInterface, raw_data, offset);
+		is_valid &= SetField(data.net_map_id, FieldId::Link_NetMapID, raw_data, offset);
+		is_valid &= SetField(data.net_map_element_id, FieldId::Link_NetMapElementID, raw_data, offset);
+		is_valid &= SetField(data.type_id, FieldId::Link_TypeID, raw_data, offset);
+		is_valid &= SetField(data.tx_data_source_id, FieldId::Link_TxDataSourceID, raw_data, offset);
+		is_valid &= SetField(data.object_id, FieldId::SysId, raw_data, offset);
+		is_valid &= SetField(data.rx_data_source_id, FieldId::Link_RxDataSourceID, raw_data, offset);
+		is_valid &= SetField(data.speed, FieldId::Link_Speed, raw_data, offset);
 		is_valid &= SetField(data.name, FieldId::SysName, raw_data, offset);
 		is_valid &= ValidateEndOfBlob(raw_data, offset);
 

@@ -26,5 +26,6 @@ int main() {
 	//auto data13 = db.GetFunctionData();
 	//auto data14 = db.GetNotificationData();
 	//auto data15 = db.GetFileData();
-	auto data16 = db.GetServerConfigurationData();
+	//auto data16 = db.GetServerConfigurationData();
+	auto data17 = db.GetLinkData();
 }
