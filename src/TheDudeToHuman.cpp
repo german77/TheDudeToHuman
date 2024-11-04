@@ -20,7 +20,8 @@ int main() {
 	//auto data7 = db.GetMapData();
 	//auto data8 = db.GetPanelElementData();
 	//auto data9 = db.GetServiceData();
-	auto data10 = db.GetPanelData();
-	auto data11 = db.GetToolData();
-	auto data12 = db.GetLinkTypeData();
+	//auto data10 = db.GetPanelData();
+	//auto data11 = db.GetToolData();
+	//auto data12 = db.GetLinkTypeData();
+	auto data13 = db.GetFunctionData();
 }

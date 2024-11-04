@@ -123,6 +123,10 @@ namespace Database {
 		return GetObjectData<DataSourceData>(DataFormat::DataSource, &DudeDatabase::RawDataToDataSourceData);
 	}
 
+	std::vector<FunctionData> DudeDatabase::GetFunctionData() const {
+		return GetObjectData<FunctionData>(DataFormat::Function, &DudeDatabase::RawDataToFunctionData);
+	}
+
 	std::vector<SnmpProfileData> DudeDatabase::GetSnmpProfileData() const {
 		return GetObjectData<SnmpProfileData>(DataFormat::SnmpProfile, &DudeDatabase::RawDataToSnmpProfileData);
 	}
@@ -435,6 +439,28 @@ namespace Database {
 		is_valid &= SetField(data.keep_time_1Day, FieldId::DataSource_KeepTime1day, raw_data, offset);
 		is_valid &= SetField(data.function_code, FieldId::DataSource_FunctionCode, raw_data, offset);
 		is_valid &= SetField(data.unit, FieldId::DataSource_Unit, raw_data, offset);
+		is_valid &= SetField(data.name, FieldId::SysName, raw_data, offset);
+		is_valid &= ValidateEndOfBlob(raw_data, offset);
+
+		if (!is_valid) {
+			return {};
+		}
+
+		return data;
+	}
+
+	FunctionData DudeDatabase::RawDataToFunctionData(std::span<const u8> raw_data) const {
+		std::size_t offset = 0;
+		bool is_valid = true;
+		FunctionData data{};
+
+		is_valid &= SetField(data.argument_descriptors, FieldId::Function_ArgumentDescrs, raw_data, offset);
+		is_valid &= SetField(data.builtin, FieldId::Function_Builtin, raw_data, offset);
+		is_valid &= SetField(data.min_arguments, FieldId::Function_MinArguments, raw_data, offset);
+		is_valid &= SetField(data.max_arguments, FieldId::Function_MaxArguments, raw_data, offset);
+		is_valid &= SetField(data.object_id, FieldId::SysId, raw_data, offset);
+		is_valid &= SetField(data.description, FieldId::Function_Descr, raw_data, offset);
+		is_valid &= SetField(data.code, FieldId::Function_Code, raw_data, offset);
 		is_valid &= SetField(data.name, FieldId::SysName, raw_data, offset);
 		is_valid &= ValidateEndOfBlob(raw_data, offset);
 

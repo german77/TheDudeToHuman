@@ -33,7 +33,7 @@ namespace Database {
 		DataSource = 0x29,
 		Unknown2a = 0x2a,
 		Unknown31 = 0x31,
-		Unknown39 = 0x39,
+		Function = 0x39,
 		SnmpProfile = 0x3a,
 		Panel = 0x3b,
 		Unknown43 = 0x43,
@@ -350,6 +350,18 @@ namespace Database {
 		ByteField keep_time_1Day;
 		TextField function_code;
 		TextField unit;
+		TextField name;
+	};
+
+	// This is type 0x39 data
+	struct FunctionData {
+		StringArrayField argument_descriptors;
+		BoolField builtin;
+		ByteField min_arguments;
+		ByteField max_arguments;
+		IntField object_id;
+		TextField description;
+		TextField code;
 		TextField name;
 	};
 

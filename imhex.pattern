@@ -4,7 +4,7 @@ enum DataFormat : u32 {
     Unknown3 = 0x03,
     Tool = 0x04,
     Unknown5 = 0x05,
-    Unknown9 = 0x09,
+    Notes = 0x09,
     Map = 0x0a,
     UnknownD = 0x0d,
     DeviceType = 0x0e,
@@ -12,11 +12,11 @@ enum DataFormat : u32 {
     Unknown10 = 0x10,
     Service = 0x11,
     Unknown18 = 0x18,
-    Unknown22 = 0x22,
-    Unknown29 = 0x29,
+    LinkType = 0x22,
+    DataSource = 0x29,
     Unknown2a = 0x2a,
     Unknown31 = 0x31,
-    Unknown39 = 0x39,
+    Function = 0x39,
     SnmpProfile = 0x3a,
     Panel = 0x3b,
     Unknown43 = 0x43,
@@ -903,6 +903,14 @@ struct Tool {
     TextField command;
     TextField name;
 };
+
+// This is type 0x09 data
+struct Notes {
+	IntField object_id;
+	IntField parent_id;
+	TimeField time_added;
+	TextField name;
+};
     
 // This is type 0x0A data
 struct Map {
@@ -993,14 +1001,6 @@ struct Map {
     TextField name;
 };
 
-// This is type 0x09 data
-struct NotesData {
-    IntField object_id;
-    IntField parent_id;
-    TimeField time_added;
-    TextField name;
-};
-
 // This is type 0x0E data
 struct DeviceType {
     IntArrayField ignored_services;
@@ -1071,8 +1071,19 @@ struct Service {
     TextField name;
 };
 
+// This is type 0x22 data
+struct LinkType {
+	IntField object_id;
+	ByteField style;
+	ByteField thickness;
+	ByteField snmp_type;
+	IntField next_id;
+	LongField snmp_speed;
+	TextField name;
+};
+
 // This is type 0x29 data
-struct DataSourceData {
+struct DataSource {
     BoolField enabled;
     IntField function_device_id;
     ByteField function_interval;
@@ -1084,6 +1095,19 @@ struct DataSourceData {
     ByteField keep_time_1Day;
     TextField function_code;
     TextField unit;
+    TextField name;
+};
+
+
+// This is type 0x39 data
+struct Function {
+    StringArrayField argument_descriptors;
+    BoolField builtin;
+    ByteField min_arguments;
+    ByteField max_arguments;
+    IntField object_id;
+    TextField description;
+    TextField code;
     TextField name;
 };
 
@@ -1172,6 +1196,9 @@ struct Data{
     if (format.data[0] == DataFormat::Tool){
         Tool context;
     }
+    if (format.data[0] == DataFormat::Notes){
+        Notes context;
+    }
     if (format.data[0] == DataFormat::Map){
         Map context;
     }
@@ -1181,20 +1208,29 @@ struct Data{
     if (format.data[0] == DataFormat::Device){
         Device context;
     }
+    if (format.data[0] == DataFormat::Service){
+        Service context;
+    }
+    if (format.data[0] == DataFormat::LinkType){
+        LinkType context;
+    }
+    if (format.data[0] == DataFormat::DataSource){
+        DataSource context;
+    }
+    if (format.data[0] == DataFormat::Function){
+        Function context;
+    }
     if (format.data[0] == DataFormat::SnmpProfile){
         SnmpProfile context;
+    }
+    if (format.data[0] == DataFormat::Panel){
+        Panel context;
     }
     if (format.data[0] == DataFormat::NetworkMapElement){
         NetworkMapElement context;
     }
     if (format.data[0] == DataFormat::PanelElement){
         PanelElement context;
-    }
-    if (format.data[0] == DataFormat::Service){
-        Service context;
-    }
-    if (format.data[0] == DataFormat::Panel){
-        Panel context;
     }
 };
 
