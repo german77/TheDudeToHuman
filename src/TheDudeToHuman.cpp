@@ -17,6 +17,7 @@ int main() {
 	//auto data4 = db.GetNetworkMapElementData();
 	//auto data5 = db.GetNotesData();
 	//auto data6 = db.GetDataSourceData();
-	auto data7 = db.GetMapData();
+	//auto data7 = db.GetMapData();
 	//auto data8 = db.GetPanelElementData();
+	auto data9 = db.GetServiceData();
 }

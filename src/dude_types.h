@@ -26,7 +26,7 @@ namespace Database {
 		DeviceType = 0x0e,
 		Device = 0x0f,
 		Unknown10 = 0x10,
-		Unknown11 = 0x11,
+		Service = 0x11,
 		Unknown18 = 0x18,
 		Unknown1f = 0x1f,
 		Unknown22 = 0x22,
@@ -87,6 +87,12 @@ namespace Database {
 	struct TimeField {
 		FieldInfo info;
 		u32 date;
+	};
+
+	// This is FieldType::Long
+	struct LongField {
+		FieldInfo info;
+		u64 value;
 	};
 
 	// This is FieldType::ShortString or FieldType::LongString
@@ -280,6 +286,33 @@ namespace Database {
 		TextField password;
 		TextField username;
 		MacAddressField mac;
+		TextField name;
+	};
+
+	// This is type 0x11 data
+	struct ServiceData {
+		IntArrayField notify_ids;
+		BoolField enabled;
+		BoolField history;
+		BoolField notify_use;
+		BoolField acked;
+		IntField probe_port;
+		ByteField probe_interval;
+		ByteField probe_timeout;
+		ByteField probe_down_count;
+		IntField data_source_id;
+		ByteField status;
+		IntField time_since_changed;
+		IntField time_since_last_up;
+		IntField time_since_last_down;
+		IntField time_previous_up;
+		IntField time_previous_down;
+		ByteField proves_down;
+		IntField object_id;
+		IntField device_id;
+		IntField agent_id;
+		IntField prove_id;
+		LongField value;
 		TextField name;
 	};
 

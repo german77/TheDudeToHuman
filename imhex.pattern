@@ -10,7 +10,7 @@ enum DataFormat : u32 {
     DeviceType = 0x0e,
     Device = 0x0f,
     Unknown10 = 0x10,
-    Unknown11 = 0x11,
+    Service = 0x11,
     Unknown18 = 0x18,
     Unknown22 = 0x22,
     Unknown29 = 0x29,
@@ -836,6 +836,12 @@ struct TimeField {
     u32 date;
 };
 
+// This is FieldType::Long
+struct LongField {
+    FieldInfo info;
+    u64 date;
+};
+
 // This is FieldType::ShortString or FieldType::LongString
 struct TextField {
     FieldInfo info;
@@ -1027,6 +1033,33 @@ struct Device {
     TextField name;
 };
 
+// This is type 0x11 data
+struct Service {
+    IntArrayField notify_ids;
+    BoolField enabled;
+    BoolField history;
+    BoolField notify_use;
+    BoolField acked;
+    IntField probe_port;
+    ByteField probe_interval;
+    ByteField probe_timeout;
+    ByteField probe_down_count;
+    IntField data_source_id;
+    ByteField status;
+    IntField time_since_changed;
+    IntField time_since_last_up;
+    IntField time_since_last_down;
+    IntField time_previous_up;
+    IntField time_previous_down;
+    ByteField proves_down;
+    IntField object_id;
+    IntField device_id;
+    IntField agent_id;
+    IntField prove_id;
+    LongField value;
+    TextField name;
+};
+
 // This is type 0x29 data
 struct DataSourceData {
     BoolField enabled;
@@ -1130,6 +1163,9 @@ struct Data{
     }
     if (format.data[0] == DataFormat::PanelElement){
         PanelElement context;
+    }
+    if (format.data[0] == DataFormat::Service){
+        Service context;
     }
 };
 

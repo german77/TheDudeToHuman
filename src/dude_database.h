@@ -32,6 +32,7 @@ namespace Database {
 		std::vector<NotesData> GetNotesData() const;
 		std::vector<DeviceTypeData> GetDeviceTypeData() const;
 		std::vector<DeviceData> GetDeviceData() const;
+		std::vector<ServiceData> GetServiceData() const;
 		std::vector<DataSourceData> GetDataSourceData() const;
 		std::vector<SnmpProfileData> GetSnmpProfileData() const;
 		std::vector<NetworkMapElementData> GetNetworkMapElementData() const;
@@ -46,6 +47,7 @@ namespace Database {
 		NotesData RawDataToNotesData(std::span<const u8> raw_data) const;
 		DeviceTypeData RawDataToDeviceTypeData(std::span<const u8> raw_data) const;
 		DeviceData RawDataToDeviceData(std::span<const u8> raw_data) const;
+		ServiceData RawDataToServiceData(std::span<const u8> raw_data) const;
 		DataSourceData RawDataToDataSourceData(std::span<const u8> raw_data) const;
 		SnmpProfileData RawDataToSnmpProfileData(std::span<const u8> raw_data) const;
 		NetworkMapElementData RawDataToNetworkMapElementData(std::span<const u8> raw_data) const;
@@ -55,6 +57,7 @@ namespace Database {
 		bool SetField(ByteField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const;
 		bool SetField(IntField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const;
 		bool SetField(TimeField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const;
+		bool SetField(LongField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const;
 		bool SetField(TextField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const;
 		bool SetField(IntArrayField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const;
 		bool SetField(IpAddressField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const;

@@ -107,6 +107,10 @@ namespace Database {
 		return GetObjectData<DeviceData>(DataFormat::Device, &DudeDatabase::RawDataToDeviceData);
 	}
 
+	std::vector<ServiceData> DudeDatabase::GetServiceData() const {
+		return GetObjectData<ServiceData>(DataFormat::Service, &DudeDatabase::RawDataToServiceData);
+	}
+
 	std::vector<DataSourceData> DudeDatabase::GetDataSourceData() const {
 		return GetObjectData<DataSourceData>(DataFormat::DataSource, &DudeDatabase::RawDataToDataSourceData);
 	}
@@ -314,6 +318,44 @@ namespace Database {
 		is_valid &= SetField(data.password, FieldId::Device_Password, raw_data, offset);
 		is_valid &= SetField(data.username, FieldId::Device_Username, raw_data, offset);
 		is_valid &= SetField(data.mac, FieldId::Device_MacAddress, raw_data, offset);
+		is_valid &= SetField(data.name, FieldId::SysName, raw_data, offset);
+		is_valid &= ValidateEndOfBlob(raw_data, offset);
+
+		if (!is_valid) {
+			return {};
+		}
+
+		return data;
+	}
+
+
+	ServiceData DudeDatabase::RawDataToServiceData(std::span<const u8> raw_data) const {
+		std::size_t offset = 0;
+		bool is_valid = true;
+		ServiceData data{};
+
+		is_valid &= SetField(data.notify_ids, FieldId::Service_NotifyIDs, raw_data, offset);
+		is_valid &= SetField(data.enabled, FieldId::Service_Enabled, raw_data, offset);
+		is_valid &= SetField(data.history, FieldId::Service_History, raw_data, offset);
+		is_valid &= SetField(data.notify_use, FieldId::Service_NotifyUse, raw_data, offset);
+		is_valid &= SetField(data.acked, FieldId::Service_Acked, raw_data, offset);
+		is_valid &= SetField(data.probe_port, FieldId::Service_ProbePort, raw_data, offset);
+		is_valid &= SetField(data.probe_interval, FieldId::Service_ProbeInterval, raw_data, offset);
+		is_valid &= SetField(data.probe_timeout, FieldId::Service_ProbeTimeout, raw_data, offset);
+		is_valid &= SetField(data.probe_down_count, FieldId::Service_ProbeDownCount, raw_data, offset);
+		is_valid &= SetField(data.data_source_id, FieldId::Service_DataSourceID, raw_data, offset);
+		is_valid &= SetField(data.status, FieldId::Service_Status, raw_data, offset);
+		is_valid &= SetField(data.time_since_changed, FieldId::Service_TimeSinceChanged, raw_data, offset);
+		is_valid &= SetField(data.time_since_last_up, FieldId::Service_TimeLastUp, raw_data, offset);
+		is_valid &= SetField(data.time_since_last_down, FieldId::Service_TimeLastDown, raw_data, offset);
+		is_valid &= SetField(data.time_previous_up, FieldId::Service_TimePrevUp, raw_data, offset);
+		is_valid &= SetField(data.time_previous_down, FieldId::Service_TimePrevDown, raw_data, offset);
+		is_valid &= SetField(data.proves_down, FieldId::Service_ProbesDown, raw_data, offset);
+		is_valid &= SetField(data.object_id, FieldId::SysId, raw_data, offset);
+		is_valid &= SetField(data.device_id, FieldId::Service_DeviceID, raw_data, offset);
+		is_valid &= SetField(data.agent_id, FieldId::Service_AgentID, raw_data, offset);
+		is_valid &= SetField(data.prove_id, FieldId::Service_probeID, raw_data, offset);
+		is_valid &= SetField(data.value, FieldId::Service_Value, raw_data, offset);
 		is_valid &= SetField(data.name, FieldId::SysName, raw_data, offset);
 		is_valid &= ValidateEndOfBlob(raw_data, offset);
 
@@ -533,6 +575,24 @@ namespace Database {
 
 		ValidateId(field.info.id.Value(), id);
 		if (!ValidateType(field.info.type.Value(), FieldType::Int)) {
+			return {};
+		}
+
+		return true;
+	}
+
+	bool DudeDatabase::SetField(LongField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const {
+		constexpr std::size_t header_size = sizeof(LongField::info) + sizeof(LongField::value);
+
+		if (!CheckSize(raw_data.size(), offset, header_size)) {
+			return {};
+		}
+
+		memcpy(&field, raw_data.data() + offset, header_size);
+		offset += header_size;
+
+		ValidateId(field.info.id.Value(), id);
+		if (!ValidateType(field.info.type.Value(), FieldType::Long)) {
 			return {};
 		}
 
