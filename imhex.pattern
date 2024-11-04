@@ -18,7 +18,7 @@ enum DataFormat : u32 {
     Unknown31 = 0x31,
     Unknown39 = 0x39,
     SnmpProfile = 0x3a,
-    Unknown3B = 0x3b,
+    Panel = 0x3b,
     Unknown43 = 0x43,
     NetworkMapElement = 0x4a,
     Unknown4B = 0x4b,
@@ -1092,6 +1092,18 @@ struct SnmpProfile {
     TextField name;
 };
 
+// This is type 0x3B data
+struct Panel {
+    BoolField ordered;
+    BoolField locked;
+    BoolField title_bars;
+    IntField object_id;
+    IntField top_element_id;
+    TextField admin;
+    TextField type;
+    TextField name;
+};
+
 // This is type 0x4A data
 struct NetworkMapElement {
     BoolField item_use_acked_color;
@@ -1166,6 +1178,9 @@ struct Data{
     }
     if (format.data[0] == DataFormat::Service){
         Service context;
+    }
+    if (format.data[0] == DataFormat::Panel){
+        Panel context;
     }
 };
 

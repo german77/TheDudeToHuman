@@ -35,7 +35,7 @@ namespace Database {
 		Unknown31 = 0x31,
 		Unknown39 = 0x39,
 		SnmpProfile = 0x3a,
-		Unknown3b = 0x3b,
+		Panel = 0x3b,
 		Unknown43 = 0x43,
 		NetworkMapElement = 0x4a,
 		Unknown4b = 0x4b,
@@ -345,6 +345,18 @@ namespace Database {
 		TextField crypt_password;
 		TextField auth_password;
 		TextField community;
+		TextField name;
+	};
+
+	// This is type 0x3B data
+	struct PanelData {
+		BoolField ordered;
+		BoolField locked;
+		BoolField title_bars;
+		IntField object_id;
+		IntField top_element_id;
+		TextField admin;
+		TextField type;
 		TextField name;
 	};
 

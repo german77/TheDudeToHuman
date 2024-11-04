@@ -35,6 +35,7 @@ namespace Database {
 		std::vector<ServiceData> GetServiceData() const;
 		std::vector<DataSourceData> GetDataSourceData() const;
 		std::vector<SnmpProfileData> GetSnmpProfileData() const;
+		std::vector<PanelData> GetPanelData() const;
 		std::vector<NetworkMapElementData> GetNetworkMapElementData() const;
 		std::vector<PanelElementData> GetPanelElementData() const;
 
@@ -50,6 +51,7 @@ namespace Database {
 		ServiceData RawDataToServiceData(std::span<const u8> raw_data) const;
 		DataSourceData RawDataToDataSourceData(std::span<const u8> raw_data) const;
 		SnmpProfileData RawDataToSnmpProfileData(std::span<const u8> raw_data) const;
+		PanelData RawDataToPanelData(std::span<const u8> raw_data) const;
 		NetworkMapElementData RawDataToNetworkMapElementData(std::span<const u8> raw_data) const;
 		PanelElementData RawDataToPanelElementData(std::span<const u8> raw_data) const;
 

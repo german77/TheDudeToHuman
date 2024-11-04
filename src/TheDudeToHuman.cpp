@@ -19,5 +19,6 @@ int main() {
 	//auto data6 = db.GetDataSourceData();
 	//auto data7 = db.GetMapData();
 	//auto data8 = db.GetPanelElementData();
-	auto data9 = db.GetServiceData();
+	//auto data9 = db.GetServiceData();
+	auto data10 = db.GetPanelData();
 }

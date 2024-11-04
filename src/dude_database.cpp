@@ -119,6 +119,10 @@ namespace Database {
 		return GetObjectData<SnmpProfileData>(DataFormat::SnmpProfile, &DudeDatabase::RawDataToSnmpProfileData);
 	}
 
+	std::vector<PanelData> DudeDatabase::GetPanelData() const {
+		return GetObjectData<PanelData>(DataFormat::Panel, &DudeDatabase::RawDataToPanelData);
+	}
+
 	std::vector<NetworkMapElementData> DudeDatabase::GetNetworkMapElementData() const {
 		return GetObjectData<NetworkMapElementData>(DataFormat::NetworkMapElement, &DudeDatabase::RawDataToNetworkMapElementData);
 	}
@@ -408,6 +412,28 @@ namespace Database {
 		is_valid &= SetField(data.crypt_password, FieldId::SnmpProfile_V3CryptPassword, raw_data, offset);
 		is_valid &= SetField(data.auth_password, FieldId::SnmpProfile_V3AuthPassword, raw_data, offset);
 		is_valid &= SetField(data.community, FieldId::SnmpProfile_Community, raw_data, offset);
+		is_valid &= SetField(data.name, FieldId::SysName, raw_data, offset);
+		is_valid &= ValidateEndOfBlob(raw_data, offset);
+
+		if (!is_valid) {
+			return {};
+		}
+
+		return data;
+	}
+
+	PanelData DudeDatabase::RawDataToPanelData(std::span<const u8> raw_data) const {
+		std::size_t offset = 0;
+		bool is_valid = true;
+		PanelData data{};
+
+		is_valid &= SetField(data.ordered, FieldId::ObjectList_Ordered, raw_data, offset);
+		is_valid &= SetField(data.locked, FieldId::Panel_Locked, raw_data, offset);
+		is_valid &= SetField(data.title_bars, FieldId::Panel_TitleBars, raw_data, offset);
+		is_valid &= SetField(data.object_id, FieldId::SysId, raw_data, offset);
+		is_valid &= SetField(data.top_element_id, FieldId::Panel_TopElementID, raw_data, offset);
+		is_valid &= SetField(data.admin, FieldId::Panel_Admin, raw_data, offset);
+		is_valid &= SetField(data.type, FieldId::ObjectList_Type, raw_data, offset);
 		is_valid &= SetField(data.name, FieldId::SysName, raw_data, offset);
 		is_valid &= ValidateEndOfBlob(raw_data, offset);
 
