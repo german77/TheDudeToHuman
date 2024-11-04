@@ -57,6 +57,8 @@ namespace Database {
 				if (it != data_formats.end()) {
 					continue;
 				}
+
+				printf("New Format %d in row %d \n", format, id);
 				data_formats.push_back(format);
 			}
 		}
@@ -116,7 +118,7 @@ namespace Database {
 	}
 
 	std::vector<NotificationData> DudeDatabase::GetNotificationData() const {
-		return GetObjectData<NotificationData>(DataFormat::Notification, &DudeDatabase::RawDataToNotificationData);
+		return GetObjectData<NotificationData>(DataFormat::Unknown1, &DudeDatabase::RawDataToNotificationData);
 	}
 
 	std::vector<LinkTypeData> DudeDatabase::GetLinkTypeData() const {

@@ -16,6 +16,7 @@ namespace Database {
 
 	enum class DataFormat : u32 {
 		None,
+		Unknown1 = 0x01,
 		Unknown3 = 0x03,
 		Tool = 0x04,
 		Unknown5 = 0x05,
