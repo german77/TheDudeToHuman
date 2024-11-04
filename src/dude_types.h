@@ -18,7 +18,7 @@ namespace Database {
 		None,
 		Unknown1 = 0x01,
 		Unknown3 = 0x03,
-		Unknown4 = 0x04,
+		Tool = 0x04,
 		Unknown5 = 0x05,
 		Notes = 0x09,
 		Map = 0x0a,
@@ -148,6 +148,16 @@ namespace Database {
 		std::vector<u8> data{};
 	};
 #pragma pack(pop)
+
+	// This is type 0x04 data
+	struct ToolData {
+		BoolField builtin;
+		ByteField type;
+		IntField device_id;
+		IntField object_id;
+		TextField command;
+		TextField name;
+	};
 
 	// This is type 0x0A data
 	struct MapData {

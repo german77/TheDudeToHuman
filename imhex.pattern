@@ -2,7 +2,7 @@ enum DataFormat : u32 {
     None,
     Unknown1 = 0x01,
     Unknown3 = 0x03,
-    Unknown4 = 0x04,
+    Tool = 0x04,
     Unknown5 = 0x05,
     Unknown9 = 0x09,
     Map = 0x0a,
@@ -894,6 +894,17 @@ struct StringArrayField {
     StringArrayEntry entries[entry_count];
 };
 
+// This is type 0x04 data
+struct Tool {
+    BoolField builtin;
+    ByteField type;
+    IntField device_id;
+    IntField object_id;
+    TextField command;
+    TextField name;
+};
+    
+// This is type 0x0A data
 struct Map {
     IntArrayField notify_ids;
     BoolField use_static_color;
@@ -1158,6 +1169,9 @@ struct PanelElement {
 struct Data{
     IntArrayField format;
     
+    if (format.data[0] == DataFormat::Tool){
+        Tool context;
+    }
     if (format.data[0] == DataFormat::Map){
         Map context;
     }

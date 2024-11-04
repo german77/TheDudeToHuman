@@ -91,6 +91,10 @@ namespace Database {
 		return data;
 	}
 
+	std::vector<ToolData> DudeDatabase::GetToolData() const {
+		return GetObjectData<ToolData>(DataFormat::Tool, &DudeDatabase::RawDataToToolData);
+	}
+
 	std::vector<MapData> DudeDatabase::GetMapData() const {
 		return GetObjectData<MapData>(DataFormat::Map, &DudeDatabase::RawDataToMapData);
 	}
@@ -148,6 +152,26 @@ namespace Database {
 
 		data.data.resize(blob.size() - offset);
 		memcpy(data.data.data(), blob.data() + offset, data.data.size());
+
+		return data;
+	}
+
+	ToolData DudeDatabase::RawDataToToolData(std::span<const u8> raw_data) const {
+		std::size_t offset = 0;
+		bool is_valid = true;
+		ToolData data{};
+
+		is_valid &= SetField(data.builtin, FieldId::Tool_Builtin, raw_data, offset);
+		is_valid &= SetField(data.type, FieldId::Tool_Type, raw_data, offset);
+		is_valid &= SetField(data.device_id, FieldId::Tool_DeviceID, raw_data, offset);
+		is_valid &= SetField(data.object_id, FieldId::SysId, raw_data, offset);
+		is_valid &= SetField(data.command, FieldId::Tool_Command, raw_data, offset);
+		is_valid &= SetField(data.name, FieldId::SysName, raw_data, offset);
+		is_valid &= ValidateEndOfBlob(raw_data, offset);
+
+		if (!is_valid) {
+			return {};
+		}
 
 		return data;
 	}
