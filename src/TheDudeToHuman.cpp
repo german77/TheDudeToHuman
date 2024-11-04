@@ -23,5 +23,6 @@ int main() {
 	//auto data10 = db.GetPanelData();
 	//auto data11 = db.GetToolData();
 	//auto data12 = db.GetLinkTypeData();
-	auto data13 = db.GetFunctionData();
+	//auto data13 = db.GetFunctionData();
+	auto data14 = db.GetNotificationData();
 }

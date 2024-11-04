@@ -115,6 +115,10 @@ namespace Database {
 		return GetObjectData<ServiceData>(DataFormat::Service, &DudeDatabase::RawDataToServiceData);
 	}
 
+	std::vector<NotificationData> DudeDatabase::GetNotificationData() const {
+		return GetObjectData<NotificationData>(DataFormat::Notification, &DudeDatabase::RawDataToNotificationData);
+	}
+
 	std::vector<LinkTypeData> DudeDatabase::GetLinkTypeData() const {
 		return GetObjectData<LinkTypeData>(DataFormat::LinkType, &DudeDatabase::RawDataToLinkTypeData);
 	}
@@ -392,6 +396,50 @@ namespace Database {
 		is_valid &= SetField(data.agent_id, FieldId::Service_AgentID, raw_data, offset);
 		is_valid &= SetField(data.prove_id, FieldId::Service_probeID, raw_data, offset);
 		is_valid &= SetField(data.value, FieldId::Service_Value, raw_data, offset);
+		is_valid &= SetField(data.name, FieldId::SysName, raw_data, offset);
+		is_valid &= ValidateEndOfBlob(raw_data, offset);
+
+		if (!is_valid) {
+			return {};
+		}
+
+		return data;
+	}
+
+	NotificationData DudeDatabase::RawDataToNotificationData(std::span<const u8> raw_data) const {
+		std::size_t offset = 0;
+		bool is_valid = true;
+		NotificationData data{};
+
+		is_valid &= SetField(data.status_list, FieldId::Notification_StatusList, raw_data, offset);
+		is_valid &= SetField(data.group_notify_ids, FieldId::Notification_GroupNotifyIDs, raw_data, offset);
+		is_valid &= SetField(data.mail_cc, FieldId::Notification_MailCc, raw_data, offset);
+		is_valid &= SetField(data.activity, FieldId::Notification_Activity, raw_data, offset);
+		is_valid &= SetField(data.log_use_color, FieldId::Notification_LogUseColor, raw_data, offset);
+		is_valid &= SetField(data.enabled, FieldId::Notification_Enabled, raw_data, offset);
+		is_valid &= SetField(data.mail_tls_mode, FieldId::Notification_MailTlsMode, raw_data, offset);
+		is_valid &= SetField(data.sys_log_server, FieldId::Notification_SyslogServer, raw_data, offset);
+		is_valid &= SetField(data.sys_log_port, FieldId::Notification_SyslogPort, raw_data, offset);
+		is_valid &= SetField(data.sound_file_id, FieldId::Notification_SoundFileID, raw_data, offset);
+		is_valid &= SetField(data.log_color, FieldId::Notification_LogColor, raw_data, offset);
+		is_valid &= SetField(data.speak_rate, FieldId::Notification_SpeakRate, raw_data, offset);
+		is_valid &= SetField(data.speak_volume, FieldId::Notification_SpeakVolume, raw_data, offset);
+		is_valid &= SetField(data.delay_interval, FieldId::Notification_DelayInterval, raw_data, offset);
+		is_valid &= SetField(data.repeat_interval, FieldId::Notification_RepeatInterval, raw_data, offset);
+		is_valid &= SetField(data.repeat_count, FieldId::Notification_RepeatCount, raw_data, offset);
+		is_valid &= SetField(data.object_id, FieldId::SysId, raw_data, offset);
+		is_valid &= SetField(data.rype_id, FieldId::Notification_RypeID, raw_data, offset);
+		is_valid &= SetField(data.mail_server, FieldId::Notification_MailServer, raw_data, offset);
+		is_valid &= SetField(data.mail_port, FieldId::Notification_MailPort, raw_data, offset);
+		is_valid &= SetField(data.log_prefix, FieldId::Notification_LogPrefix, raw_data, offset);
+		is_valid &= SetField(data.mail_subject, FieldId::Notification_MailSubject, raw_data, offset);
+		is_valid &= SetField(data.mail_to, FieldId::Notification_MailTo, raw_data, offset);
+		is_valid &= SetField(data.mail_from, FieldId::Notification_MailFrom, raw_data, offset);
+		is_valid &= SetField(data.mail_password, FieldId::Notification_MailPassword, raw_data, offset);
+		is_valid &= SetField(data.mail_user, FieldId::Notification_MailUser, raw_data, offset);
+		is_valid &= SetField(data.mail_server_dns, FieldId::Notification_MailServerDns, raw_data, offset);
+		is_valid &= SetField(data.mail_server6, FieldId::Notification_MailServer6, raw_data, offset);
+		is_valid &= SetField(data.text_template, FieldId::Notification_TextTemplate, raw_data, offset);
 		is_valid &= SetField(data.name, FieldId::SysName, raw_data, offset);
 		is_valid &= ValidateEndOfBlob(raw_data, offset);
 
@@ -694,6 +742,24 @@ namespace Database {
 
 		ValidateId(field.info.id.Value(), id);
 		if (!ValidateType(field.info.type.Value(), FieldType::Long)) {
+			return {};
+		}
+
+		return true;
+	}
+
+	bool DudeDatabase::SetField(LongLongField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const {
+		constexpr std::size_t header_size = sizeof(LongLongField::info) + sizeof(LongLongField::value);
+
+		if (!CheckSize(raw_data.size(), offset, header_size)) {
+			return {};
+		}
+
+		memcpy(&field, raw_data.data() + offset, header_size);
+		offset += header_size;
+
+		ValidateId(field.info.id.Value(), id);
+		if (!ValidateType(field.info.type.Value(), FieldType::LongLong)) {
 			return {};
 		}
 

@@ -27,7 +27,7 @@ namespace Database {
 		Device = 0x0f,
 		Unknown10 = 0x10,
 		Service = 0x11,
-		Unknown18 = 0x18,
+		Notification = 0x18,
 		Unknown1f = 0x1f,
 		LinkType = 0x22,
 		DataSource = 0x29,
@@ -48,6 +48,7 @@ namespace Database {
 		Int = 0x08,
 		Byte = 0x09,
 		Long = 0x10,
+		LongLong = 0x18,
 		LongString = 0x20,
 		ShortString = 0x21,
 		LongArray = 0x31,
@@ -93,6 +94,12 @@ namespace Database {
 	struct LongField {
 		FieldInfo info;
 		u64 value;
+	};
+
+	// This is FieldType::LongLong
+	struct LongLongField {
+		FieldInfo info;
+		u128 value;
 	};
 
 	// This is FieldType::ShortString or FieldType::LongString
@@ -323,6 +330,40 @@ namespace Database {
 		IntField agent_id;
 		IntField prove_id;
 		LongField value;
+		TextField name;
+	};
+
+	// This is type 0x18 data
+	struct NotificationData {
+		IntArrayField status_list;
+		IntArrayField group_notify_ids;
+		StringArrayField mail_cc;
+		IntArrayField activity;
+		BoolField log_use_color;
+		BoolField enabled;
+		ByteField mail_tls_mode;
+		ByteField sys_log_server;
+		IntField sys_log_port;
+		IntField sound_file_id;
+		IntField log_color;
+		ByteField speak_rate;
+		ByteField speak_volume;
+		ByteField delay_interval;
+		ByteField repeat_interval;
+		ByteField repeat_count;
+		IntField object_id;
+		IntField rype_id;
+		IntField mail_server;
+		IntField mail_port;
+		TextField log_prefix;
+		TextField mail_subject;
+		TextField mail_to;
+		TextField mail_from;
+		TextField mail_password;
+		TextField mail_user;
+		TextField mail_server_dns;
+		LongLongField mail_server6;
+		TextField text_template;
 		TextField name;
 	};
 

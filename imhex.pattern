@@ -12,6 +12,7 @@ enum DataFormat : u32 {
     Unknown10 = 0x10,
     Service = 0x11,
     Notification = 0x18,
+    Unknown1f = 0x1f,
     LinkType = 0x22,
     DataSource = 0x29,
     Unknown2a = 0x2a,
@@ -914,12 +915,12 @@ struct Tool {
 
 // This is type 0x09 data
 struct Notes {
-	IntField object_id;
-	IntField parent_id;
-	TimeField time_added;
-	TextField name;
+    IntField object_id;
+    IntField parent_id;
+    TimeField time_added;
+    TextField name;
 };
-    
+
 // This is type 0x0A data
 struct Map {
     IntArrayField notify_ids;
@@ -1081,47 +1082,47 @@ struct Service {
 
 // This is type 0x18 data
 struct Notification {
-	IntArrayField status_list;
-	IntArrayField group_notify_ids;
-	StringArrayField mail_cc;
-	IntArrayField activity;
-	BoolField log_use_color;
-	BoolField enabled;
-	ByteField mail_tls_mode;
-	ByteField sys_log_server;
-	IntField sys_log_port;
-	IntField sound_file_id;
-	ByteField log_color;
-	ByteField speak_rate;
-	ByteField speak_volume;
-	ByteField delay_interval;
-	ByteField repeat_interval;
-	ByteField repeat_count;
-	IntField object_id;
-	IntField rype_id;
-	IntField mail_server;
-	IntField mail_port;
-	TextField log_prefix;
-	TextField mail_subject;
-	TextField mail_to;
-	TextField mail_from;
-	TextField mail_password;
-	TextField mail_user;
-	TextField mail_server_dns;
-	LongLongField mail_server6;
-	TextField text_template;
-	TextField name;
+    IntArrayField status_list;
+    IntArrayField group_notify_ids;
+    StringArrayField mail_cc;
+    IntArrayField activity;
+    BoolField log_use_color;
+    BoolField enabled;
+    ByteField mail_tls_mode;
+    ByteField sys_log_server;
+    IntField sys_log_port;
+    IntField sound_file_id;
+    IntField log_color;
+    ByteField speak_rate;
+    ByteField speak_volume;
+    ByteField delay_interval;
+    ByteField repeat_interval;
+    ByteField repeat_count;
+    IntField object_id;
+    IntField rype_id;
+    IntField mail_server;
+    IntField mail_port;
+    TextField log_prefix;
+    TextField mail_subject;
+    TextField mail_to;
+    TextField mail_from;
+    TextField mail_password;
+    TextField mail_user;
+    TextField mail_server_dns;
+    LongLongField mail_server6;
+    TextField text_template;
+    TextField name;
 };
 
 // This is type 0x22 data
 struct LinkType {
-	IntField object_id;
-	ByteField style;
-	ByteField thickness;
-	ByteField snmp_type;
-	IntField next_id;
-	LongField snmp_speed;
-	TextField name;
+    IntField object_id;
+    ByteField style;
+    ByteField thickness;
+    IntField snmp_type;
+    IntField next_id;
+    LongField snmp_speed;
+    TextField name;
 };
 
 // This is type 0x29 data
@@ -1139,7 +1140,6 @@ struct DataSource {
     TextField unit;
     TextField name;
 };
-
 
 // This is type 0x39 data
 struct Function {
