@@ -29,7 +29,7 @@ namespace Database {
 		Service = 0x11,
 		Unknown18 = 0x18,
 		Unknown1f = 0x1f,
-		Unknown22 = 0x22,
+		LinkType = 0x22,
 		DataSource = 0x29,
 		Unknown2a = 0x2a,
 		Unknown31 = 0x31,
@@ -323,6 +323,17 @@ namespace Database {
 		IntField agent_id;
 		IntField prove_id;
 		LongField value;
+		TextField name;
+	};
+
+	// This is type 0x22 data
+	struct LinkTypeData {
+		IntField object_id;
+		ByteField style;
+		ByteField thickness;
+		IntField snmp_type;
+		IntField next_id;
+		LongField snmp_speed;
 		TextField name;
 	};
 

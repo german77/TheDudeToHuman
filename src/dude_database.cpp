@@ -95,12 +95,12 @@ namespace Database {
 		return GetObjectData<ToolData>(DataFormat::Tool, &DudeDatabase::RawDataToToolData);
 	}
 
-	std::vector<MapData> DudeDatabase::GetMapData() const {
-		return GetObjectData<MapData>(DataFormat::Map, &DudeDatabase::RawDataToMapData);
-	}
-
 	std::vector<NotesData> DudeDatabase::GetNotesData() const {
 		return GetObjectData<NotesData>(DataFormat::Notes, &DudeDatabase::RawDataToNotesData);
+	}
+
+	std::vector<MapData> DudeDatabase::GetMapData() const {
+		return GetObjectData<MapData>(DataFormat::Map, &DudeDatabase::RawDataToMapData);
 	}
 
 	std::vector<DeviceTypeData> DudeDatabase::GetDeviceTypeData() const {
@@ -113,6 +113,10 @@ namespace Database {
 
 	std::vector<ServiceData> DudeDatabase::GetServiceData() const {
 		return GetObjectData<ServiceData>(DataFormat::Service, &DudeDatabase::RawDataToServiceData);
+	}
+
+	std::vector<LinkTypeData> DudeDatabase::GetLinkTypeData() const {
+		return GetObjectData<LinkTypeData>(DataFormat::LinkType, &DudeDatabase::RawDataToLinkTypeData);
 	}
 
 	std::vector<DataSourceData> DudeDatabase::GetDataSourceData() const {
@@ -166,6 +170,24 @@ namespace Database {
 		is_valid &= SetField(data.device_id, FieldId::Tool_DeviceID, raw_data, offset);
 		is_valid &= SetField(data.object_id, FieldId::SysId, raw_data, offset);
 		is_valid &= SetField(data.command, FieldId::Tool_Command, raw_data, offset);
+		is_valid &= SetField(data.name, FieldId::SysName, raw_data, offset);
+		is_valid &= ValidateEndOfBlob(raw_data, offset);
+
+		if (!is_valid) {
+			return {};
+		}
+
+		return data;
+	}
+
+	NotesData DudeDatabase::RawDataToNotesData(std::span<const u8> raw_data) const {
+		std::size_t offset = 0;
+		bool is_valid = true;
+		NotesData data{};
+
+		is_valid &= SetField(data.object_id, FieldId::SysId, raw_data, offset);
+		is_valid &= SetField(data.parent_id, FieldId::Note_ObjID, raw_data, offset);
+		is_valid &= SetField(data.time_added, FieldId::Note_TimeAdded, raw_data, offset);
 		is_valid &= SetField(data.name, FieldId::SysName, raw_data, offset);
 		is_valid &= ValidateEndOfBlob(raw_data, offset);
 
@@ -275,24 +297,6 @@ namespace Database {
 		return data;
 	}
 
-	NotesData DudeDatabase::RawDataToNotesData(std::span<const u8> raw_data) const {
-		std::size_t offset = 0;
-		bool is_valid = true;
-		NotesData data{};
-
-		is_valid &= SetField(data.object_id, FieldId::SysId, raw_data, offset);
-		is_valid &= SetField(data.parent_id, FieldId::Note_ObjID, raw_data, offset);
-		is_valid &= SetField(data.time_added, FieldId::Note_TimeAdded, raw_data, offset);
-		is_valid &= SetField(data.name, FieldId::SysName, raw_data, offset);
-		is_valid &= ValidateEndOfBlob(raw_data, offset);
-
-		if (!is_valid) {
-			return {};
-		}
-
-		return data;
-	}
-
 	DeviceTypeData DudeDatabase::RawDataToDeviceTypeData(std::span<const u8> raw_data) const {
 		std::size_t offset = 0;
 		bool is_valid = true;
@@ -384,6 +388,27 @@ namespace Database {
 		is_valid &= SetField(data.agent_id, FieldId::Service_AgentID, raw_data, offset);
 		is_valid &= SetField(data.prove_id, FieldId::Service_probeID, raw_data, offset);
 		is_valid &= SetField(data.value, FieldId::Service_Value, raw_data, offset);
+		is_valid &= SetField(data.name, FieldId::SysName, raw_data, offset);
+		is_valid &= ValidateEndOfBlob(raw_data, offset);
+
+		if (!is_valid) {
+			return {};
+		}
+
+		return data;
+	}
+
+	LinkTypeData DudeDatabase::RawDataToLinkTypeData(std::span<const u8> raw_data) const {
+		std::size_t offset = 0;
+		bool is_valid = true;
+		LinkTypeData data{};
+
+		is_valid &= SetField(data.object_id, FieldId::SysId, raw_data, offset);
+		is_valid &= SetField(data.style, FieldId::LinkType_Style, raw_data, offset);
+		is_valid &= SetField(data.thickness, FieldId::LinkType_Thickness, raw_data, offset);
+		is_valid &= SetField(data.snmp_type, FieldId::LinkType_SnmpType, raw_data, offset);
+		is_valid &= SetField(data.next_id, FieldId::SysNextId, raw_data, offset);
+		is_valid &= SetField(data.snmp_speed, FieldId::LinkType_SnmpSpeed, raw_data, offset);
 		is_valid &= SetField(data.name, FieldId::SysName, raw_data, offset);
 		is_valid &= ValidateEndOfBlob(raw_data, offset);
 

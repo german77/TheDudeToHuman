@@ -34,6 +34,7 @@ namespace Database {
 		std::vector<DeviceTypeData> GetDeviceTypeData() const;
 		std::vector<DeviceData> GetDeviceData() const;
 		std::vector<ServiceData> GetServiceData() const;
+		std::vector<LinkTypeData> GetLinkTypeData() const;
 		std::vector<DataSourceData> GetDataSourceData() const;
 		std::vector<SnmpProfileData> GetSnmpProfileData() const;
 		std::vector<PanelData> GetPanelData() const;
@@ -51,6 +52,7 @@ namespace Database {
 		DeviceTypeData RawDataToDeviceTypeData(std::span<const u8> raw_data) const;
 		DeviceData RawDataToDeviceData(std::span<const u8> raw_data) const;
 		ServiceData RawDataToServiceData(std::span<const u8> raw_data) const;
+		LinkTypeData RawDataToLinkTypeData(std::span<const u8> raw_data) const;
 		DataSourceData RawDataToDataSourceData(std::span<const u8> raw_data) const;
 		SnmpProfileData RawDataToSnmpProfileData(std::span<const u8> raw_data) const;
 		PanelData RawDataToPanelData(std::span<const u8> raw_data) const;

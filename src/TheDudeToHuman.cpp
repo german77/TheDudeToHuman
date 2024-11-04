@@ -22,4 +22,5 @@ int main() {
 	//auto data9 = db.GetServiceData();
 	auto data10 = db.GetPanelData();
 	auto data11 = db.GetToolData();
+	auto data12 = db.GetLinkTypeData();
 }
