@@ -14,6 +14,9 @@ else()
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
 endif()
 
+# Output binaries to bin/
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
+
 # Include source code
 # ===================
 

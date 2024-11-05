@@ -7,26 +7,26 @@
 #include "dude_database.h"
 
 int main() {
-	std::string db_filename = "../dude.db";
-	Database::DudeDatabase db{ db_filename };
+    std::string db_filename = "../dude.db";
+    Database::DudeDatabase db{db_filename};
 
-	auto formats = db.ListUsedDataFormats();
-	//auto data1 = db.GetDeviceTypeData();
-	//auto data2 = db.GetDeviceData();
-	//auto data3 = db.GetSnmpProfileData();
-	//auto data4 = db.GetNetworkMapElementData();
-	//auto data5 = db.GetNotesData();
-	//auto data6 = db.GetDataSourceData();
-	//auto data7 = db.GetMapData();
-	//auto data8 = db.GetPanelElementData();
-	//auto data9 = db.GetServiceData();
-	//auto data10 = db.GetPanelData();
-	//auto data11 = db.GetToolData();
-	//auto data12 = db.GetLinkTypeData();
-	//auto data13 = db.GetFunctionData();
-	//auto data14 = db.GetNotificationData();
-	//auto data15 = db.GetFileData();
-	//auto data16 = db.GetServerConfigurationData();
-	//auto data17 = db.GetLinkData();
-	auto data17 = db.GetChartLineData();
+    auto formats = db.ListUsedDataFormats();
+    // auto data1 = db.GetDeviceTypeData();
+    // auto data2 = db.GetDeviceData();
+    // auto data3 = db.GetSnmpProfileData();
+    // auto data4 = db.GetNetworkMapElementData();
+    // auto data5 = db.GetNotesData();
+    // auto data6 = db.GetDataSourceData();
+    // auto data7 = db.GetMapData();
+    // auto data8 = db.GetPanelElementData();
+    // auto data9 = db.GetServiceData();
+    // auto data10 = db.GetPanelData();
+    // auto data11 = db.GetToolData();
+    // auto data12 = db.GetLinkTypeData();
+    // auto data13 = db.GetFunctionData();
+    // auto data14 = db.GetNotificationData();
+    // auto data15 = db.GetFileData();
+    // auto data16 = db.GetServerConfigurationData();
+    // auto data17 = db.GetLinkData();
+    auto data17 = db.GetChartLineData();
 }

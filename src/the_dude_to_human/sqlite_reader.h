@@ -10,25 +10,24 @@
 #include "sqlite3.h"
 
 namespace Database {
-	using SqlRow = std::pair<int, std::vector<u8>>;
-	using SqlData = std::vector<SqlRow>;
+using SqlRow = std::pair<int, std::vector<u8>>;
+using SqlData = std::vector<SqlRow>;
 
+class SqliteReader {
+public:
+    SqliteReader(const std::string& db_file);
 
-	class SqliteReader {
-	public:
-		SqliteReader(const std::string& db_file);
+    int OpenDatabase();
+    void CloseDatabase();
 
-		int OpenDatabase();
-		void CloseDatabase();
+    int GetTableData(SqlData& data, const std::string& table_name) const;
 
-		int  GetTableData(SqlData& data, const std::string& table_name) const;
+private:
+    int ExecStatement(SqlData& data, const std::string& sql) const;
+    SqlRow ReadRow(sqlite3_stmt* statement) const;
 
-	private:
-		int ExecStatement(SqlData& data, const std::string& sql) const;
-		SqlRow ReadRow(sqlite3_stmt* statement) const;
-
-		bool is_open{};
-		std::string db_filename{};
-		sqlite3* db{ NULL };
-	};
-}
+    bool is_open{};
+    std::string db_filename{};
+    sqlite3* db{NULL};
+};
+} // namespace Database
