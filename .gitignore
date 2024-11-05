@@ -35,4 +35,4 @@
 *.db*
 
 # Visual Studio
-.vs
+build
