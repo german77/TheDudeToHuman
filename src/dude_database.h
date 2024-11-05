@@ -44,6 +44,7 @@ namespace Database {
 		std::vector<SnmpProfileData> GetSnmpProfileData() const;
 		std::vector<PanelData> GetPanelData() const;
 		std::vector<NetworkMapElementData> GetNetworkMapElementData() const;
+		std::vector<ChartLineData> GetChartLineData() const;
 		std::vector<PanelElementData> GetPanelElementData() const;
 
 	private:
@@ -67,6 +68,7 @@ namespace Database {
 		SnmpProfileData RawDataToSnmpProfileData(std::span<const u8> raw_data) const;
 		PanelData RawDataToPanelData(std::span<const u8> raw_data) const;
 		NetworkMapElementData RawDataToNetworkMapElementData(std::span<const u8> raw_data) const;
+		ChartLineData RawDataToChartLineData(std::span<const u8> raw_data) const;
 		PanelElementData RawDataToPanelElementData(std::span<const u8> raw_data) const;
 
 		bool SetField(BoolField& field, FieldId id, std::span<const u8> raw_data, std::size_t& offset) const;

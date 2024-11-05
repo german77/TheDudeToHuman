@@ -157,6 +157,10 @@ namespace Database {
 		return GetObjectData<NetworkMapElementData>(DataFormat::NetworkMapElement, &DudeDatabase::RawDataToNetworkMapElementData);
 	}
 
+	std::vector<ChartLineData> DudeDatabase::GetChartLineData() const {
+		return GetObjectData<ChartLineData>(DataFormat::ChartLine, &DudeDatabase::RawDataToChartLineData);
+	}
+
 	std::vector<PanelElementData> DudeDatabase::GetPanelElementData() const {
 		return GetObjectData<PanelElementData>(DataFormat::PanelElement, &DudeDatabase::RawDataToPanelElementData);
 	}
@@ -781,6 +785,30 @@ namespace Database {
 		is_valid &= SetField(data.item_y, FieldId::NetworkMapElement_ItemY, raw_data, offset);
 		is_valid &= SetField(data.label_refresh_interval, FieldId::NetworkMapElement_LabelRefreshInterval, raw_data, offset);
 		is_valid &= SetField(data.item_font, FieldId::NetworkMapElement_ItemFont, raw_data, offset);
+		is_valid &= SetField(data.name, FieldId::SysName, raw_data, offset);
+		is_valid &= ValidateEndOfBlob(raw_data, offset);
+
+		if (!is_valid) {
+			return {};
+		}
+
+		return data;
+	}
+
+	ChartLineData DudeDatabase::RawDataToChartLineData(std::span<const u8> raw_data) const {
+		std::size_t offset = 0;
+		bool is_valid = true;
+		ChartLineData data{};
+
+		is_valid &= SetField(data.chart_id, FieldId::ChartLine_ChartID, raw_data, offset);
+		is_valid &= SetField(data.source_id, FieldId::ChartLine_SourceID, raw_data, offset);
+		is_valid &= SetField(data.line_style, FieldId::ChartLine_LineStyle, raw_data, offset);
+		is_valid &= SetField(data.line_color, FieldId::ChartLine_LineColor, raw_data, offset);
+		is_valid &= SetField(data.line_opacity, FieldId::ChartLine_LineOpacity, raw_data, offset);
+		is_valid &= SetField(data.fill_color, FieldId::ChartLine_FillColor, raw_data, offset);
+		is_valid &= SetField(data.fill_opacity, FieldId::ChartLine_FillOpacity, raw_data, offset);
+		is_valid &= SetField(data.object_id, FieldId::SysId, raw_data, offset);
+		is_valid &= SetField(data.next_id, FieldId::SysNextId, raw_data, offset);
 		is_valid &= SetField(data.name, FieldId::SysName, raw_data, offset);
 		is_valid &= ValidateEndOfBlob(raw_data, offset);
 

@@ -21,7 +21,7 @@ enum DataFormat : u32 {
     Panel = 0x3b,
     Unknown43 = 0x43,
     NetworkMapElement = 0x4a,
-    Unknown4B = 0x4b,
+    ChartLine = 0x4b,
     PanelElement = 0x4d,
 };
 
@@ -1352,6 +1352,21 @@ struct NetworkMapElement {
     TextField name;
 };
 
+
+// This is type 0x4B data
+struct ChartLine {
+    IntField chart_id;
+    IntField source_id;
+    ByteField line_style;
+    IntField line_color;
+    ByteField line_opacity;
+    IntField fill_color;
+    ByteField fill_opacity;
+    IntField object_id;
+    IntField next_id;
+    TextField name;
+};
+
 // This is type 0x4D data
 struct PanelElement {
     BoolField split;
@@ -1416,6 +1431,9 @@ struct Data{
     }
     if (format.data[0] == DataFormat::NetworkMapElement){
         NetworkMapElement context;
+    }
+    if (format.data[0] == DataFormat::ChartLine){
+        ChartLine context;
     }
     if (format.data[0] == DataFormat::PanelElement){
         PanelElement context;

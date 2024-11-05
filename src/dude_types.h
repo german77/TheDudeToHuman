@@ -37,7 +37,7 @@ namespace Database {
 		Panel = 0x3b,
 		Unknown43 = 0x43,
 		NetworkMapElement = 0x4a,
-		Unknown4b = 0x4b,
+		ChartLine = 0x4b,
 		PanelElement = 0x4d,
 	};
 
@@ -600,6 +600,20 @@ namespace Database {
 		IntField item_y;
 		IntField label_refresh_interval;
 		LongArrayField item_font;
+		TextField name;
+	};
+
+	// This is type 0x4B data
+	struct ChartLineData {
+		IntField chart_id;
+		IntField source_id;
+		ByteField line_style;
+		IntField line_color;
+		ByteField line_opacity;
+		IntField fill_color;
+		ByteField fill_opacity;
+		IntField object_id;
+		IntField next_id;
 		TextField name;
 	};
 
