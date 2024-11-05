@@ -1,5 +1,15 @@
 # SPDX-FileCopyrightText: Copyright 2024 Narr the Reg
 # SPDX-License-Identifier: MIT
 
+# Disable tests in all externals supporting the standard option name
+set(BUILD_TESTING OFF)
+
+# Build only static externals
+set(BUILD_SHARED_LIBS OFF)
+
+# Skip install rules for all externals
+set_directory_properties(PROPERTIES EXCLUDE_FROM_ALL ON)
+
 # Sqlite
-#add_subdirectory(sqlite)
+add_subdirectory(sqlite)
+target_include_directories(sqlite PUBLIC ./sqlite)
