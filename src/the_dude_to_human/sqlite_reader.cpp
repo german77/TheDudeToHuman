@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 #include <cstdio>
+#include <cstring>
 
 #include "sqlite_reader.h"
 
@@ -96,7 +97,7 @@ SqlRow SqliteReader::ReadRow(sqlite3_stmt* statement) const {
     const void* blob_data_pointer = sqlite3_column_blob(statement, 1);
 
     std::vector<u8> blob_data(blob_size);
-    memcpy(blob_data.data(), blob_data_pointer, blob_size);
+    std::memcpy(blob_data.data(), blob_data_pointer, blob_size);
     return {id, blob_data};
 }
 

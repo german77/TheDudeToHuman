@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: Copyright 2024 Narr the Reg
 // SPDX-License-Identifier: MIT
 
+#include <cstring>
+
 #include "dude_field_parser.h"
 
 namespace Database {
@@ -113,7 +115,7 @@ ParserResult DudeFieldParser::ReadData(void* data, std::size_t size) {
         return ParserResult::EndOfFile;
     }
 
-    memcpy(data, raw_data.data() + offset, size);
+    std::memcpy(data, raw_data.data() + offset, size);
     offset += size;
 
     return ParserResult::Success;

@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: Copyright 2024 Narr the Reg
 // SPDX-License-Identifier: MIT
 
+#include <algorithm>
 #include <cstddef>
 #include <cstdio>
 
@@ -54,13 +55,13 @@ std::vector<DataFormat> DudeDatabase::ListUsedDataFormats() const {
         DudeFieldParser parser{blob};
         for (auto& data_format : parser.GetFormat().data) {
             const DataFormat format = static_cast<DataFormat>(data_format);
-            const auto it = find(data_formats.begin(), data_formats.end(), format);
+            const auto it = std::find(data_formats.begin(), data_formats.end(), format);
 
             if (it != data_formats.end()) {
                 continue;
             }
 
-            printf("New Format %d in row %d \n", format, id);
+            printf("New Format %d in row %d \n", data_format, id);
             data_formats.push_back(format);
         }
     }
