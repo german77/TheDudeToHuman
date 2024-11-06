@@ -99,4 +99,9 @@ SqlRow SqliteReader::ReadRow(sqlite3_stmt* statement) const {
     memcpy(blob_data.data(), blob_data_pointer, blob_size);
     return {id, blob_data};
 }
+
+const char* SqliteReader::GetError() const {
+    return sqlite3_errmsg(db);
+}
+
 } // namespace Database

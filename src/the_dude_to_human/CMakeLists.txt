@@ -2,10 +2,12 @@
 # SPDX-License-Identifier: MIT
 
 add_executable(the_dude_to_human
+    database/dude_field_id.h
+    database/dude_field_parser.cpp
+    database/dude_field_parser.h
+    database/dude_types.h
     dude_database.cpp
     dude_database.h
-    dude_field_id.h
-    dude_types.h
     sqlite_reader.cpp
     sqlite_reader.h
     TheDudeToHuman.cpp

@@ -25,8 +25,8 @@ int main() {
     // auto data12 = db.GetLinkTypeData();
     // auto data13 = db.GetFunctionData();
     // auto data14 = db.GetNotificationData();
-    // auto data15 = db.GetFileData();
-    // auto data16 = db.GetServerConfigurationData();
+    auto data15 = db.GetFileData();
+    // auto data16 = db.GetServerConfigData();
     // auto data17 = db.GetLinkData();
-    auto data17 = db.GetChartLineData();
+    // auto data18 = db.GetChartLineData();
 }

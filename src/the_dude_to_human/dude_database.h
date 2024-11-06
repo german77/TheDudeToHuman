@@ -8,10 +8,12 @@
 #include <vector>
 
 #include "common/common_types.h"
-#include "dude_types.h"
+#include "database/dude_types.h"
 #include "sqlite_reader.h"
 
 namespace Database {
+class DudeFieldParser;
+
 class DudeDatabase {
 public:
     DudeDatabase(const std::string& db_file);
@@ -28,7 +30,7 @@ public:
     // Usefull to find new unsuported types
     std::vector<DataFormat> ListUsedDataFormats() const;
 
-    std::vector<ServerConfigurationData> GetServerConfigurationData() const;
+    std::vector<ServerConfigData> GetServerConfigData() const;
     std::vector<ToolData> GetToolData() const;
     std::vector<FileData> GetFileData() const;
     std::vector<NotesData> GetNotesData() const;
@@ -50,59 +52,27 @@ public:
 private:
     template <typename T>
     std::vector<T> GetObjectData(DataFormat format,
-                                 T (DudeDatabase::*RawToObjData)(std::span<const u8> raw_data)
+                                 T (DudeDatabase::*RawToObjData)(DudeFieldParser& parser)
                                      const) const;
 
-    RawObjData BlobToRawObjData(std::span<const u8> blob) const;
-    ServerConfigurationData RawDataToServerConfigurationData(std::span<const u8> blob) const;
-    ToolData RawDataToToolData(std::span<const u8> blob) const;
-    FileData RawDataToFileData(std::span<const u8> blob) const;
-    NotesData RawDataToNotesData(std::span<const u8> raw_data) const;
-    MapData RawDataToMapData(std::span<const u8> raw_data) const;
-    DeviceTypeData RawDataToDeviceTypeData(std::span<const u8> raw_data) const;
-    DeviceData RawDataToDeviceData(std::span<const u8> raw_data) const;
-    ServiceData RawDataToServiceData(std::span<const u8> raw_data) const;
-    NotificationData RawDataToNotificationData(std::span<const u8> raw_data) const;
-    LinkData RawDataToLinkData(std::span<const u8> raw_data) const;
-    LinkTypeData RawDataToLinkTypeData(std::span<const u8> raw_data) const;
-    DataSourceData RawDataToDataSourceData(std::span<const u8> raw_data) const;
-    FunctionData RawDataToFunctionData(std::span<const u8> raw_data) const;
-    SnmpProfileData RawDataToSnmpProfileData(std::span<const u8> raw_data) const;
-    PanelData RawDataToPanelData(std::span<const u8> raw_data) const;
-    NetworkMapElementData RawDataToNetworkMapElementData(std::span<const u8> raw_data) const;
-    ChartLineData RawDataToChartLineData(std::span<const u8> raw_data) const;
-    PanelElementData RawDataToPanelElementData(std::span<const u8> raw_data) const;
-
-    bool SetField(BoolField& field, FieldId id, std::span<const u8> raw_data,
-                  std::size_t& offset) const;
-    bool SetField(ByteField& field, FieldId id, std::span<const u8> raw_data,
-                  std::size_t& offset) const;
-    bool SetField(IntField& field, FieldId id, std::span<const u8> raw_data,
-                  std::size_t& offset) const;
-    bool SetField(TimeField& field, FieldId id, std::span<const u8> raw_data,
-                  std::size_t& offset) const;
-    bool SetField(LongField& field, FieldId id, std::span<const u8> raw_data,
-                  std::size_t& offset) const;
-    bool SetField(LongLongField& field, FieldId id, std::span<const u8> raw_data,
-                  std::size_t& offset) const;
-    bool SetField(TextField& field, FieldId id, std::span<const u8> raw_data,
-                  std::size_t& offset) const;
-    bool SetField(IntArrayField& field, FieldId id, std::span<const u8> raw_data,
-                  std::size_t& offset) const;
-    bool SetField(IpAddressField& field, FieldId id, std::span<const u8> raw_data,
-                  std::size_t& offset) const;
-    bool SetField(LongArrayField& field, FieldId id, std::span<const u8> raw_data,
-                  std::size_t& offset) const;
-    bool SetField(MacAddressField& field, FieldId id, std::span<const u8> raw_data,
-                  std::size_t& offset) const;
-    bool SetField(StringArrayField& field, FieldId id, std::span<const u8> raw_data,
-                  std::size_t& offset) const;
-
-    bool CheckSize(std::size_t raw_data_size, std::size_t offset, std::size_t header_size) const;
-    bool ValidateEndOfBlob(std::span<const u8> raw_data, std::size_t offset) const;
-    bool ValidateId(FieldId a, FieldId b) const;
-    bool ValidateType(FieldType a, FieldType b) const;
-    DataFormat GetMainDataFormat(const RawObjData& obj_data) const;
+    ServerConfigData GetServerConfigData(DudeFieldParser& parser) const;
+    ToolData GetToolData(DudeFieldParser& parser) const;
+    FileData GetFileData(DudeFieldParser& parser) const;
+    NotesData GetNotesData(DudeFieldParser& parser) const;
+    MapData GetMapData(DudeFieldParser& parser) const;
+    DeviceTypeData GetDeviceTypeData(DudeFieldParser& parser) const;
+    DeviceData GetDeviceData(DudeFieldParser& parser) const;
+    ServiceData GetServiceData(DudeFieldParser& parser) const;
+    NotificationData GetNotificationData(DudeFieldParser& parser) const;
+    LinkData GetLinkData(DudeFieldParser& parser) const;
+    LinkTypeData GetLinkTypeData(DudeFieldParser& parser) const;
+    DataSourceData GetDataSourceData(DudeFieldParser& parser) const;
+    FunctionData GetFunctionData(DudeFieldParser& parser) const;
+    SnmpProfileData GetSnmpProfileData(DudeFieldParser& parser) const;
+    PanelData GetPanelData(DudeFieldParser& parser) const;
+    NetworkMapElementData GetNetworkMapElementData(DudeFieldParser& parser) const;
+    ChartLineData GetChartLineData(DudeFieldParser& parser) const;
+    PanelElementData GetPanelElementData(DudeFieldParser& parser) const;
 
     Database::SqliteReader db;
 };

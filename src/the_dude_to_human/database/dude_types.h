@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <string>
 #include <vector>
 
 #include "common/bit_field.h"
@@ -115,13 +116,6 @@ struct IntArrayField {
     std::vector<u32> data{};
 };
 
-// This is FieldType::IntArray
-struct IpAddressField {
-    FieldInfo info{};
-    u16 entries{};
-    std::vector<IpAddress> ip_address{};
-};
-
 // This is FieldType::LongArray
 struct LongArrayField {
     FieldInfo info{};
@@ -156,7 +150,7 @@ struct RawObjData {
 #pragma pack(pop)
 
 // This is type 0x03 data
-struct ServerConfigurationData {
+struct ServerConfigData {
     IntArrayField time_zone_history;
     IntArrayField discover_skip_types;
     IntArrayField discover_skip_probes;
@@ -397,7 +391,7 @@ struct DeviceData {
     IntArrayField parent_ids;
     IntArrayField notify_ids;
     StringArrayField dns_names;
-    IpAddressField ip;
+    IntArrayField ip;
     BoolField secure_mode;
     BoolField router_os;
     BoolField dude_server;

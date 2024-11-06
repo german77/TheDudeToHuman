@@ -22,6 +22,8 @@ public:
 
     int GetTableData(SqlData& data, const std::string& table_name) const;
 
+    const char* GetError() const;
+
 private:
     int ExecStatement(SqlData& data, const std::string& sql) const;
     SqlRow ReadRow(sqlite3_stmt* statement) const;
