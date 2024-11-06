@@ -10,7 +10,7 @@
 #include "sqlite3.h"
 
 namespace Database {
-using SqlRow = std::pair<int, std::vector<u8>>;
+using SqlRow = std::pair<u32, std::vector<u8>>;
 using SqlData = std::vector<SqlRow>;
 
 class SqliteReader {

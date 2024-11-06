@@ -65,7 +65,6 @@ struct FieldInfo {
     };
 };
 
-#pragma pack(push, 1)
 // This is FieldType::Bool
 struct BoolField {
     FieldInfo info{};
@@ -86,20 +85,20 @@ struct IntField {
 
 // This is FieldType::Int
 struct TimeField {
-    FieldInfo info;
-    u32 date;
+    FieldInfo info{};
+    u32 date{};
 };
 
 // This is FieldType::Long
 struct LongField {
-    FieldInfo info;
-    u64 value;
+    FieldInfo info{};
+    u64 value{};
 };
 
 // This is FieldType::LongLong
 struct LongLongField {
-    FieldInfo info;
-    u128 value;
+    FieldInfo info{};
+    u128 value{};
 };
 
 // This is FieldType::ShortString or FieldType::LongString
@@ -141,13 +140,6 @@ struct StringArrayField {
     u16 entry_count{};
     std::vector<StringArrayEntry> entries{};
 };
-
-struct RawObjData {
-    u16 magic{};
-    IntArrayField data_format{};
-    std::vector<u8> data{};
-};
-#pragma pack(pop)
 
 // This is type 0x03 data
 struct ServerConfigData {
