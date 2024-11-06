@@ -8,18 +8,18 @@ enum DataFormat : u32 {
     UnknownD = 0x0d,
     DeviceType = 0x0e,
     Device = 0x0f,
-    Unknown10 = 0x10,
+    Network = 0x10,
     Service = 0x11,
     Notification = 0x18,
     Link = 0x1f,
     LinkType = 0x22,
     DataSource = 0x29,
-    Unknown2a = 0x2a,
-    Unknown31 = 0x31,
+    ObjectList = 0x2a,
+    DeviceGroup = 0x31,
     Function = 0x39,
     SnmpProfile = 0x3a,
     Panel = 0x3b,
-    Unknown43 = 0x43,
+    SysLogRule = 0x43,
     NetworkMapElement = 0x4a,
     ChartLine = 0x4b,
     PanelElement = 0x4d,
@@ -1171,6 +1171,15 @@ struct Device {
     TextField name;
 };
 
+// This is type 0x10 data
+struct Network {
+    IntArrayField subnets;
+    IntField object_id;
+    IntField net_map_id;
+    IntField net_map_element;
+    TextField name;
+};
+
 // This is type 0x11 data
 struct Service {
     IntArrayField notify_ids;
@@ -1275,6 +1284,21 @@ struct DataSource {
     TextField name;
 };
 
+// This is type 0x2a data
+struct ObjectList {
+    BoolField ordered;
+    IntField object_id;
+    TextField type;
+    TextField name;
+};
+
+// This is type 0x31 data
+struct DeviceGroup {
+    IntArrayField argument_descriptors;
+    IntField object_id;
+    TextField name;
+};
+
 // This is type 0x39 data
 struct Function {
     StringArrayField argument_descriptors;
@@ -1312,6 +1336,24 @@ struct Panel {
     IntField top_element_id;
     TextField admin;
     TextField type;
+    TextField name;
+};
+
+
+// This is type 0x43 data
+struct SysLogRule {
+    BoolField regexp_not;
+    BoolField source_set;
+    BoolField regexp_set;
+    BoolField enabled;
+    BoolField source_not;
+    IntField source_first;
+    IntField source_second;
+    ByteField action;
+    IntField notify_id;
+    IntField object_id;
+    IntField next_id;
+    TextField regexp;
     TextField name;
 };
 
@@ -1405,6 +1447,9 @@ struct Data{
     if (format.data[0] == DataFormat::Device){
         Device context;
     }
+    if (format.data[0] == DataFormat::Network){
+        Network context;
+    }
     if (format.data[0] == DataFormat::Service){
         Service context;
     }
@@ -1420,6 +1465,12 @@ struct Data{
     if (format.data[0] == DataFormat::DataSource){
         DataSource context;
     }
+    if (format.data[0] == DataFormat::ObjectList){
+        ObjectList context;
+    }
+    if (format.data[0] == DataFormat::DeviceGroup){
+        DeviceGroup context;
+    }
     if (format.data[0] == DataFormat::Function){
         Function context;
     }
@@ -1428,6 +1479,9 @@ struct Data{
     }
     if (format.data[0] == DataFormat::Panel){
         Panel context;
+    }
+    if (format.data[0] == DataFormat::SysLogRule){
+        SysLogRule context;
     }
     if (format.data[0] == DataFormat::NetworkMapElement){
         NetworkMapElement context;
