@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: Copyright 2024 Narr the Reg
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 cmake_minimum_required(VERSION 3.15)
 
 project(the_dude_to_human)

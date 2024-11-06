@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: Copyright 2024 Narr the Reg
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 add_executable(the_dude_to_human
     database/dude_field_id.h

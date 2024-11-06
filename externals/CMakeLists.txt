@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: Copyright 2024 Narr the Reg
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 # Disable tests in all externals supporting the standard option name
 set(BUILD_TESTING OFF)
