@@ -32,7 +32,7 @@ enum class DataFormat : u32 {
     LinkType = 0x22,
     DataSource = 0x29,
     Unknown2a = 0x2a,
-    Unknown31 = 0x31,
+    DeviceGroup = 0x31,
     Function = 0x39,
     SnmpProfile = 0x3a,
     Panel = 0x3b,
@@ -509,6 +509,13 @@ struct DataSourceData {
     ByteField keep_time_1Day;
     TextField function_code;
     TextField unit;
+    TextField name;
+};
+
+// This is type 0x31 data
+struct DeviceGroupData {
+    IntArrayField device_ids;
+    IntField object_id;
     TextField name;
 };
 

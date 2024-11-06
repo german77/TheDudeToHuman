@@ -42,6 +42,7 @@ public:
     std::vector<LinkData> GetLinkData() const;
     std::vector<LinkTypeData> GetLinkTypeData() const;
     std::vector<DataSourceData> GetDataSourceData() const;
+    std::vector<DeviceGroupData> GetDeviceGroupData() const;
     std::vector<FunctionData> GetFunctionData() const;
     std::vector<SnmpProfileData> GetSnmpProfileData() const;
     std::vector<PanelData> GetPanelData() const;
@@ -68,6 +69,7 @@ private:
     LinkData GetLinkData(DudeFieldParser& parser) const;
     LinkTypeData GetLinkTypeData(DudeFieldParser& parser) const;
     DataSourceData GetDataSourceData(DudeFieldParser& parser) const;
+    DeviceGroupData GetDeviceGroupData(DudeFieldParser& parser) const;
     FunctionData GetFunctionData(DudeFieldParser& parser) const;
     SnmpProfileData GetSnmpProfileData(DudeFieldParser& parser) const;
     PanelData GetPanelData(DudeFieldParser& parser) const;

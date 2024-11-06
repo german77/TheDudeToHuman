@@ -148,6 +148,11 @@ std::vector<DataSourceData> DudeDatabase::GetDataSourceData() const {
     return GetObjectData<DataSourceData>(DataFormat::DataSource, &DudeDatabase::GetDataSourceData);
 }
 
+std::vector<DeviceGroupData> DudeDatabase::GetDeviceGroupData() const {
+    return GetObjectData<DeviceGroupData>(DataFormat::DeviceGroup,
+                                          &DudeDatabase::GetDeviceGroupData);
+}
+
 std::vector<FunctionData> DudeDatabase::GetFunctionData() const {
     return GetObjectData<FunctionData>(DataFormat::Function, &DudeDatabase::GetFunctionData);
 }
@@ -593,6 +598,16 @@ DataSourceData DudeDatabase::GetDataSourceData(DudeFieldParser& parser) const {
     parser.ReadField(data.keep_time_1Day, FieldId::DataSource_KeepTime1day);
     parser.ReadField(data.function_code, FieldId::DataSource_FunctionCode);
     parser.ReadField(data.unit, FieldId::DataSource_Unit);
+    parser.ReadField(data.name, FieldId::SysName);
+
+    return data;
+}
+
+DeviceGroupData DudeDatabase::GetDeviceGroupData(DudeFieldParser& parser) const {
+    DeviceGroupData data{};
+
+    parser.ReadField(data.device_ids, FieldId::DeviceGroup_DeviceIDs);
+    parser.ReadField(data.object_id, FieldId::SysId);
     parser.ReadField(data.name, FieldId::SysName);
 
     return data;
