@@ -8,6 +8,8 @@ add_executable(the_dude_to_human
     database/dude_types.h
     dude_database.cpp
     dude_database.h
+    mikrotik/mikrotik_device.cpp
+    mikrotik/mikrotik_device.h
     sqlite_reader.cpp
     sqlite_reader.h
     TheDudeToHuman.cpp
@@ -15,4 +17,7 @@ add_executable(the_dude_to_human
 
 create_target_directory_groups(the_dude_to_human)
 
-target_link_libraries(the_dude_to_human PUBLIC sqlite)
+target_link_libraries(the_dude_to_human PRIVATE sqlite)
+if (MSVC)
+    target_link_libraries(the_dude_to_human PRIVATE getopt)
+endif()

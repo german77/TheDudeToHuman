@@ -13,3 +13,8 @@ set_directory_properties(PROPERTIES EXCLUDE_FROM_ALL ON)
 # Sqlite
 add_subdirectory(sqlite)
 target_include_directories(sqlite PUBLIC ./sqlite)
+
+# getopt
+if (MSVC)
+    add_subdirectory(getopt)
+endif()
