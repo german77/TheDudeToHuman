@@ -17,7 +17,7 @@ using MacAddress = std::array<u8, 6>;
 
 enum class DataFormat : u32 {
     None,
-    ServerConfiguration = 0x03,
+    ServerConfig = 0x03,
     Tool = 0x04,
     File = 0x05,
     Notes = 0x09,
@@ -36,7 +36,7 @@ enum class DataFormat : u32 {
     Function = 0x39,
     SnmpProfile = 0x3a,
     Panel = 0x3b,
-    Unknown43 = 0x43,
+    SysLogRule = 0x43,
     NetworkMapElement = 0x4a,
     ChartLine = 0x4b,
     PanelElement = 0x4d,
@@ -549,6 +549,23 @@ struct PanelData {
     IntField top_element_id;
     TextField admin;
     TextField type;
+    TextField name;
+};
+
+// This is type 0x43 data
+struct SysLogRuleData {
+    BoolField regexp_not;
+    BoolField source_set;
+    BoolField regexp_set;
+    BoolField enabled;
+    BoolField source_not;
+    IntField source_first;
+    IntField source_second;
+    ByteField action;
+    IntField notify_id;
+    IntField object_id;
+    IntField next_id;
+    TextField regexp;
     TextField name;
 };
 

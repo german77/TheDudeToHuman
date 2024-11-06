@@ -45,6 +45,7 @@ public:
     std::vector<FunctionData> GetFunctionData() const;
     std::vector<SnmpProfileData> GetSnmpProfileData() const;
     std::vector<PanelData> GetPanelData() const;
+    std::vector<SysLogRuleData> GetSysLogRuleData() const;
     std::vector<NetworkMapElementData> GetNetworkMapElementData() const;
     std::vector<ChartLineData> GetChartLineData() const;
     std::vector<PanelElementData> GetPanelElementData() const;
@@ -70,6 +71,7 @@ private:
     FunctionData GetFunctionData(DudeFieldParser& parser) const;
     SnmpProfileData GetSnmpProfileData(DudeFieldParser& parser) const;
     PanelData GetPanelData(DudeFieldParser& parser) const;
+    SysLogRuleData GetSysLogRuleData(DudeFieldParser& parser) const;
     NetworkMapElementData GetNetworkMapElementData(DudeFieldParser& parser) const;
     ChartLineData GetChartLineData(DudeFieldParser& parser) const;
     PanelElementData GetPanelElementData(DudeFieldParser& parser) const;

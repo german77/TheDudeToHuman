@@ -140,8 +140,8 @@ enum class FieldId : u32 {
 
     // Syslog Rule
     SysLogRule_Enabled = 0x101770,
-    SysLogRule_SrcFirst1 = 0x101771,
-    SysLogRule_SrcSecond1 = 0x101772,
+    SysLogRule_SrcFirst = 0x101771,
+    SysLogRule_SrcSecond = 0x101772,
     SysLogRule_Regexp = 0x101773,
     SysLogRule_SrcNot = 0x101774,
     SysLogRule_RegexpNot = 0x101775,
@@ -152,8 +152,8 @@ enum class FieldId : u32 {
 
     // SNMP Trap Rule
     SnmpTrapRule_Enabled = 0x101b58,
-    SnmpTrapRule_SrcFirst2 = 0x101b59,
-    SnmpTrapRule_SrcSecond2 = 0x101b5a,
+    SnmpTrapRule_SrcFirst = 0x101b59,
+    SnmpTrapRule_SrcSecond = 0x101b5a,
     SnmpTrapRule_TrapIDs = 0x101b5b,
     SnmpTrapRule_SrcNot = 0x101b5c,
     SnmpTrapRule_TrapNot = 0x101b5d,

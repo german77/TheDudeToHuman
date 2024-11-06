@@ -99,7 +99,7 @@ std::vector<T> DudeDatabase::GetObjectData(DataFormat format,
 }
 
 std::vector<ServerConfigData> DudeDatabase::GetServerConfigData() const {
-    return GetObjectData<ServerConfigData>(DataFormat::ServerConfiguration,
+    return GetObjectData<ServerConfigData>(DataFormat::ServerConfig,
                                            &DudeDatabase::GetServerConfigData);
 }
 
@@ -159,6 +159,10 @@ std::vector<SnmpProfileData> DudeDatabase::GetSnmpProfileData() const {
 
 std::vector<PanelData> DudeDatabase::GetPanelData() const {
     return GetObjectData<PanelData>(DataFormat::Panel, &DudeDatabase::GetPanelData);
+}
+
+std::vector<SysLogRuleData> DudeDatabase::GetSysLogRuleData() const {
+    return GetObjectData<SysLogRuleData>(DataFormat::SysLogRule, &DudeDatabase::GetSysLogRuleData);
 }
 
 std::vector<NetworkMapElementData> DudeDatabase::GetNetworkMapElementData() const {
@@ -638,6 +642,26 @@ PanelData DudeDatabase::GetPanelData(DudeFieldParser& parser) const {
     parser.ReadField(data.top_element_id, FieldId::Panel_TopElementID);
     parser.ReadField(data.admin, FieldId::Panel_Admin);
     parser.ReadField(data.type, FieldId::ObjectList_Type);
+    parser.ReadField(data.name, FieldId::SysName);
+
+    return data;
+}
+
+SysLogRuleData DudeDatabase::GetSysLogRuleData(DudeFieldParser& parser) const {
+    SysLogRuleData data{};
+
+    parser.ReadField(data.regexp_not, FieldId::SysLogRule_RegexpNot);
+    parser.ReadField(data.source_set, FieldId::SysLogRule_SrcSet);
+    parser.ReadField(data.regexp_set, FieldId::SysLogRule_RegexpSet);
+    parser.ReadField(data.enabled, FieldId::SysLogRule_Enabled);
+    parser.ReadField(data.source_not, FieldId::SysLogRule_SrcNot);
+    parser.ReadField(data.source_first, FieldId::SysLogRule_SrcFirst);
+    parser.ReadField(data.source_second, FieldId::SysLogRule_SrcSecond);
+    parser.ReadField(data.action, FieldId::SysLogRule_Action);
+    parser.ReadField(data.notify_id, FieldId::SysLogRule_NotifyID);
+    parser.ReadField(data.object_id, FieldId::SysId);
+    parser.ReadField(data.next_id, FieldId::SysNextId);
+    parser.ReadField(data.regexp, FieldId::SysLogRule_Regexp);
     parser.ReadField(data.name, FieldId::SysName);
 
     return data;
