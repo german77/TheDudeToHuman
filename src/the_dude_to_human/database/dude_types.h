@@ -25,13 +25,13 @@ enum class DataFormat : u32 {
     UnknownD = 0x0d,
     DeviceType = 0x0e,
     Device = 0x0f,
-    Unknown10 = 0x10,
+    Network = 0x10,
     Service = 0x11,
     Notification = 0x18,
     Link = 0x1f,
     LinkType = 0x22,
     DataSource = 0x29,
-    Unknown2a = 0x2a,
+    ObjectList = 0x2a,
     DeviceGroup = 0x31,
     Function = 0x39,
     SnmpProfile = 0x3a,
@@ -408,6 +408,15 @@ struct DeviceData {
     TextField name;
 };
 
+// This is type 0x10 data
+struct NetworkData {
+    IntArrayField subnets;
+    IntField object_id;
+    IntField net_map_id;
+    IntField net_map_element;
+    TextField name;
+};
+
 // This is type 0x11 data
 struct ServiceData {
     IntArrayField notify_ids;
@@ -509,6 +518,14 @@ struct DataSourceData {
     ByteField keep_time_1Day;
     TextField function_code;
     TextField unit;
+    TextField name;
+};
+
+// This is type 0x2a data
+struct ObjectListData {
+    BoolField ordered;
+    IntField object_id;
+    TextField type;
     TextField name;
 };
 

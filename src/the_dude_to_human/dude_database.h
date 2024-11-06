@@ -37,11 +37,13 @@ public:
     std::vector<MapData> GetMapData() const;
     std::vector<DeviceTypeData> GetDeviceTypeData() const;
     std::vector<DeviceData> GetDeviceData() const;
+    std::vector<NetworkData> GetNetworkData() const;
     std::vector<ServiceData> GetServiceData() const;
     std::vector<NotificationData> GetNotificationData() const;
     std::vector<LinkData> GetLinkData() const;
     std::vector<LinkTypeData> GetLinkTypeData() const;
     std::vector<DataSourceData> GetDataSourceData() const;
+    std::vector<ObjectListData> GetObjectListData() const;
     std::vector<DeviceGroupData> GetDeviceGroupData() const;
     std::vector<FunctionData> GetFunctionData() const;
     std::vector<SnmpProfileData> GetSnmpProfileData() const;
@@ -64,11 +66,13 @@ private:
     MapData GetMapData(DudeFieldParser& parser) const;
     DeviceTypeData GetDeviceTypeData(DudeFieldParser& parser) const;
     DeviceData GetDeviceData(DudeFieldParser& parser) const;
+    NetworkData GetNetworkData(DudeFieldParser& parser) const;
     ServiceData GetServiceData(DudeFieldParser& parser) const;
     NotificationData GetNotificationData(DudeFieldParser& parser) const;
     LinkData GetLinkData(DudeFieldParser& parser) const;
     LinkTypeData GetLinkTypeData(DudeFieldParser& parser) const;
     DataSourceData GetDataSourceData(DudeFieldParser& parser) const;
+    ObjectListData GetObjectListData(DudeFieldParser& parser) const;
     DeviceGroupData GetDeviceGroupData(DudeFieldParser& parser) const;
     FunctionData GetFunctionData(DudeFieldParser& parser) const;
     SnmpProfileData GetSnmpProfileData(DudeFieldParser& parser) const;

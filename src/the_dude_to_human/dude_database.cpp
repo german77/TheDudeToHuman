@@ -127,6 +127,10 @@ std::vector<DeviceData> DudeDatabase::GetDeviceData() const {
     return GetObjectData<DeviceData>(DataFormat::Device, &DudeDatabase::GetDeviceData);
 }
 
+std::vector<NetworkData> DudeDatabase::GetNetworkData() const {
+    return GetObjectData<NetworkData>(DataFormat::Network, &DudeDatabase::GetNetworkData);
+}
+
 std::vector<ServiceData> DudeDatabase::GetServiceData() const {
     return GetObjectData<ServiceData>(DataFormat::Service, &DudeDatabase::GetServiceData);
 }
@@ -146,6 +150,10 @@ std::vector<LinkTypeData> DudeDatabase::GetLinkTypeData() const {
 
 std::vector<DataSourceData> DudeDatabase::GetDataSourceData() const {
     return GetObjectData<DataSourceData>(DataFormat::DataSource, &DudeDatabase::GetDataSourceData);
+}
+
+std::vector<ObjectListData> DudeDatabase::GetObjectListData() const {
+    return GetObjectData<ObjectListData>(DataFormat::ObjectList, &DudeDatabase::GetObjectListData);
 }
 
 std::vector<DeviceGroupData> DudeDatabase::GetDeviceGroupData() const {
@@ -484,6 +492,17 @@ DeviceData DudeDatabase::GetDeviceData(DudeFieldParser& parser) const {
     return data;
 }
 
+NetworkData DudeDatabase::GetNetworkData(DudeFieldParser& parser) const {
+    NetworkData data{};
+
+    parser.ReadField(data.subnets, FieldId::Network_Subnets);
+    parser.ReadField(data.object_id, FieldId::SysId);
+    parser.ReadField(data.net_map_element, FieldId::Network_NetMapElementID);
+    parser.ReadField(data.net_map_id, FieldId::Network_NetMapID);
+    parser.ReadField(data.name, FieldId::SysName);
+
+    return data;
+}
 ServiceData DudeDatabase::GetServiceData(DudeFieldParser& parser) const {
     ServiceData data{};
 
@@ -598,6 +617,17 @@ DataSourceData DudeDatabase::GetDataSourceData(DudeFieldParser& parser) const {
     parser.ReadField(data.keep_time_1Day, FieldId::DataSource_KeepTime1day);
     parser.ReadField(data.function_code, FieldId::DataSource_FunctionCode);
     parser.ReadField(data.unit, FieldId::DataSource_Unit);
+    parser.ReadField(data.name, FieldId::SysName);
+
+    return data;
+}
+
+ObjectListData DudeDatabase::GetObjectListData(DudeFieldParser& parser) const {
+    ObjectListData data{};
+
+    parser.ReadField(data.ordered, FieldId::ObjectList_Ordered);
+    parser.ReadField(data.object_id, FieldId::SysId);
+    parser.ReadField(data.type, FieldId::ObjectList_Type);
     parser.ReadField(data.name, FieldId::SysName);
 
     return data;
