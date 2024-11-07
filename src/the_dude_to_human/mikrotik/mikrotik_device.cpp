@@ -18,15 +18,14 @@
 #pragma warning(disable : 4996)
 
 static int waitsocket(libssh2_socket_t socket_fd, LIBSSH2_SESSION* session) {
-    struct timeval timeout;
-    int rc;
     fd_set fd;
     fd_set* writefd = NULL;
     fd_set* readfd = NULL;
-    int dir;
 
-    timeout.tv_sec = 10;
-    timeout.tv_usec = 0;
+    const timeval timeout{
+        .tv_sec = 10,
+        .tv_usec = 0,
+    };
 
     FD_ZERO(&fd);
 
@@ -40,7 +39,7 @@ static int waitsocket(libssh2_socket_t socket_fd, LIBSSH2_SESSION* session) {
 #endif
 
     /* now make sure we wait in the correct direction */
-    dir = libssh2_session_block_directions(session);
+    int dir = libssh2_session_block_directions(session);
 
     if (dir & LIBSSH2_SESSION_BLOCK_INBOUND)
         readfd = &fd;
@@ -48,9 +47,7 @@ static int waitsocket(libssh2_socket_t socket_fd, LIBSSH2_SESSION* session) {
     if (dir & LIBSSH2_SESSION_BLOCK_OUTBOUND)
         writefd = &fd;
 
-    rc = select((int)(socket_fd + 1), readfd, writefd, NULL, &timeout);
-
-    return rc;
+    return select(static_cast<int>(socket_fd + 1), readfd, writefd, NULL, &timeout);
 }
 
 namespace Mikrotik {
@@ -164,16 +161,19 @@ int MikrotikDevice::ConnectSSH(std::string username, std::string password) {
     };
     sin.sin_addr.s_addr = hostaddr;
 
-    if (result = connect(sock, reinterpret_cast<sockaddr*>(&sin), sizeof(sockaddr_in)); result) {
+    result = connect(sock, reinterpret_cast<sockaddr*>(&sin), sizeof(sockaddr_in));
+    if (result) {
         return result;
     }
 
     auto lock = std::scoped_lock(session_mutex);
 
-    if (result = libssh2_session_handshake(session, sock); result)
+    result = libssh2_session_handshake(session, sock);
+    if (result)
         return result;
 
-    if (result = libssh2_userauth_password(session, username.data(), password.data()); result)
+    result = libssh2_userauth_password(session, username.data(), password.data());
+    if (result)
         return result;
 
     libssh2_session_set_blocking(session, 1);
@@ -182,10 +182,7 @@ int MikrotikDevice::ConnectSSH(std::string username, std::string password) {
 }
 
 int MikrotikDevice::ExecuteSSH(std::string commandline) {
-    int rc;
-    int exitcode = 0;
-    ssize_t bytecount = 0;
-    char* exitsignal = (char*)"none";
+    int result{};
     LIBSSH2_CHANNEL* channel;
 
     /* Exec non-blocking on the remote host */
@@ -196,60 +193,48 @@ int MikrotikDevice::ExecuteSSH(std::string commandline) {
         waitsocket(sock, session);
     } while (1);
     if (!channel) {
-        fprintf(stderr, "Error\n");
-        exit(1);
+        return 1;
     }
-    while ((rc = libssh2_channel_exec(channel, commandline.c_str())) == LIBSSH2_ERROR_EAGAIN) {
+    while ((result = libssh2_channel_exec(channel, commandline.c_str())) == LIBSSH2_ERROR_EAGAIN) {
         waitsocket(sock, session);
     }
-    if (rc) {
-        fprintf(stderr, "exec error\n");
-        exit(1);
+    if (result) {
+        return 1;
     }
     for (;;) {
-        ssize_t nread;
+        ssize_t nread{};
         /* loop until we block */
         do {
-            char buffer[0x4000];
-            nread = libssh2_channel_read(channel, buffer, sizeof(buffer));
-            if (nread > 0) {
-                ssize_t i;
-                bytecount += nread;
-                fprintf(stderr, "We read:\n");
-                for (i = 0; i < nread; ++i)
-                    fputc(buffer[i], stderr);
-                fprintf(stderr, "\n");
-            } else {
+            std::array<char, 0x400> buffer;
+            nread = libssh2_channel_read(channel, buffer.data(), buffer.size());
+            if (nread <= 0) {
                 if (nread != LIBSSH2_ERROR_EAGAIN)
-                    /* no need to output this for the EAGAIN case */
                     fprintf(stderr, "libssh2_channel_read returned %ld\n", (long)nread);
+                continue;
             }
+
+            fprintf(stderr, "We read:\n");
+            for (ssize_t i = 0; i < nread; ++i)
+                fputc(buffer[i], stderr);
+            fprintf(stderr, "\n");
         } while (nread > 0);
 
         /* this is due to blocking that would occur otherwise so we loop on
            this condition */
         if (nread == LIBSSH2_ERROR_EAGAIN) {
             waitsocket(sock, session);
-        } else
-            break;
+            continue;
+        }
+        break;
     }
-    exitcode = 127;
-    while ((rc = libssh2_channel_close(channel)) == LIBSSH2_ERROR_EAGAIN)
+
+    while ((result = libssh2_channel_close(channel)) == LIBSSH2_ERROR_EAGAIN)
         waitsocket(sock, session);
 
-    if (rc == 0) {
-        exitcode = libssh2_channel_get_exit_status(channel);
-        libssh2_channel_get_exit_signal(channel, &exitsignal, NULL, NULL, NULL, NULL, NULL);
-    }
-
-    if (exitsignal)
-        fprintf(stderr, "\nGot signal: %s\n", exitsignal);
-    else
-        fprintf(stderr, "\nEXIT: %d bytecount: %ld\n", exitcode, (long)bytecount);
-
     libssh2_channel_free(channel);
-    channel = NULL;
-    return rc;
+    channel = nullptr;
+
+    return result;
 }
 
 int MikrotikDevice::DisconnectSSH() {
