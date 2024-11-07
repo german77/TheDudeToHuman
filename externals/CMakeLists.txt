@@ -18,3 +18,6 @@ target_include_directories(sqlite PUBLIC ./sqlite)
 if (MSVC)
     add_subdirectory(getopt)
 endif()
+
+# Libssh2
+add_subdirectory(libssh2)
