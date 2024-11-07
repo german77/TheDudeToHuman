@@ -7,24 +7,28 @@
 
 #ifdef _WIN32
 // windows.h needs to be included before shellapi.h
-#include <windows.h>
 #include <shellapi.h>
+#include <windows.h>
 #endif
 
 #undef _UNICODE
 #include <getopt.h>
 
-#include "dude_database.h"
+#include "database/dude_database.h"
+#include "database/dude_validator.h"
 #include "mikrotik/mikrotik_device.h"
 
 static void PrintHelp(const char* argv0) {
+    // clang-format off
     std::cout
         << "Usage: " << argv0
         << " [options] <filename>\n"
            "-f, --file                                 Load the specified database file\n"
-           "-m, --mikrotik=user:password@address:port  Connect to the specified mikrotik device\n"
-           "-d, --database=user:password@address:port  Connect to the specified database\n"
+           "-o, --out                                  Store database location\n"
+           //"-m, --mikrotik=user:password@address:port  Connect to the specified mikrotik device\n"
+           //"-d, --database=user:password@address:port  Connect to the specified database\n"
            "-h, --help                                 Display this help and exit\n";
+    // clang-format on
 }
 
 int main(int argc, char** argv) {
@@ -43,6 +47,9 @@ int main(int argc, char** argv) {
     bool has_filepath{};
     std::string filepath{};
 
+    bool has_out_filepath{};
+    std::string out_filepath{};
+
     bool has_mikrotik{};
     std::string mikrotik_user{};
     std::string mikrotik_password{};
@@ -57,9 +64,10 @@ int main(int argc, char** argv) {
 
     static struct option long_options[] = {
         // clang-format off
-        {"file", optional_argument, 0, 'f'},
-        {"mikrotik", optional_argument, 0, 'm'},
-        {"database", optional_argument, 0, 'd'},
+        {"file", required_argument, 0, 'f'},
+        {"out", required_argument, 0, 'o'},
+        {"mikrotik", required_argument, 0, 'm'},
+        //{"database", optional_argument, 0, 'd'},
         {"help", no_argument, 0, 'h'},
         {0, 0, 0, 0},
         // clang-format on
@@ -73,6 +81,12 @@ int main(int argc, char** argv) {
                 has_filepath = true;
                 const std::string str_arg(optarg);
                 filepath = str_arg;
+                break;
+            }
+            case 'o': {
+                has_out_filepath = true;
+                const std::string str_arg(optarg);
+                out_filepath = str_arg;
                 break;
             }
             case 'h':
@@ -158,6 +172,9 @@ int main(int argc, char** argv) {
     }
 
     Database::DudeDatabase db{filepath};
-    auto formats = db.ListUsedDataFormats();
-    auto data = db.GetProbeData();
+    db.ListUsedDataFormats();
+
+    if (!has_out_filepath) {
+        db.SaveDatabase(out_filepath);
+    }
 }

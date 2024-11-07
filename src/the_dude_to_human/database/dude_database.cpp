@@ -5,8 +5,8 @@
 #include <cstddef>
 #include <cstdio>
 
-#include "database/dude_field_parser.h"
 #include "dude_database.h"
+#include "dude_field_parser.h"
 
 namespace Database {
 DudeDatabase::DudeDatabase(const std::string& db_file) : db{db_file} {
@@ -22,33 +22,37 @@ DudeDatabase::~DudeDatabase() {
     db.CloseDatabase();
 }
 
-int DudeDatabase::GetChartValuesRaw(SqlData& data) const {
+int DudeDatabase::GetChartValuesRaw(Sqlite::SqlData& data) const {
     return db.GetTableData(data, "chart_values_raw");
 }
 
-int DudeDatabase::GetChartValues10Min(SqlData& data) const {
+int DudeDatabase::GetChartValues10Min(Sqlite::SqlData& data) const {
     return db.GetTableData(data, "chart_values_10min");
 }
 
-int DudeDatabase::GetChartValues2Hour(SqlData& data) const {
+int DudeDatabase::GetChartValues2Hour(Sqlite::SqlData& data) const {
     return db.GetTableData(data, "chart_values_2hour");
 }
 
-int DudeDatabase::GetChartValues1Day(SqlData& data) const {
+int DudeDatabase::GetChartValues1Day(Sqlite::SqlData& data) const {
     return db.GetTableData(data, "chart_values_1day");
 }
 
-int DudeDatabase::GetObjs(SqlData& data) const {
+int DudeDatabase::GetObjs(Sqlite::SqlData& data) const {
     return db.GetTableData(data, "objs");
 }
 
-int DudeDatabase::GetOutages(SqlData& data) const {
+int DudeDatabase::GetOutages(Sqlite::SqlData& data) const {
     return db.GetTableData(data, "outages");
+}
+
+int DudeDatabase::SaveDatabase(const std::string& db_file) {
+    return 0;
 }
 
 std::vector<DataFormat> DudeDatabase::ListUsedDataFormats() const {
     std::vector<DataFormat> data_formats{};
-    Database::SqlData sql_data{};
+    Sqlite::SqlData sql_data{};
     GetObjs(sql_data);
 
     for (auto& [id, blob] : sql_data) {
@@ -74,7 +78,7 @@ std::vector<T> DudeDatabase::GetObjectData(DataFormat format,
                                            T (DudeDatabase::*RawToObjData)(DudeFieldParser& parser)
                                                const) const {
     std::vector<T> data{};
-    Database::SqlData sql_data{};
+    Sqlite::SqlData sql_data{};
     GetObjs(sql_data);
 
     for (auto& [id, blob] : sql_data) {

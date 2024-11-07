@@ -6,7 +6,7 @@
 
 #include "sqlite_reader.h"
 
-namespace Database {
+namespace Sqlite {
 SqliteReader::SqliteReader(const std::string& db_file) {
     is_open = false;
     db_filename = db_file;
@@ -105,4 +105,4 @@ const char* SqliteReader::GetError() const {
     return sqlite3_errmsg(db);
 }
 
-} // namespace Database
+} // namespace Sqlite

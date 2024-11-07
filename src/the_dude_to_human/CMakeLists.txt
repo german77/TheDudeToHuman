@@ -2,22 +2,27 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 add_executable(the_dude_to_human
+    database/dude_database.cpp
+    database/dude_database.h
     database/dude_field_id.h
     database/dude_field_parser.cpp
     database/dude_field_parser.h
     database/dude_types.h
-    dude_database.cpp
-    dude_database.h
+    database/dude_validator.cpp
+    database/dude_validator.h
     mikrotik/mikrotik_device.cpp
     mikrotik/mikrotik_device.h
-    sqlite_reader.cpp
-    sqlite_reader.h
+    sqlite/sqlite_reader.cpp
+    sqlite/sqlite_reader.h
+    sqlite/sqlite_types.h
+    sqlite/sqlite_writer.cpp
+    sqlite/sqlite_writer.h
     TheDudeToHuman.cpp
 )
-
-create_target_directory_groups(the_dude_to_human)
 
 target_link_libraries(the_dude_to_human PRIVATE sqlite)
 if (MSVC)
     target_link_libraries(the_dude_to_human PRIVATE getopt)
 endif()
+
+create_target_directory_groups(the_dude_to_human)

@@ -32,7 +32,6 @@ void MikrotikDevice::UploadDatabase() {
     if (!is_connected) {
         return;
     }
-
 }
 
-} // namespace Database
+} // namespace Mikrotik

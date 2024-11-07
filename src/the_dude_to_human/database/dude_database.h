@@ -7,9 +7,9 @@
 #include <string>
 #include <vector>
 
+#include "../sqlite/sqlite_reader.h"
 #include "common/common_types.h"
-#include "database/dude_types.h"
-#include "sqlite_reader.h"
+#include "dude_types.h"
 
 namespace Database {
 class DudeFieldParser;
@@ -19,13 +19,15 @@ public:
     DudeDatabase(const std::string& db_file);
     ~DudeDatabase();
 
-    int GetChartValuesRaw(SqlData& data) const;
-    int GetChartValues10Min(SqlData& data) const;
-    int GetChartValues2Hour(SqlData& data) const;
-    int GetChartValues1Day(SqlData& data) const;
+    int GetChartValuesRaw(Sqlite::SqlData& data) const;
+    int GetChartValues10Min(Sqlite::SqlData& data) const;
+    int GetChartValues2Hour(Sqlite::SqlData& data) const;
+    int GetChartValues1Day(Sqlite::SqlData& data) const;
 
-    int GetObjs(SqlData& data) const;
-    int GetOutages(SqlData& data) const;
+    int GetObjs(Sqlite::SqlData& data) const;
+    int GetOutages(Sqlite::SqlData& data) const;
+
+    int SaveDatabase(const std::string& db_file);
 
     // Usefull to find new unsuported types
     std::vector<DataFormat> ListUsedDataFormats() const;
@@ -84,6 +86,6 @@ private:
     ChartLineData GetChartLineData(DudeFieldParser& parser) const;
     PanelElementData GetPanelElementData(DudeFieldParser& parser) const;
 
-    Database::SqliteReader db;
+    Sqlite::SqliteReader db;
 };
 } // namespace Database

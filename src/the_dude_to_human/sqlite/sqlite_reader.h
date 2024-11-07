@@ -8,10 +8,9 @@
 
 #include "common/common_types.h"
 #include "sqlite3.h"
+#include "sqlite_types.h"
 
-namespace Database {
-using SqlRow = std::pair<u32, std::vector<u8>>;
-using SqlData = std::vector<SqlRow>;
+namespace Sqlite {
 
 class SqliteReader {
 public:
@@ -32,4 +31,4 @@ private:
     std::string db_filename{};
     sqlite3* db{NULL};
 };
-} // namespace Database
+} // namespace Sqlite
