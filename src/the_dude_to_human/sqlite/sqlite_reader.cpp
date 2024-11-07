@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <cstring>
 
-#include "sqlite_reader.h"
+#include "the_dude_to_human/sqlite/sqlite_reader.h"
 
 namespace Sqlite {
 SqliteReader::SqliteReader(const std::string& db_file) {

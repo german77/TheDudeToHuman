@@ -6,7 +6,7 @@
 #include <span>
 
 #include "common/common_types.h"
-#include "dude_types.h"
+#include "the_dude_to_human/database/dude_types.h"
 
 namespace Database {
 enum class ParserResult {

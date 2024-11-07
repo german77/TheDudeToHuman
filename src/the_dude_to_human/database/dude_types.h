@@ -9,7 +9,7 @@
 #include "common/bit_field.h"
 #include "common/common_funcs.h"
 #include "common/common_types.h"
-#include "dude_field_id.h"
+#include "the_dude_to_human/database/dude_field_id.h"
 
 namespace Database {
 using IpAddress = std::array<u8, 4>;

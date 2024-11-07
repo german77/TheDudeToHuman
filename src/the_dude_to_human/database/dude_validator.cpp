@@ -5,7 +5,7 @@
 #include <cstddef>
 #include <cstdio>
 
-#include "dude_validator.h"
+#include "the_dude_to_human/database/dude_validator.h"
 
 namespace Database {
 DudeValidator::DudeValidator() {}

@@ -8,7 +8,7 @@
 
 #include "common/common_types.h"
 #include "sqlite3.h"
-#include "sqlite_types.h"
+#include "the_dude_to_human/sqlite/sqlite_types.h"
 
 namespace Sqlite {
 

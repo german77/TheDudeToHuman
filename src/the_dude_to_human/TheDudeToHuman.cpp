@@ -7,16 +7,16 @@
 
 #ifdef _WIN32
 // windows.h needs to be included before shellapi.h
-#include <shellapi.h>
 #include <windows.h>
+#include <shellapi.h>
 #endif
 
 #undef _UNICODE
 #include <getopt.h>
 
-#include "database/dude_database.h"
-#include "database/dude_validator.h"
-#include "mikrotik/mikrotik_device.h"
+#include "the_dude_to_human/database/dude_database.h"
+#include "the_dude_to_human/database/dude_validator.h"
+#include "the_dude_to_human/mikrotik/mikrotik_device.h"
 
 static void PrintHelp(const char* argv0) {
     // clang-format off

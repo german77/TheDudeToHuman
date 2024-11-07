@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <cstring>
 
-#include "sqlite_writer.h"
+#include "the_dude_to_human/sqlite/sqlite_writer.h"
 
 namespace Sqlite {
 SqliteWriter::SqliteWriter(const std::string& db_file) {

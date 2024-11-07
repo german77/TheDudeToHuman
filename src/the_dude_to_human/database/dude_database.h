@@ -7,9 +7,9 @@
 #include <string>
 #include <vector>
 
-#include "../sqlite/sqlite_reader.h"
 #include "common/common_types.h"
-#include "dude_types.h"
+#include "the_dude_to_human/database/dude_types.h"
+#include "the_dude_to_human/sqlite/sqlite_reader.h"
 
 namespace Database {
 class DudeFieldParser;

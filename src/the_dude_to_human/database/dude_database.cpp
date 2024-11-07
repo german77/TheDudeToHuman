@@ -5,8 +5,8 @@
 #include <cstddef>
 #include <cstdio>
 
-#include "dude_database.h"
-#include "dude_field_parser.h"
+#include "the_dude_to_human/database/dude_database.h"
+#include "the_dude_to_human/database/dude_field_parser.h"
 
 namespace Database {
 DudeDatabase::DudeDatabase(const std::string& db_file) : db{db_file} {

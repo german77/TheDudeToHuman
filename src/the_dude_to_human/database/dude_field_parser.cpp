@@ -3,7 +3,7 @@
 
 #include <cstring>
 
-#include "dude_field_parser.h"
+#include "the_dude_to_human/database/dude_field_parser.h"
 
 namespace Database {
 DudeFieldParser::DudeFieldParser(std::span<const u8> data) : raw_data{data} {
