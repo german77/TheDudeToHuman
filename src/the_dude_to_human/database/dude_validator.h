@@ -11,7 +11,7 @@ class DudeDatabase;
 
 class DudeValidator {
 public:
-    DudeValidator();
+    DudeValidator(DudeDatabase* database);
 
 private:
     DudeDatabase* db;

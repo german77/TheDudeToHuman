@@ -25,7 +25,7 @@ static void PrintHelp(const char* argv0) {
         << " [options] <filename>\n"
            "-f, --file                                 Load the specified database file\n"
            "-o, --out                                  Store database location\n"
-           //"-m, --mikrotik=user:password@address:port  Connect to the specified mikrotik device\n"
+           "-m, --mikrotik=user:password@address:port  Connect to the specified mikrotik device\n"
            //"-d, --database=user:password@address:port  Connect to the specified database\n"
            "-h, --help                                 Display this help and exit\n";
     // clang-format on
@@ -169,6 +169,13 @@ int main(int argc, char** argv) {
     if (!has_filepath && !has_mikrotik && !has_database) {
         PrintHelp(argv[0]);
         return 0;
+    }
+
+    if (has_mikrotik) {
+        Mikrotik::MikrotikDevice device = {mikrotik_address, mikrotik_port};
+        device.Connect(mikrotik_user, mikrotik_password);
+        device.Execute("system health print file=\" health.txt\";\n");
+        device.Disconnect();
     }
 
     Database::DudeDatabase db{filepath};

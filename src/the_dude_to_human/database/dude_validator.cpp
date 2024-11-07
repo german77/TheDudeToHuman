@@ -8,6 +8,6 @@
 #include "the_dude_to_human/database/dude_validator.h"
 
 namespace Database {
-DudeValidator::DudeValidator() {}
+DudeValidator::DudeValidator(DudeDatabase* database) : db{database} {}
 
 } // namespace Database

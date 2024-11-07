@@ -107,10 +107,12 @@ ParserResult DudeFieldParser::SkipField() {
 }
 
 ParserResult DudeFieldParser::ReadData(void* data, std::size_t size) {
+    if (data == nullptr) {
+        return ParserResult::InvalidFieldArguments;
+    }
     if (!is_data_valid) {
         return ParserResult::Corrupted;
     }
-
     if (raw_data.size() < size + offset) {
         return ParserResult::EndOfFile;
     }

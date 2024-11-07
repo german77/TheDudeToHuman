@@ -20,7 +20,7 @@ add_executable(the_dude_to_human
     TheDudeToHuman.cpp
 )
 
-target_link_libraries(the_dude_to_human PRIVATE sqlite)
+target_link_libraries(the_dude_to_human PRIVATE sqlite libssh2)
 if (MSVC)
     target_link_libraries(the_dude_to_human PRIVATE getopt)
 endif()
