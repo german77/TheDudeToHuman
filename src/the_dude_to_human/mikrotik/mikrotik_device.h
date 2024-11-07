@@ -4,10 +4,13 @@
 #pragma once
 
 #include <atomic>
+#include <mutex>
 #include <string>
 
 #include "common/common_types.h"
-#include "libssh2.h"
+
+struct _LIBSSH2_SESSION;
+typedef struct _LIBSSH2_SESSION LIBSSH2_SESSION;
 
 namespace Mikrotik {
 
@@ -41,8 +44,9 @@ private:
 private:
     static inline std::atomic_int lib_refcount = 0;
 
-    libssh2_socket_t sock;
-    LIBSSH2_SESSION* session = NULL;
+    u64 sock{};
+    LIBSSH2_SESSION* session = nullptr;
+    std::mutex session_mutex;
 };
 
 } // namespace Mikrotik

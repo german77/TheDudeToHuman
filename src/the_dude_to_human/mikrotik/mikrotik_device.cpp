@@ -54,8 +54,7 @@ static int waitsocket(libssh2_socket_t socket_fd, LIBSSH2_SESSION* session) {
 }
 
 namespace Mikrotik {
-MikrotikDevice::MikrotikDevice(std::string address_, u16 port_)
-    : hostname{address_}, port{port_}, sock{socket(AF_INET, SOCK_STREAM, 0)} {
+MikrotikDevice::MikrotikDevice(std::string address_, u16 port_) : hostname{address_}, port{port_} {
     InitializeSSH();
 }
 
@@ -79,6 +78,7 @@ bool MikrotikDevice::Connect(std::string username, std::string password) {
     }
 
     if (ConnectSSH(username, password) != 0) {
+        DisconnectSSH();
         return false;
     }
 
@@ -138,104 +138,47 @@ int MikrotikDevice::InitializeSSH() {
 }
 
 int MikrotikDevice::ConnectSSH(std::string username, std::string password) {
-    uint32_t hostaddr;
-    struct sockaddr_in sin;
-    const char* fingerprint;
-    int rc;
-    int exitcode = 0;
-    size_t len;
-    LIBSSH2_KNOWNHOSTS* nh;
-    int type;
+    int result = 0;
 
 #ifdef _WIN32
     WSADATA wsadata;
-
-    rc = WSAStartup(MAKEWORD(2, 0), &wsadata);
-    if (rc) {
-        fprintf(stderr, "WSAStartup failed with error: %d\n", rc);
-        return 1;
+    result = WSAStartup(MAKEWORD(2, 0), &wsadata);
+    if (result) {
+        fprintf(stderr, "WSAStartup failed with error: %d\n", result);
+        return result;
     }
 #endif
 
-    hostaddr = inet_addr(hostname.c_str());
+    auto hostaddr = inet_addr(hostname.c_str());
 
-    /* Ultra basic "connect to port port on localhost".  Your code is
-     * responsible for creating the socket establishing the connection
-     */
     sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock == LIBSSH2_INVALID_SOCKET) {
         fprintf(stderr, "failed to create socket.\n");
-        DisconnectSSH();
-        return 1;
+        return errno;
     }
 
-    sin.sin_family = AF_INET;
-    sin.sin_port = htons(port);
+    sockaddr_in sin = {
+        .sin_family = AF_INET,
+        .sin_port = htons(port),
+        .sin_addr = {},
+    };
     sin.sin_addr.s_addr = hostaddr;
-    if (connect(sock, (struct sockaddr*)(&sin), sizeof(struct sockaddr_in))) {
-        fprintf(stderr, "failed to connect.\n");
-        DisconnectSSH();
-        return 1;
+
+    if (result = connect(sock, reinterpret_cast<sockaddr*>(&sin), sizeof(sockaddr_in)); result) {
+        return result;
     }
 
-    /* tell libssh2 we want it all done non-blocking */
-    libssh2_session_set_blocking(session, 0);
+    auto lock = std::scoped_lock(session_mutex);
 
-    /* ... start it up. This will trade welcome banners, exchange keys,
-     * and setup crypto, compression, and MAC layers
-     */
-    while ((rc = libssh2_session_handshake(session, sock)) == LIBSSH2_ERROR_EAGAIN)
-        ;
-    if (rc) {
-        fprintf(stderr, "Failure establishing SSH session: %d\n", rc);
-        DisconnectSSH();
-        return 1;
-    }
+    if (result = libssh2_session_handshake(session, sock); result)
+        return result;
 
-    nh = libssh2_knownhost_init(session);
-    if (!nh) {
-        /* eeek, do cleanup here */
-        return 2;
-    }
+    if (result = libssh2_userauth_password(session, username.data(), password.data()); result)
+        return result;
 
-    /* read all hosts from here */
-    libssh2_knownhost_readfile(nh, "known_hosts", LIBSSH2_KNOWNHOST_FILE_OPENSSH);
+    libssh2_session_set_blocking(session, 1);
 
-    /* store all known hosts to here */
-    libssh2_knownhost_writefile(nh, "dumpfile", LIBSSH2_KNOWNHOST_FILE_OPENSSH);
-
-    fingerprint = libssh2_session_hostkey(session, &len, &type);
-    if (fingerprint) {
-        struct libssh2_knownhost* host;
-        int check = libssh2_knownhost_checkp(
-            nh, hostname.c_str(), port, fingerprint, len,
-            LIBSSH2_KNOWNHOST_TYPE_PLAIN | LIBSSH2_KNOWNHOST_KEYENC_RAW, &host);
-
-        fprintf(stderr, "Host check: %d, key: %s\n", check,
-                (check <= LIBSSH2_KNOWNHOST_CHECK_MISMATCH) ? host->key : "<none>");
-
-        /*****
-         * At this point, we could verify that 'check' tells us the key is
-         * fine or bail out.
-         *****/
-    } else {
-        /* eeek, do cleanup here */
-        return 3;
-    }
-    libssh2_knownhost_free(nh);
-
-    if (!password.empty()) {
-        /* We could authenticate via password */
-        while ((rc = libssh2_userauth_password(session, username.c_str(), password.c_str())) ==
-               LIBSSH2_ERROR_EAGAIN)
-            ;
-        if (rc) {
-            fprintf(stderr, "Authentication by password failed.\n");
-            return rc;
-        }
-    }
-
-    return exitcode;
+    return result;
 }
 
 int MikrotikDevice::ExecuteSSH(std::string commandline) {
@@ -311,6 +254,7 @@ int MikrotikDevice::ExecuteSSH(std::string commandline) {
 
 int MikrotikDevice::DisconnectSSH() {
     int result = 0;
+    auto lock = std::scoped_lock(session_mutex);
 
     if (session) {
         result = libssh2_session_disconnect(session, "Normal Shutdown");
