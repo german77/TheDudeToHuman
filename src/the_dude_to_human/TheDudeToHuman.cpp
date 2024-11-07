@@ -159,4 +159,5 @@ int main(int argc, char** argv) {
 
     Database::DudeDatabase db{filepath};
     auto formats = db.ListUsedDataFormats();
+    auto data = db.GetProbeData();
 }

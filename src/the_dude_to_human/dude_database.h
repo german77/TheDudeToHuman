@@ -35,6 +35,7 @@ public:
     std::vector<FileData> GetFileData() const;
     std::vector<NotesData> GetNotesData() const;
     std::vector<MapData> GetMapData() const;
+    std::vector<ProbeData> GetProbeData() const;
     std::vector<DeviceTypeData> GetDeviceTypeData() const;
     std::vector<DeviceData> GetDeviceData() const;
     std::vector<NetworkData> GetNetworkData() const;
@@ -64,6 +65,7 @@ private:
     FileData GetFileData(DudeFieldParser& parser) const;
     NotesData GetNotesData(DudeFieldParser& parser) const;
     MapData GetMapData(DudeFieldParser& parser) const;
+    ProbeData GetProbeData(DudeFieldParser& parser) const;
     DeviceTypeData GetDeviceTypeData(DudeFieldParser& parser) const;
     DeviceData GetDeviceData(DudeFieldParser& parser) const;
     NetworkData GetNetworkData(DudeFieldParser& parser) const;

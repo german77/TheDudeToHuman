@@ -22,7 +22,7 @@ enum class DataFormat : u32 {
     File = 0x05,
     Notes = 0x09,
     Map = 0x0a,
-    UnknownD = 0x0d,
+    Probe = 0x0d,
     DeviceType = 0x0e,
     Device = 0x0f,
     Network = 0x10,
@@ -362,6 +362,46 @@ struct MapData {
     LongArrayField device_font;
     TextField device_label;
     TextField list_type;
+    TextField name;
+};
+
+// This is type 0x0D data
+struct ProbeData {
+    IntArrayField logic_probe_ids;
+    IntArrayField snmp_value_oid;
+    IntArrayField snmp_oid;
+    IntArrayField dns_addresses;
+    BoolField snmp_avail_if_up;
+    BoolField tcp_only_connect;
+    BoolField tcp_first_receive;
+    ByteField logic_type;
+    IntField type_id;
+    IntField object_id;
+    IntField agent_id;
+    IntField default_port;
+    ByteField icmp_size;
+    ByteField icmp_retry_count;
+    IntField icmp_retry_interval;
+    ByteField random_probability;
+    ByteField icmp_ttl;
+    IntField snmp_profile_id;
+    ByteField snmp_oid_type;
+    ByteField snmp_compare_method;
+    ByteField snmp_value_number;
+    ByteField snmp_value_ip;
+    TextField function_unit;
+    TextField funtion_value;
+    TextField function_error;
+    TextField function_available;
+    TextField snmp_value_string;
+    LongField snmp_value_big_number;
+    TextField dns_name;
+    TextField tcp_receive_3;
+    TextField tcp_send_3;
+    TextField tcp_receive_2;
+    TextField tcp_send_2;
+    TextField tcp_receive_1;
+    TextField tcp_send_1;
     TextField name;
 };
 

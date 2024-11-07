@@ -119,6 +119,10 @@ std::vector<MapData> DudeDatabase::GetMapData() const {
     return GetObjectData<MapData>(DataFormat::Map, &DudeDatabase::GetMapData);
 }
 
+std::vector<ProbeData> DudeDatabase::GetProbeData() const {
+    return GetObjectData<ProbeData>(DataFormat::Probe, &DudeDatabase::GetProbeData);
+}
+
 std::vector<DeviceTypeData> DudeDatabase::GetDeviceTypeData() const {
     return GetObjectData<DeviceTypeData>(DataFormat::DeviceType, &DudeDatabase::GetDeviceTypeData);
 }
@@ -438,6 +442,49 @@ MapData DudeDatabase::GetMapData(DudeFieldParser& parser) const {
     parser.ReadField(data.device_font, FieldId::NetworkMap_DeviceFont);
     parser.ReadField(data.device_label, FieldId::NetworkMap_DeviceLabel);
     parser.ReadField(data.list_type, FieldId::ObjectList_Type);
+    parser.ReadField(data.name, FieldId::SysName);
+
+    return data;
+}
+
+ProbeData DudeDatabase::GetProbeData(DudeFieldParser& parser) const {
+    ProbeData data{};
+
+    parser.ReadField(data.logic_probe_ids, FieldId::Probe_LogicProbeIDs);
+    parser.ReadField(data.snmp_value_oid, FieldId::Probe_SnmpValueOid);
+    parser.ReadField(data.snmp_oid, FieldId::Probe_SnmpOid);
+    parser.ReadField(data.dns_addresses, FieldId::Probe_DnsAddresses);
+    parser.ReadField(data.snmp_avail_if_up, FieldId::Probe_SnmpAvailIfUp);
+    parser.ReadField(data.tcp_only_connect, FieldId::Probe_TcpOnlyConnect);
+    parser.ReadField(data.tcp_first_receive, FieldId::Probe_TcpFirstReceive);
+    parser.ReadField(data.logic_type, FieldId::Probe_LogicType);
+    parser.ReadField(data.type_id, FieldId::Probe_TypeID);
+    parser.ReadField(data.object_id, FieldId::SysId);
+    parser.ReadField(data.agent_id, FieldId::Probe_AgentID);
+    parser.ReadField(data.default_port, FieldId::Probe_DefaultPort);
+    parser.ReadField(data.icmp_size, FieldId::Probe_IcmpSize);
+    parser.ReadField(data.icmp_retry_count, FieldId::Probe_IcmpRetryCount);
+    parser.ReadField(data.icmp_retry_interval, FieldId::Probe_IcmpRetryInterval);
+    parser.ReadField(data.random_probability, FieldId::Probe_RandomProbability);
+    parser.ReadField(data.icmp_ttl, FieldId::Probe_IcmpTtl);
+    parser.ReadField(data.snmp_profile_id, FieldId::Probe_SnmpProfileID);
+    parser.ReadField(data.snmp_oid_type, FieldId::Probe_SnmpOidType);
+    parser.ReadField(data.snmp_compare_method, FieldId::Probe_SnmpCompareMethod);
+    parser.ReadField(data.snmp_value_number, FieldId::Probe_SnmpValueNumber);
+    parser.ReadField(data.snmp_value_ip, FieldId::Probe_SnmpValueIP);
+    parser.ReadField(data.function_unit, FieldId::Probe_FunctionUnit);
+    parser.ReadField(data.funtion_value, FieldId::Probe_FunctionValue);
+    parser.ReadField(data.function_error, FieldId::Probe_FunctionError);
+    parser.ReadField(data.function_available, FieldId::Probe_FunctionAvailable);
+    parser.ReadField(data.snmp_value_string, FieldId::Probe_SnmpValueString);
+    parser.ReadField(data.snmp_value_big_number, FieldId::Probe_SnmpValueBigNumber);
+    parser.ReadField(data.dns_name, FieldId::Probe_DnsName);
+    parser.ReadField(data.tcp_receive_3, FieldId::Probe_TcpReceive3);
+    parser.ReadField(data.tcp_send_3, FieldId::Probe_TcpSend3);
+    parser.ReadField(data.tcp_receive_2, FieldId::Probe_TcpReceive2);
+    parser.ReadField(data.tcp_send_2, FieldId::Probe_TcpSend2);
+    parser.ReadField(data.tcp_receive_1, FieldId::Probe_TcpReceive1);
+    parser.ReadField(data.tcp_send_1, FieldId::Probe_TcpSend1);
     parser.ReadField(data.name, FieldId::SysName);
 
     return data;
