@@ -174,7 +174,9 @@ int main(int argc, char** argv) {
     if (has_mikrotik) {
         Mikrotik::MikrotikDevice device = {mikrotik_address, mikrotik_port};
         device.Connect(mikrotik_user, mikrotik_password);
-        device.Execute("system health print file=\" health.txt\";\n");
+        std::string output{};
+        device.Execute("system health print;", &output);
+        std::cout << output;
         device.Disconnect();
     }
 

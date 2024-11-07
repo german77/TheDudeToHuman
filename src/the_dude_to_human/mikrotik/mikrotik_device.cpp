@@ -94,12 +94,12 @@ bool MikrotikDevice::Disconnect() {
     return true;
 }
 
-bool MikrotikDevice::Execute(std::string commandline) {
+bool MikrotikDevice::Execute(std::string commandline, std::string* output) {
     if (!is_connected) {
         return false;
     }
 
-    ExecuteSSH(commandline);
+    ExecuteSSH(commandline, output);
 
     return true;
 }
@@ -181,7 +181,7 @@ int MikrotikDevice::ConnectSSH(std::string username, std::string password) {
     return result;
 }
 
-int MikrotikDevice::ExecuteSSH(std::string commandline) {
+int MikrotikDevice::ExecuteSSH(std::string commandline, std::string* output) {
     int result{};
     LIBSSH2_CHANNEL* channel;
 
@@ -205,19 +205,24 @@ int MikrotikDevice::ExecuteSSH(std::string commandline) {
         ssize_t nread{};
         /* loop until we block */
         do {
-            std::array<char, 0x400> buffer;
+            std::array<char, 0x400> buffer{};
             nread = libssh2_channel_read(channel, buffer.data(), buffer.size());
+
             if (nread <= 0) {
-                if (nread != LIBSSH2_ERROR_EAGAIN)
-                    fprintf(stderr, "libssh2_channel_read returned %ld\n", (long)nread);
+                continue;
+            }
+            if (output == nullptr) {
                 continue;
             }
 
-            fprintf(stderr, "We read:\n");
             for (ssize_t i = 0; i < nread; ++i)
-                fputc(buffer[i], stderr);
-            fprintf(stderr, "\n");
+                *output += buffer[i];
+            *output += "\n";
         } while (nread > 0);
+
+        if (nread < 0 && nread != LIBSSH2_ERROR_EAGAIN) {
+            fprintf(stderr, "libssh2_channel_read returned %ld\n", (long)nread);
+        }
 
         /* this is due to blocking that would occur otherwise so we loop on
            this condition */

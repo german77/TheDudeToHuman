@@ -23,7 +23,7 @@ public:
     bool Connect(std::string username, std::string password);
     bool Disconnect();
 
-    bool Execute(std::string commandline);
+    bool Execute(std::string commandline, std::string* output = nullptr);
 
     void DownloadDatabase();
     void UploadDatabase();
@@ -32,7 +32,7 @@ private:
     int InitializeSSH();
     int ConnectSSH(std::string username, std::string password);
 
-    int ExecuteSSH(std::string commandline);
+    int ExecuteSSH(std::string commandline, std::string* output = nullptr);
 
     int DisconnectSSH();
 
