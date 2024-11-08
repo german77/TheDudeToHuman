@@ -37,6 +37,7 @@ u16 DudeFieldParser::GetMagic() const {
 
     return magic;
 }
+
 IntArrayField DudeFieldParser::GetFormat() const {
     if (!is_data_valid) {
         return {};

@@ -1,28 +1,27 @@
 // SPDX-FileCopyrightText: Copyright 2024 Narr the Reg
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#ifdef HAVE_SYS_SOCKET_H
-#include <sys/socket.h>
-#endif
-#ifdef HAVE_NETINET_IN_H
-#include <netinet/in.h>
-#endif
-#ifdef HAVE_ARPA_INET_H
+#ifdef __linux__
 #include <arpa/inet.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
 #endif
 
 #include "libssh2.h"
 #include "the_dude_to_human/mikrotik/mikrotik_device.h"
 
 #define BUFSIZE 32000
+
+#ifdef _WIN32
 #pragma warning(disable : 4996)
+#endif
 
 static int waitsocket(libssh2_socket_t socket_fd, LIBSSH2_SESSION* session) {
     fd_set fd;
     fd_set* writefd = NULL;
     fd_set* readfd = NULL;
 
-    const timeval timeout{
+    timeval timeout{
         .tv_sec = 10,
         .tv_usec = 0,
     };
@@ -148,7 +147,7 @@ int MikrotikDevice::ConnectSSH(std::string username, std::string password) {
 
     auto hostaddr = inet_addr(hostname.c_str());
 
-    sock = socket(AF_INET, SOCK_STREAM, 0);
+    sock = static_cast<int>(socket(AF_INET, SOCK_STREAM, 0));
     if (sock == LIBSSH2_INVALID_SOCKET) {
         fprintf(stderr, "failed to create socket.\n");
         return errno;
