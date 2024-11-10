@@ -10,6 +10,8 @@ add_executable(the_dude_to_human
     database/dude_types.h
     database/dude_validator.cpp
     database/dude_validator.h
+    gzip/gzip.cpp
+    gzip/gzip.h
     mikrotik/mikrotik_device.cpp
     mikrotik/mikrotik_device.h
     sqlite/sqlite_reader.cpp
@@ -20,7 +22,7 @@ add_executable(the_dude_to_human
     TheDudeToHuman.cpp
 )
 
-target_link_libraries(the_dude_to_human PRIVATE sqlite libssh2)
+target_link_libraries(the_dude_to_human PRIVATE sqlite libssh2 zlib)
 if (MSVC)
     target_link_libraries(the_dude_to_human PRIVATE getopt)
 endif()

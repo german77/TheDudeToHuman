@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <cstring>
 
+#include "the_dude_to_human/gzip/gzip.h"
 #include "the_dude_to_human/sqlite/sqlite_reader.h"
 
 namespace Sqlite {
@@ -17,10 +18,23 @@ int SqliteReader::OpenDatabase() {
         return SQLITE_OK;
     }
 
-    const int rc = sqlite3_open_v2(db_filename.c_str(), &db, SQLITE_OPEN_READONLY, 0);
+    Gzip::Gzip gzip{db_filename};
 
-    if (rc != SQLITE_OK) {
-        return rc;
+    // Sqlite can't read compressed databases
+    int result = SQLITE_OK;
+    if (gzip.IsGzipFile()) {
+        std::string tmp_db_file = db_filename + ".tmp";
+        if (!gzip.Decompress(tmp_db_file)) {
+            return SQLITE_CANTOPEN;
+        }
+
+        result = sqlite3_open_v2(tmp_db_file.c_str(), &db, SQLITE_OPEN_READONLY, 0);
+    } else {
+        result = sqlite3_open_v2(db_filename.c_str(), &db, SQLITE_OPEN_READONLY, 0);
+    }
+
+    if (result != SQLITE_OK) {
+        return result;
     }
 
     is_open = true;

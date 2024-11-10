@@ -65,7 +65,7 @@ std::vector<DataFormat> DudeDatabase::ListUsedDataFormats() const {
                 continue;
             }
 
-            printf("New Format %d in row %d \n", data_format, id);
+            printf("New Format 0x%02x in row %d \n", data_format, id);
             data_formats.push_back(format);
         }
     }

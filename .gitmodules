@@ -1,3 +1,6 @@
 [submodule "externals/libssh2"]
 	path = externals/libssh2
 	url = https://github.com/libssh2/libssh2.git
+[submodule "externals/zlib"]
+	path = externals/zlib
+	url = https://github.com/madler/zlib.git
