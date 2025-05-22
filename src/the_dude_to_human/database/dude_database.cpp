@@ -73,6 +73,22 @@ std::vector<DataFormat> DudeDatabase::ListUsedDataFormats() const {
     return data_formats;
 }
 
+std::vector<MapData> DudeDatabase::ListMapData() const {
+    std::vector<MapData> mapData = GetMapData();
+    for (const auto& data : mapData) {
+        printf("Map %d: %s\n", data.object_id.value, data.name.text.c_str());
+    }
+    return mapData;
+}
+
+std::vector<DeviceData> DudeDatabase::ListDeviceData() const {
+    std::vector<DeviceData> deviceData = GetDeviceData();
+    for (const auto& data : deviceData) {
+        printf("Device %d: %s\n", data.object_id.value, data.name.text.c_str());
+    }
+    return deviceData;
+}
+
 template <typename T>
 std::vector<T> DudeDatabase::GetObjectData(DataFormat format,
                                            T (DudeDatabase::*RawToObjData)(DudeFieldParser& parser)
@@ -88,12 +104,13 @@ std::vector<T> DudeDatabase::GetObjectData(DataFormat format,
             continue;
         }
 
-        printf("Reading row %d\n", id);
+        // printf("Reading row %d\n", id);
 
         const T obj_data = (this->*RawToObjData)(parser);
 
         if (id != obj_data.object_id.value) {
-            printf("Corrupted Entry\n");
+            printf("Corrupted Entry %d\n", id);
+            continue;
         }
 
         data.push_back(obj_data);

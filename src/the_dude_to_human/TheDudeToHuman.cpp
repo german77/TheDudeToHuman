@@ -189,9 +189,11 @@ int main(int argc, char** argv) {
     if (has_filepath) {
         std::cout << "Reading database " << filepath << "\n";
         Database::DudeDatabase db{filepath};
-        db.ListUsedDataFormats();
+        //db.ListUsedDataFormats();
+        db.ListMapData();
+        db.ListDeviceData();
 
-        if (!has_out_filepath) {
+        if (has_out_filepath) {
             std::cout << "Saving database " << out_filepath << "\n";
             db.SaveDatabase(out_filepath);
         }

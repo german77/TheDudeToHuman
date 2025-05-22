@@ -108,6 +108,9 @@ ParserResult DudeFieldParser::SkipField() {
 }
 
 ParserResult DudeFieldParser::ReadData(void* data, std::size_t size) {
+    if (size == 0) {
+        return ParserResult::Success;
+    }
     if (data == nullptr) {
         return ParserResult::InvalidFieldArguments;
     }

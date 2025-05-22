@@ -32,6 +32,9 @@ public:
     // Usefull to find new unsuported types
     std::vector<DataFormat> ListUsedDataFormats() const;
 
+    std::vector<MapData> ListMapData() const;
+    std::vector<DeviceData> ListDeviceData() const;
+
     std::vector<ServerConfigData> GetServerConfigData() const;
     std::vector<ToolData> GetToolData() const;
     std::vector<FileData> GetFileData() const;
