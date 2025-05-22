@@ -8,6 +8,7 @@
 #ifdef _WIN32
 // windows.h needs to be included before shellapi.h
 #include <windows.h>
+
 #include <shellapi.h>
 #endif
 
@@ -23,11 +24,11 @@ static void PrintHelp(const char* argv0) {
     std::cout
         << "Usage: " << argv0
         << " [options] <filename>\n"
-           "-f, --file                                 Load the specified database file\n"
-           "-o, --out                                  Store database location\n"
-           "-m, --mikrotik=user:password@address:port  Connect to the specified mikrotik device\n"
+           "--f, --file                                 Load the specified database file\n"
+           "--o, --out                                  Store database location\n"
+           "--m, --mikrotik=user:password@address:port  Connect to the specified mikrotik device\n"
            //"-d, --database=user:password@address:port  Connect to the specified database\n"
-           "-h, --help                                 Display this help and exit\n";
+           "--h, --help                                 Display this help and exit\n";
     // clang-format on
 }
 
@@ -172,18 +173,27 @@ int main(int argc, char** argv) {
     }
 
     if (has_mikrotik) {
+        std::cout << "Conecting to " << mikrotik_address << ":" << mikrotik_port << "\n";
         Mikrotik::MikrotikDevice device = {mikrotik_address, mikrotik_port};
-        device.Connect(mikrotik_user, mikrotik_password);
+        if (!device.Connect(mikrotik_user, mikrotik_password)) {
+            std::cout << "Unable to connect to device\n";
+            return 0;
+        }
         std::string output{};
+        std::cout << "Executing command 'system health print;'\n";
         device.Execute("system health print;", &output);
         std::cout << output;
         device.Disconnect();
     }
 
-    Database::DudeDatabase db{filepath};
-    db.ListUsedDataFormats();
+    if (has_filepath) {
+        std::cout << "Reading database " << filepath << "\n";
+        Database::DudeDatabase db{filepath};
+        db.ListUsedDataFormats();
 
-    if (!has_out_filepath) {
-        db.SaveDatabase(out_filepath);
+        if (!has_out_filepath) {
+            std::cout << "Saving database " << out_filepath << "\n";
+            db.SaveDatabase(out_filepath);
+        }
     }
 }
