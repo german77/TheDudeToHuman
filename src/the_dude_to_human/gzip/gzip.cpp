@@ -9,7 +9,7 @@
 
 #define BUFLEN 16384
 
-bool DecompressFiles(gzFile in, FILE* out) {
+static bool DecompressFiles(gzFile in, FILE* out) {
     char buf[BUFLEN];
     int len;
     bool is_first_batch = true;
@@ -42,7 +42,7 @@ namespace Gzip {
 Gzip::Gzip(const std::string& file) : filename{file} {}
 
 bool Gzip::IsGzipFile() {
-    constexpr std::array<char, 2> gzip_signature{0x1Fu, 0x8Bu};
+    constexpr std::array<u8, 2> gzip_signature{0x1F, 0x8B};
 
     std::fstream file_data(filename);
 
@@ -61,9 +61,16 @@ bool Gzip::Decompress(const std::string& out_file) {
     gzFile in = gzopen(filename.c_str(), "rb");
     FILE* out = nullptr;
 
+#ifdef _WIN32
     if (fopen_s(&out, out_file.c_str(), "wb") != 0) {
         return false;
     }
+#else
+    out = fopen(out_file.c_str(),"wb");
+    if(!out){
+        return false;
+    }
+#endif
 
     return DecompressFiles(in, out);
 }

@@ -61,7 +61,7 @@ int main(int argc, char** argv) {
     std::string database_user{};
     std::string database_password{};
     std::string database_address{};
-    u16 database_port = {3306};
+    [[maybe_unused]]u16 database_port = {3306};
 
     static struct option long_options[] = {
         // clang-format off
