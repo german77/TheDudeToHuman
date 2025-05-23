@@ -189,7 +189,6 @@ int main(int argc, char** argv) {
     if (has_filepath) {
         std::cout << "Reading database " << filepath << "\n";
         Database::DudeDatabase db{filepath};
-        //db.ListUsedDataFormats();
         db.ListMapData();
         db.ListDeviceData();
 

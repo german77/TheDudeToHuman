@@ -281,10 +281,10 @@ ParserResult DudeFieldParser::ReadField(TextField& field, FieldId id) {
 
     switch (field.info.type.Value()) {
     case FieldType::ShortString:
-        result = ReadData(&field.data_size, sizeof(u8));
+        result = ReadData(&field.text_size, sizeof(u8));
         break;
     case FieldType::LongString:
-        result = ReadData(&field.data_size, sizeof(u16));
+        result = ReadData(&field.text_size, sizeof(u16));
         break;
     default:
         RestoreOffset();
@@ -296,8 +296,8 @@ ParserResult DudeFieldParser::ReadField(TextField& field, FieldId id) {
         return result;
     }
 
-    std::vector<char> raw_text(field.data_size);
-    result = ReadData(raw_text.data(), field.data_size);
+    std::vector<char> raw_text(field.text_size);
+    result = ReadData(raw_text.data(), field.text_size);
 
     if (result != ParserResult::Success) {
         RestoreOffset();

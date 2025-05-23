@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include <algorithm>
+#include <format>
 #include <string>
 #include <vector>
 
@@ -63,49 +65,120 @@ struct FieldInfo {
         BitField<0, 24, FieldId> id;
         BitField<24, 8, FieldType> type;
     };
+
+    std::string serializeJson() const {
+        return std::format("\"id\":0x{:x}, \"type\":{}", (u32)id.Value(), (u32)type.Value());
+    }
 };
 
 // This is FieldType::Bool
 struct BoolField {
     FieldInfo info{};
     bool value{};
+
+    std::string serializeJson() const {
+        return std::format("\"fieldInfo\":{{{}}}, \"value\":{}", info.serializeJson(), value);
+    }
+    std::string serializeJson2() const {
+        return std::format("{}", value);
+    }
 };
 
 // This is FieldType::Byte
 struct ByteField {
     FieldInfo info{};
     u8 value{};
+
+    std::string serializeJson() const {
+        return std::format("\"fieldInfo\":{{{}}}, \"value\":{}", info.serializeJson(), value);
+    }
+    std::string serializeJson2() const {
+        return std::format("{}", value);
+    }
 };
 
 // This is FieldType::Int
 struct IntField {
     FieldInfo info{};
     u32 value{};
+
+    std::string serializeJson() const {
+        return std::format("\"fieldInfo\":{{{}}}, \"value\":{}", info.serializeJson(), value);
+    }
+    std::string serializeJson2() const {
+        return std::format("{}", value);
+    }
 };
 
 // This is FieldType::Int
 struct TimeField {
     FieldInfo info{};
     u32 date{};
+
+    std::string serializeJson() const {
+        return std::format("\"fieldInfo\":{{{}}}, \"date\":{}", info.serializeJson(), date);
+    }
+    std::string serializeJson2() const {
+        return std::format("{}", date);
+    }
 };
 
 // This is FieldType::Long
 struct LongField {
     FieldInfo info{};
     u64 value{};
+
+    std::string serializeJson() const {
+        return std::format("\"fieldInfo\":{{{}}} ,\"value\":{}", info.serializeJson(), value);
+    }
+    std::string serializeJson2() const {
+        return std::format("{}", value);
+    }
 };
 
 // This is FieldType::LongLong
 struct LongLongField {
     FieldInfo info{};
     u128 value{};
+
+    std::string serializeJson() const {
+        return std::format("\"fieldInfo\":{{{}}}, \"value\":0x{:x}{:08x}", info.serializeJson(),
+                           value[0], value[1]);
+    }
+    std::string serializeJson2() const {
+        return std::format("0x{:x}{:08x}", value[0], value[1]);
+    }
 };
 
 // This is FieldType::ShortString or FieldType::LongString
 struct TextField {
     FieldInfo info{};
-    u16 data_size{};
+    u16 text_size{};
     std::string text{};
+
+    std::string serializeJson() const {
+        return std::format("\"fieldInfo\":{{{}}}, \"textSize\":{}, \"text\":\"{}\"",
+                           info.serializeJson(), text_size, sanitize(text));
+    }
+    std::string serializeJson2() const {
+        return std::format("\"{}\"", sanitize(text));
+    }
+
+private:
+    std::string sanitize(std::string str)const{
+        str = replaceAll(str, std::string("\\"), std::string("\\\\"));
+        str = replaceAll(str, std::string("\""), std::string("\\\""));
+        return str;
+    }
+
+    std::string replaceAll(std::string str, const std::string& from, const std::string& to) const {
+        size_t start_pos = 0;
+        while ((start_pos = str.find(from, start_pos)) != std::string::npos) {
+            str.replace(start_pos, from.length(), to);
+            start_pos += to.length(); // Handles case where 'to' is a substring of 'from'
+        }
+        return str;
+    }
 };
 
 // This is FieldType::IntArray
@@ -113,6 +186,31 @@ struct IntArrayField {
     FieldInfo info{};
     u16 entries{};
     std::vector<u32> data{};
+
+    std::string serializeJson() const {
+        std::string array = "";
+        for (u32 entry : data) {
+            array += std::format("{},", entry);
+        }
+        if(!data.empty()){
+            array.pop_back();
+        }
+
+        return std::format("\"fieldInfo\":{{{}}}, \"entires\":{}, \"data\":[{}]", info.serializeJson(),
+                           entries, array);
+    }
+    std::string serializeJson2() const {
+        std::string array = "";
+
+        for (u32 entry : data) {
+            array += std::format("{},", entry);
+        }
+        if(!data.empty()){
+            array.pop_back();
+        }
+
+        return std::format("[{}]", array);
+    }
 };
 
 // This is FieldType::LongArray
@@ -258,6 +356,22 @@ struct ToolData {
     IntField object_id;
     TextField command;
     TextField name;
+
+    std::string serializeJson() const {
+        return std::format("\"builtin\":{{{}}}, \"type\":{{{}}}, \"deviceId\":{{{}}}, "
+                           "\"objectId\":{{{}}}, \"command\":{{{}}}, \"name\":{{{}}}",
+                           builtin.serializeJson(), type.serializeJson(), device_id.serializeJson(),
+                           object_id.serializeJson(), command.serializeJson(),
+                           name.serializeJson());
+    }
+
+    std::string serializeJson2() const {
+        return std::format("\"builtin\":{}, \"type\":{}, \"deviceId\":{}, \"objectId\":{}, "
+                           "\"command\":{}, \"name\":{}",
+                           builtin.serializeJson2(), type.serializeJson2(),
+                           device_id.serializeJson2(), object_id.serializeJson2(),
+                           command.serializeJson2(), name.serializeJson2());
+    }
 };
 
 // This is type 0x05 data
@@ -266,6 +380,19 @@ struct FileData {
     IntField object_id;
     TextField file_name;
     TextField name;
+
+    std::string serializeJson() const {
+        return std::format(
+            "\"parentId\":{{{}}}, \"objectId\":{{{}}}, \"fileName\":{{{}}}, \"name\":{{{}}}",
+            parent_id.serializeJson(), object_id.serializeJson(), file_name.serializeJson(),
+            name.serializeJson());
+    }
+
+    std::string serializeJson2() const {
+        return std::format("\"parentId\":{}, \"objectId\":{}, \"fileName\":{}, \"name\":{}",
+                           parent_id.serializeJson2(), object_id.serializeJson2(),
+                           file_name.serializeJson2(), name.serializeJson2());
+    }
 };
 
 // This is type 0x09 data
@@ -274,6 +401,20 @@ struct NotesData {
     IntField parent_id;
     TimeField time_added;
     TextField name;
+
+    std::string serializeJson() const {
+        return std::format(
+            "\"objectId\":{{{}}}, \"parentId\":{{{}}}, \"timeAdded\":{{{}}}, \"name\":{{{}}}",
+            object_id.serializeJson(), parent_id.serializeJson(), time_added.serializeJson(),
+            name.serializeJson());
+    }
+
+    std::string serializeJson2() const {
+        return std::format(
+            "\"objectId\":{}, \"parentId\":{}, \"timeAdded\":{}, \"name\":{}",
+            object_id.serializeJson2(), parent_id.serializeJson2(), time_added.serializeJson2(),
+            name.serializeJson2());
+    }
 };
 
 // This is type 0x0A data
@@ -416,6 +557,20 @@ struct DeviceTypeData {
     IntField next_id;
     TextField url;
     TextField name;
+
+    std::string serializeJson() const {
+        return std::format(
+            "\"ignoredServices\":{{{}}}, \"allowedServices\":{{{}}}, \"requiredServices\":{{{}}}, \"imageId\":{{{}}}, \"imageScale\":{{{}}}, \"objectId\":{{{}}}, \"nextId\":{{{}}}, \"url\":{{{}}}, \"name\":{{{}}}",
+            ignored_services.serializeJson(), allowed_services.serializeJson(), required_services.serializeJson(),
+            image_id.serializeJson(),image_scale.serializeJson(),object_id.serializeJson(),next_id.serializeJson(),url.serializeJson(),name.serializeJson());
+    }
+
+    std::string serializeJson2() const {
+        return std::format(
+            "\"ignoredServices\":{}, \"allowedServices\":{}, \"requiredServices\":{}, \"imageId\":{}, \"imageScale\":{}, \"objectId\":{}, \"nextId\":{}, \"url\":{}, \"name\":{}",
+            ignored_services.serializeJson2(), allowed_services.serializeJson2(), required_services.serializeJson2(),
+            image_id.serializeJson2(),image_scale.serializeJson2(),object_id.serializeJson2(),next_id.serializeJson2(),url.serializeJson2(),name.serializeJson2());
+    }
 };
 
 // This is type 0x0F data

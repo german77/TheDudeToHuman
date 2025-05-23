@@ -4,9 +4,11 @@
 #include <algorithm>
 #include <cstddef>
 #include <cstdio>
+#include <fstream>
 
 #include "the_dude_to_human/database/dude_database.h"
 #include "the_dude_to_human/database/dude_field_parser.h"
+#include "the_dude_to_human/database/dude_json.h"
 
 namespace Database {
 DudeDatabase::DudeDatabase(const std::string& db_file) : db{db_file} {
@@ -47,7 +49,15 @@ int DudeDatabase::GetOutages(Sqlite::SqlData& data) const {
 }
 
 int DudeDatabase::SaveDatabase(const std::string& db_file) {
-    return 0;
+    std::string json = serializeDatabaseJson(this);
+
+    std::ofstream jsonFile(db_file);
+    if (jsonFile.is_open()) {
+        jsonFile << json;
+        jsonFile.close();
+        return 0;
+    }
+    return 1;
 }
 
 std::vector<DataFormat> DudeDatabase::ListUsedDataFormats() const {

@@ -7,6 +7,8 @@ add_executable(the_dude_to_human
     database/dude_field_id.h
     database/dude_field_parser.cpp
     database/dude_field_parser.h
+    database/dude_json.cpp
+    database/dude_json.h
     database/dude_types.h
     database/dude_validator.cpp
     database/dude_validator.h
