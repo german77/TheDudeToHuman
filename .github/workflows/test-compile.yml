@@ -1,0 +1,46 @@
+name: Test
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: linux
+            cpu: amd64
+            builder: ubuntu-latest
+
+          - os: linux
+            cpu: arm64
+            builder: ubuntu-24.04-arm
+
+          - os: macos
+            cpu: amd64
+            builder: macos-13
+
+          - os: macos
+            cpu: arm64
+            builder: macos-latest
+
+          - os: windows
+            cpu: amd64
+            builder: windows-latest
+
+          - os: windows
+            cpu: arm64
+            builder: windows-11-arm
+
+    name: ${{ matrix.os }}-${{ matrix.cpu }}
+    runs-on: ${{ matrix.builder }}
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Build
+        run: |
+          cmake -S . -B build
+          cmake --build build --target the_dude_to_human
