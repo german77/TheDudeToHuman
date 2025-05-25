@@ -4,3 +4,6 @@
 [submodule "externals/zlib"]
 	path = externals/zlib
 	url = https://github.com/madler/zlib.git
+[submodule "externals/fmt"]
+	path = externals/fmt
+	url = https://github.com/fmtlib/fmt.git

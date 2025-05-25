@@ -33,6 +33,7 @@
 
 # Database files
 *.db*
+*.json
 
 # Visual Studio
 build

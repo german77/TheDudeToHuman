@@ -25,3 +25,6 @@ add_subdirectory(libssh2)
 # zlib
 add_subdirectory(zlib)
 target_include_directories(zlib PUBLIC ./zlib)
+
+# fmt
+add_subdirectory(fmt)

@@ -233,6 +233,7 @@ struct StringArrayField {
 };
 
 struct DudeObj {
+    virtual ~DudeObj() {}
     virtual std::string SerializeJson() const {
         return "\"object_id\":-1";
     }
