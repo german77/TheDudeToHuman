@@ -148,7 +148,7 @@ int MikrotikDevice::ConnectSSH(std::string username, std::string password) {
     auto hostaddr = inet_addr(hostname.c_str());
 
     sock = static_cast<int>(socket(AF_INET, SOCK_STREAM, 0));
-    if (sock == LIBSSH2_INVALID_SOCKET) {
+    if (sock == (u32)LIBSSH2_INVALID_SOCKET) {
         fprintf(stderr, "failed to create socket.\n");
         return errno;
     }
@@ -249,7 +249,7 @@ int MikrotikDevice::DisconnectSSH() {
         result = libssh2_session_disconnect(session, "Normal Shutdown");
     }
 
-    if (sock != LIBSSH2_INVALID_SOCKET) {
+    if (sock != (u32)LIBSSH2_INVALID_SOCKET) {
         shutdown(sock, 2);
         LIBSSH2_SOCKET_CLOSE(sock);
     }
