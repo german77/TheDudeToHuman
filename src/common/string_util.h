@@ -8,6 +8,7 @@
 #include <span>
 #include <string>
 #include <vector>
+
 #include "common/common_types.h"
 
 namespace Common {
@@ -36,6 +37,7 @@ bool SplitPath(const std::string& full_path, std::string* _pPath, std::string* _
 
 [[nodiscard]] std::string ReplaceAll(std::string result, const std::string& src,
                                      const std::string& dest);
+[[nodiscard]] std::string Sanitize(std::string str);
 
 [[nodiscard]] std::string UTF16ToUTF8(std::u16string_view input);
 [[nodiscard]] std::u16string UTF8ToUTF16(std::string_view input);

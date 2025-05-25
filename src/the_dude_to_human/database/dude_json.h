@@ -5,5 +5,5 @@
 
 namespace Database {
     class DudeDatabase;
-    std::string serializeDatabaseJson(DudeDatabase* db);
+    int SerializeDatabaseJson(DudeDatabase* db, const std::string& db_file);
 } // namespace Database

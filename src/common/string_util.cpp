@@ -141,6 +141,17 @@ std::string ReplaceAll(std::string result, const std::string& src, const std::st
     return result;
 }
 
+std::string Sanitize(std::string str) {
+    str = ReplaceAll(str, std::string("\\"), std::string("\\\\"));
+    str = ReplaceAll(str, std::string("\""), std::string("\\\""));
+    str = ReplaceAll(str, std::string("\b"), std::string("\\b"));
+    str = ReplaceAll(str, std::string("\f"), std::string("\\f"));
+    str = ReplaceAll(str, std::string("\n"), std::string("\\n"));
+    str = ReplaceAll(str, std::string("\r"), std::string("\\r"));
+    str = ReplaceAll(str, std::string("\t"), std::string("\\t"));
+    return str;
+}
+
 std::string UTF16ToUTF8(std::u16string_view input) {
     std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
     return convert.to_bytes(input.data(), input.data() + input.size());

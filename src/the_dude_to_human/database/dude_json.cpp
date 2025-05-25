@@ -2,75 +2,61 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include <format>
+#include <fstream>
 
 #include "the_dude_to_human/database/dude_database.h"
 #include "the_dude_to_human/database/dude_json.h"
 
 namespace Database {
-static std::string serializeToolData(DudeDatabase* db) {
-    std::vector<Database::ToolData> tool_data = db->GetToolData();
+
+template <typename T>
+static std::string SerializeData(std::vector<T> obj) {
     std::string json = "";
 
-    for (const ToolData& data : tool_data) {
-        json += std::format("{{{}}},", data.serializeJson2());
+    for (const DudeObj& data : obj) {
+        json += std::format("{{{}}},", data.SerializeJson());
     }
-    if (!tool_data.empty()) {
+    if (!obj.empty()) {
         json.pop_back();
     }
 
     return json;
 }
 
-static std::string serializeFileData(DudeDatabase* db) {
-    std::vector<Database::FileData> file_data = db->GetFileData();
-    std::string json = "";
+int SerializeDatabaseJson(DudeDatabase* db, const std::string& db_file) {
+    std::ofstream jsonFile(db_file);
+    if (!jsonFile.is_open())
+        return 1;
 
-    for (const FileData& data : file_data) {
-        json += std::format("{{{}}},", data.serializeJson2());
-    }
-    if (!file_data.empty()) {
-        json.pop_back();
-    }
+    jsonFile << "{\n";
+    jsonFile << std::format("\"serverConfig\": [{}],\n", SerializeData(db->GetServerConfigData()));
+    jsonFile << std::format("\"tool\": [{}],\n", SerializeData(db->GetToolData()));
+    jsonFile << std::format("\"file\": [{}],\n", SerializeData(db->GetFileData()));
+    jsonFile << std::format("\"notes\": [{}],\n", SerializeData(db->GetNotesData()));
+    jsonFile << std::format("\"Map\": [{}],\n", SerializeData(db->GetMapData()));
+    //jsonFile << std::format("\"Probe\": [{}],\n", SerializeData(db->GetProbeData()));
+    jsonFile << std::format("\"deviceType\": [{}],\n", SerializeData(db->GetDeviceTypeData()));
+    jsonFile << std::format("\"Device\": [{}],\n", SerializeData(db->GetDeviceData()));
+    jsonFile << std::format("\"Network\": [{}],\n", SerializeData(db->GetNetworkData()));
+    jsonFile << std::format("\"Service\": [{}],\n", SerializeData(db->GetServiceData()));
+    jsonFile << std::format("\"Notification\": [{}],\n", SerializeData(db->GetNotificationData()));
+    jsonFile << std::format("\"Link\": [{}],\n", SerializeData(db->GetLinkData()));
+    jsonFile << std::format("\"LinkType\": [{}],\n", SerializeData(db->GetLinkTypeData()));
+    jsonFile << std::format("\"DataSource\": [{}],\n", SerializeData(db->GetDataSourceData()));
+    jsonFile << std::format("\"ObjectList\": [{}],\n", SerializeData(db->GetObjectListData()));
+    jsonFile << std::format("\"DeviceGroup\": [{}],\n", SerializeData(db->GetDeviceGroupData()));
+    jsonFile << std::format("\"Function\": [{}],\n", SerializeData(db->GetFunctionData()));
+    jsonFile << std::format("\"SnmpProfile\": [{}],\n", SerializeData(db->GetSnmpProfileData()));
+    jsonFile << std::format("\"Panel\": [{}],\n", SerializeData(db->GetPanelData()));
+    jsonFile << std::format("\"SysLogRule\": [{}],\n", SerializeData(db->GetSysLogRuleData()));
+    jsonFile << std::format("\"NetworkMapElement\": [{}],\n",
+                            SerializeData(db->GetNetworkMapElementData()));
+    jsonFile << std::format("\"ChartLine\": [{}],\n", SerializeData(db->GetChartLineData()));
+    jsonFile << std::format("\"PanelElement\": [{}]\n", SerializeData(db->GetPanelElementData()));
+    jsonFile << "}";
 
-    return json;
-}
-
-static std::string serializeNotesData(DudeDatabase* db) {
-    std::vector<Database::NotesData> notes_data = db->GetNotesData();
-    std::string json = "";
-
-    for (const NotesData& data : notes_data) {
-        json += std::format("{{{}}},", data.serializeJson2());
-    }
-    if (!notes_data.empty()) {
-        json.pop_back();
-    }
-
-    return json;
-}
-
-static std::string serializeDeviceTypeData(DudeDatabase* db) {
-    std::vector<Database::DeviceTypeData> device_data = db->GetDeviceTypeData();
-    std::string json = "";
-
-    for (const DeviceTypeData& data : device_data) {
-        json += std::format("{{{}}},", data.serializeJson2());
-    }
-    if (!device_data.empty()) {
-        json.pop_back();
-    }
-
-    return json;
-}
-
-std::string serializeDatabaseJson(DudeDatabase* db) {
-    std::string tool_data = std::format("\"toolData\": [{}]", serializeToolData(db));
-    std::string file_data = std::format("\"fileData\": [{}]", serializeFileData(db));
-    std::string notes_data = std::format("\"notesData\": [{}]", serializeNotesData(db));
-    std::string device_type_data =
-        std::format("\"deviceTypeData\": [{}]", serializeDeviceTypeData(db));
-    return std::format("{{\n{},\n {},\n {},\n {}\n}}\n", tool_data, file_data, notes_data,
-                       device_type_data);
+    jsonFile.close();
+    return 0;
 }
 
 } // namespace Database
