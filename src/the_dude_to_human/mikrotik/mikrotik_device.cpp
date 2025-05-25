@@ -1,10 +1,13 @@
 // SPDX-FileCopyrightText: Copyright 2024 Narr the Reg
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#ifdef __linux__
+#ifdef _WIN32
+#include <winsock2.h>
+#else
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
+#include <unistd.h>
 #endif
 
 #include "libssh2.h"
@@ -147,8 +150,8 @@ int MikrotikDevice::ConnectSSH(std::string username, std::string password) {
 
     auto hostaddr = inet_addr(hostname.c_str());
 
-    sock = static_cast<int>(socket(AF_INET, SOCK_STREAM, 0));
-    if (sock == (u32)LIBSSH2_INVALID_SOCKET) {
+    sock = static_cast<s32>(socket(AF_INET, SOCK_STREAM, 0));
+    if (sock == static_cast<s32>(LIBSSH2_INVALID_SOCKET)) {
         fprintf(stderr, "failed to create socket.\n");
         return errno;
     }
@@ -249,7 +252,7 @@ int MikrotikDevice::DisconnectSSH() {
         result = libssh2_session_disconnect(session, "Normal Shutdown");
     }
 
-    if (sock != (u32)LIBSSH2_INVALID_SOCKET) {
+    if (sock != static_cast<s32>(LIBSSH2_INVALID_SOCKET)) {
         shutdown(sock, 2);
         LIBSSH2_SOCKET_CLOSE(sock);
     }

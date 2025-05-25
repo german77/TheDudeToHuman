@@ -44,7 +44,7 @@ private:
 private:
     static inline std::atomic_int lib_refcount = 0;
 
-    u32 sock{};
+    s32 sock{};
     LIBSSH2_SESSION* session = nullptr;
     std::mutex session_mutex;
 };

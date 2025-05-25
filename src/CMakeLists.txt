@@ -149,15 +149,6 @@ else()
         add_definitions(-D_FILE_OFFSET_BITS=64)
     endif()
 
-    if (MINGW)
-        add_definitions(-DMINGW_HAS_SECURE_API)
-
-        if (MINGW_STATIC_BUILD)
-            add_definitions(-DQT_STATICPLUGIN)
-            add_compile_options("-static")
-        endif()
-    endif()
-
     if(CMAKE_SYSTEM_NAME STREQUAL "Linux" OR MINGW)
         # GNU ar: Create thin archive files.
         # Requires binutils-2.19 or later.

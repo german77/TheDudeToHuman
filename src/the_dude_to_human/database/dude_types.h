@@ -4,9 +4,9 @@
 #pragma once
 
 #include <algorithm>
-#include <format>
 #include <string>
 #include <vector>
+#include <fmt/core.h>
 
 #include "common/bit_field.h"
 #include "common/common_funcs.h"
@@ -68,7 +68,7 @@ struct FieldInfo {
     };
 
     std::string SerializeJson() const {
-        return std::format("\"id\":0x{:x}, \"type\":{}", (u32)id.Value(), (u32)type.Value());
+        return fmt::format("\"id\":0x{:x}, \"type\":{}", (u32)id.Value(), (u32)type.Value());
     }
 };
 
@@ -91,7 +91,7 @@ struct ByteField {
     u8 value{};
 
     std::string SerializeJson() const {
-        return std::format("{}", value);
+        return fmt::format("{}", value);
     }
 };
 
@@ -101,7 +101,7 @@ struct IntField {
     u32 value{};
 
     std::string SerializeJson() const {
-        return std::format("{}", value);
+        return fmt::format("{}", value);
     }
 };
 
@@ -111,7 +111,7 @@ struct TimeField {
     u32 date{};
 
     std::string SerializeJson() const {
-        return std::format("{}", date);
+        return fmt::format("{}", date);
     }
 };
 
@@ -121,7 +121,7 @@ struct LongField {
     u64 value{};
 
     std::string SerializeJson() const {
-        return std::format("{}", value);
+        return fmt::format("{}", value);
     }
 };
 
@@ -131,7 +131,7 @@ struct LongLongField {
     u128 value{};
 
     std::string SerializeJson() const {
-        return std::format("\"0x{:x}{:08x}\"", value[0], value[1]);
+        return fmt::format("\"0x{:x}{:08x}\"", value[0], value[1]);
     }
 };
 
@@ -142,7 +142,7 @@ struct TextField {
     std::string text{};
 
     std::string SerializeJson() const {
-        return std::format("\"{}\"", Common::Sanitize(text));
+        return fmt::format("\"{}\"", Common::Sanitize(text));
     }
 };
 
@@ -156,13 +156,13 @@ struct IntArrayField {
         std::string array = "";
 
         for (u32 entry : data) {
-            array += std::format("{},", entry);
+            array += fmt::format("{},", entry);
         }
         if (!data.empty()) {
             array.pop_back();
         }
 
-        return std::format("[{}]", array);
+        return fmt::format("[{}]", array);
     }
 };
 
@@ -176,13 +176,13 @@ struct LongArrayField {
         std::string array = "";
 
         for (u8 byte : data) {
-            array += std::format("{},", byte);
+            array += fmt::format("{},", byte);
         }
         if (!data.empty()) {
             array.pop_back();
         }
 
-        return std::format("[{}]", array);
+        return fmt::format("[{}]", array);
     }
 };
 
@@ -196,14 +196,14 @@ struct MacAddressField {
         std::string array = "";
 
         for (const MacAddress& mac : mac_address) {
-            array += std::format("\"{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}\",", mac[0], mac[1],
+            array += fmt::format("\"{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}\",", mac[0], mac[1],
                                  mac[2], mac[3], mac[4], mac[5]);
         }
         if (!mac_address.empty()) {
             array.pop_back();
         }
 
-        return std::format("[{}]", array);
+        return fmt::format("[{}]", array);
     }
 };
 
@@ -222,13 +222,13 @@ struct StringArrayField {
         std::string array = "";
 
         for (const StringArrayEntry& entry : entries) {
-            array += std::format("\"{}\",", Common::Sanitize(entry.text));
+            array += fmt::format("\"{}\",", Common::Sanitize(entry.text));
         }
         if (!entries.empty()) {
             array.pop_back();
         }
 
-        return std::format("[{}]", array);
+        return fmt::format("[{}]", array);
     }
 };
 
@@ -348,7 +348,7 @@ struct ServerConfigData : DudeObj {
     TextField name;
 
     std::string SerializeJson() const override {
-        return std::format(
+        return fmt::format(
             "\"timeZoneHistory\":{}, \"discoverSkipTypes\":{}, \"discoverSkipProbes\":{}, "
             "\"customColors\":{}, \"chartLineColors\":{}, \"notifyIds\":{}, "
             "\"discoverIdentification\":{}, \"discoverNetworks\":{}, \"discoverLinks\":{}, "
@@ -450,7 +450,7 @@ struct ToolData : DudeObj {
     TextField name;
 
     std::string SerializeJson() const override {
-        return std::format("\"builtin\":{}, \"type\":{}, \"deviceId\":{}, \"objectId\":{}, "
+        return fmt::format("\"builtin\":{}, \"type\":{}, \"deviceId\":{}, \"objectId\":{}, "
                            "\"command\":{}, \"name\":{}",
                            builtin.SerializeJson(), type.SerializeJson(), device_id.SerializeJson(),
                            object_id.SerializeJson(), command.SerializeJson(),
@@ -466,7 +466,7 @@ struct FileData : DudeObj {
     TextField name;
 
     std::string SerializeJson() const override {
-        return std::format("\"parentId\":{}, \"objectId\":{}, \"fileName\":{}, \"name\":{}",
+        return fmt::format("\"parentId\":{}, \"objectId\":{}, \"fileName\":{}, \"name\":{}",
                            parent_id.SerializeJson(), object_id.SerializeJson(),
                            file_name.SerializeJson(), name.SerializeJson());
     }
@@ -480,7 +480,7 @@ struct NotesData : DudeObj {
     TextField name;
 
     std::string SerializeJson() const override {
-        return std::format("\"objectId\":{}, \"parentId\":{}, \"timeAdded\":{}, \"name\":{}",
+        return fmt::format("\"objectId\":{}, \"parentId\":{}, \"timeAdded\":{}, \"name\":{}",
                            object_id.SerializeJson(), parent_id.SerializeJson(),
                            time_added.SerializeJson(), name.SerializeJson());
     }
@@ -575,7 +575,7 @@ struct MapData : DudeObj {
     TextField name;
 
     std::string SerializeJson() const override {
-        return std::format(
+        return fmt::format(
             "\"notifyIds\":{}, \"useStaticColor\":{}, \"useLinkColor\":{}, "
             "\"useLinkLabelColor\":{}, \"useLinkFullColor\":{}, \"useDeviceLabel\":{}, "
             "\"useDeviceShape\":{}, \"useDeviceFont\":{}, \"useNetworkLabel\":{}, "
@@ -685,7 +685,7 @@ struct ProbeData : DudeObj {
     TextField name;
 
     std::string SerializeJson() const override {
-        return std::format(
+        return fmt::format(
             "\"logicProbeIds\":{}, \"snmpValueOid\":{}, \"snmpOid\":{}, \"dnsAddresses\":{}, "
             "\"snmpAvailIfUp\":{}, \"tcpOnlyConnect\":{}, \"tcpFirstReceive\":{}, "
             "\"logicType\":{}, \"typeId\":{}, \"objectId\":{}, \"agentId\":{}, \"defaultPort\":{}, "
@@ -729,7 +729,7 @@ struct DeviceTypeData : DudeObj {
     TextField name;
 
     std::string SerializeJson() const override {
-        return std::format("\"ignoredServices\":{}, \"allowedServices\":{}, "
+        return fmt::format("\"ignoredServices\":{}, \"allowedServices\":{}, "
                            "\"requiredServices\":{}, \"imageId\":{}, \"imageScale\":{}, "
                            "\"objectId\":{}, \"nextId\":{}, \"url\":{}, \"name\":{}",
                            ignored_services.SerializeJson(), allowed_services.SerializeJson(),
@@ -769,7 +769,7 @@ struct DeviceData : DudeObj {
     TextField name;
 
     std::string SerializeJson() const override {
-        return std::format(
+        return fmt::format(
             "\"parentIds\":{}, \"notifyIds\":{}, \"dnsNames\":{}, \"ip\":{}, \"secureMode\":{}, "
             "\"routerOs\":{}, \"dudeServer\":{}, \"notifyUse\":{}, \"proveEnabled\":{}, "
             "\"lookup\":{}, \"dnsLookupInterval\":{}, \"macLookup\":{}, \"typeId\":{}, "
@@ -798,7 +798,7 @@ struct NetworkData : DudeObj {
     TextField name;
 
     std::string SerializeJson() const override {
-        return std::format(
+        return fmt::format(
             "\"subnets\":{}, \"objectId\":{}, \"netMapId\":{}, \"netMapElement\":{}, \"name\":{}",
             subnets.SerializeJson(), object_id.SerializeJson(), net_map_id.SerializeJson(),
             net_map_element.SerializeJson(), name.SerializeJson());
@@ -832,7 +832,7 @@ struct ServiceData : DudeObj {
     TextField name;
 
     std::string SerializeJson() const override {
-        return std::format(
+        return fmt::format(
             "\"notifyIds\":{}, \"enabled\":{}, \"history\":{}, \"notifyUse\":{}, \"acked\":{}, "
             "\"probePort\":{}, \"probeInterval\":{}, \"probeTimeout\":{}, \"probeDownCount\":{}, "
             "\"dataSourceId\":{}, \"status\":{}, \"timeSinceChanged\":{}, \"timeSinceLastUp\":{}, "
@@ -886,7 +886,7 @@ struct NotificationData : DudeObj {
     TextField name;
 
     std::string SerializeJson() const override {
-        return std::format(
+        return fmt::format(
             "\"statusList\":{}, \"groupNotifyIds\":{}, \"mailCc\":{}, \"activity\":{}, "
             "\"logUseColor\":{}, \"enabled\":{}, \"mailTlsMode\":{}, \"sysLogServer\":{}, "
             "\"sysLogPort\":{}, \"soundFileId\":{}, \"logColor\":{}, \"speakRate\":{}, "
@@ -926,7 +926,7 @@ struct LinkData : DudeObj {
     TextField name;
 
     std::string SerializeJson() const override {
-        return std::format(
+        return fmt::format(
             "\"history\":{}, \"masteringType\":{}, \"masterDevice\":{}, \"masterInterface\":{}, "
             "\"netMapId\":{}, \"netMapElementId\":{}, \"typeId\":{}, \"txDataSourceId\":{}, "
             "\"objectId\":{}, \"rxDataSourceId\":{}, \"speed\":{}, \"name\":{}",
@@ -949,7 +949,7 @@ struct LinkTypeData : DudeObj {
     TextField name;
 
     std::string SerializeJson() const override {
-        return std::format("\"objectId\":{}, \"style\":{}, \"thickness\":{}, \"snmpType\":{}, "
+        return fmt::format("\"objectId\":{}, \"style\":{}, \"thickness\":{}, \"snmpType\":{}, "
                            "\"nextId\":{}, \"snmpSpeed\":{}, \"name\":{}",
                            object_id.SerializeJson(), style.SerializeJson(),
                            thickness.SerializeJson(), snmp_type.SerializeJson(),
@@ -974,7 +974,7 @@ struct DataSourceData : DudeObj {
     TextField name;
 
     std::string SerializeJson() const override {
-        return std::format("\"enabled\":{}, \"functionDeviceId\":{}, \"functionInterval\":{}, "
+        return fmt::format("\"enabled\":{}, \"functionDeviceId\":{}, \"functionInterval\":{}, "
                            "\"dataSourceType\":{}, \"objectId\":{}, \"keepTimeRaw\":{}, "
                            "\"keepTime10min\":{}, \"keepTime2hour\":{}, \"keepTime1Day\":{}, "
                            "\"functionCode\":{}, \"unit\":{}, \"name\":{}",
@@ -995,7 +995,7 @@ struct ObjectListData : DudeObj {
     TextField name;
 
     std::string SerializeJson() const override {
-        return std::format("\"ordered\":{}, \"objectId\":{}, \"type\":{}, \"name\":{}",
+        return fmt::format("\"ordered\":{}, \"objectId\":{}, \"type\":{}, \"name\":{}",
                            ordered.SerializeJson(), object_id.SerializeJson(), type.SerializeJson(),
                            name.SerializeJson());
     }
@@ -1008,7 +1008,7 @@ struct DeviceGroupData : DudeObj {
     TextField name;
 
     std::string SerializeJson() const override {
-        return std::format("\"deviceIds\":{}, \"objectId\":{}, \"name\":{}",
+        return fmt::format("\"deviceIds\":{}, \"objectId\":{}, \"name\":{}",
                            device_ids.SerializeJson(), object_id.SerializeJson(),
                            name.SerializeJson());
     }
@@ -1026,7 +1026,7 @@ struct FunctionData : DudeObj {
     TextField name;
 
     std::string SerializeJson() const override {
-        return std::format(
+        return fmt::format(
             "\"argumentDescriptors\":{}, \"builtin\":{}, \"minArguments\":{}, \"maxArguments\":{}, "
             "\"objectId\":{}, \"description\":{}, \"code\":{}, \"name\":{}",
             argument_descriptors.SerializeJson(), builtin.SerializeJson(),
@@ -1051,7 +1051,7 @@ struct SnmpProfileData : DudeObj {
     TextField name;
 
     std::string SerializeJson() const override {
-        return std::format(
+        return fmt::format(
             "\"version\":{}, \"port\":{}, \"security\":{}, \"authMethod\":{}, \"crypthMethod\":{}, "
             "\"tryCount\":{}, \"tryTimeout\":{}, \"objectId\":{}, \"cryptPassword\":{}, "
             "\"authPassword\":{}, \"community\":{}, \"name\":{}",
@@ -1074,7 +1074,7 @@ struct PanelData : DudeObj {
     TextField name;
 
     std::string SerializeJson() const override {
-        return std::format("\"ordered\":{}, \"locked\":{}, \"titleBars\":{}, \"objectId\":{}, "
+        return fmt::format("\"ordered\":{}, \"locked\":{}, \"titleBars\":{}, \"objectId\":{}, "
                            "\"topElementId\":{}, \"admin\":{}, \"type\":{}, \"name\":{}",
                            ordered.SerializeJson(), locked.SerializeJson(),
                            title_bars.SerializeJson(), object_id.SerializeJson(),
@@ -1100,7 +1100,7 @@ struct SysLogRuleData : DudeObj {
     TextField name;
 
     std::string SerializeJson() const override {
-        return std::format(
+        return fmt::format(
             "\"regexpNot\":{}, \"sourceSet\":{}, \"regexpSet\":{}, \"enabled\":{}, "
             "\"sourceNot\":{}, \"sourceFirst\":{}, \"sourceSecond\":{}, \"action\":{}, "
             "\"notifyId\":{}, \"objectId\":{}, \"nextId\":{}, \"regexp\":{}, \"name\":{}",
@@ -1149,7 +1149,7 @@ struct NetworkMapElementData : DudeObj {
     TextField name;
 
     std::string SerializeJson() const override {
-        return std::format(
+        return fmt::format(
             "\"itemUseAckedColor\":{}, \"itemUseLabel\":{}, \"itemUseShapes\":{}, "
             "\"itemUseFont\":{}, \"itemUseImage\":{}, "
             "\"itemUseImageScale\":{}, \"itemUseWidth\":{}, \"itemUseUpColor\":{}, "
@@ -1190,7 +1190,7 @@ struct ChartLineData : DudeObj {
     TextField name;
 
     std::string SerializeJson() const override {
-        return std::format("\"chartId\":{}, \"sourceId\":{}, \"lineStyle\":{}, \"lineColor\":{}, "
+        return fmt::format("\"chartId\":{}, \"sourceId\":{}, \"lineStyle\":{}, \"lineColor\":{}, "
                            "\"lineOpacity\":{}, \"fillColor\":{}, \"fillOpacity\":{}, "
                            "\"objectId\":{}, \"nextId\":{}, \"name\":{}",
                            chart_id.SerializeJson(), source_id.SerializeJson(),
@@ -1215,7 +1215,7 @@ struct PanelElementData : DudeObj {
     TextField name;
 
     std::string SerializeJson() const override {
-        return std::format(
+        return fmt::format(
             "\"split\":{}, \"panelId\":{}, \"splitType\":{}, \"splitShare\":{}, \"firstId\":{}, "
             "\"secondId\":{}, \"objId\":{}, \"objectId\":{}, \"objMeta\":{}, \"name\":{}",
             split.SerializeJson(), panel_id.SerializeJson(), split_type.SerializeJson(),
