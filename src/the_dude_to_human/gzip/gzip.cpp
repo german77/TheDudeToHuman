@@ -54,7 +54,7 @@ bool Gzip::IsGzipFile() {
     file_data.read(signature.data(), signature.size());
     file_data.close();
 
-    return signature[0] == gzip_signature[0] && signature[1] == gzip_signature[1];
+    return static_cast<u8>(signature[0]) == gzip_signature[0] && static_cast<u8>(signature[1]) == gzip_signature[1];
 }
 
 bool Gzip::Decompress(const std::string& out_file) {

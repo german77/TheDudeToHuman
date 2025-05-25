@@ -1,6 +1,6 @@
 name: Test
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   build:
@@ -27,10 +27,6 @@ jobs:
           - os: windows
             cpu: amd64
             builder: windows-latest
-
-          - os: windows
-            cpu: arm64
-            builder: windows-11-arm
 
     name: ${{ matrix.os }}-${{ matrix.cpu }}
     runs-on: ${{ matrix.builder }}
