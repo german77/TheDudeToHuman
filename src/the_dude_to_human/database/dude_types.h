@@ -197,7 +197,7 @@ struct MacAddressField {
 
         for (const MacAddress& mac : mac_address) {
             array += std::format("\"{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}\",", mac[0], mac[1],
-                                 mac[2], mac[3], mac[4], mac[5], mac[6]);
+                                 mac[2], mac[3], mac[4], mac[5]);
         }
         if (!mac_address.empty()) {
             array.pop_back();

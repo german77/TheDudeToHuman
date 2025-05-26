@@ -19,16 +19,21 @@
 #include "the_dude_to_human/database/dude_validator.h"
 #include "the_dude_to_human/mikrotik/mikrotik_device.h"
 
+static void PrintVersion() {
+    std::cout << "the dude to human version 1.0.0";
+}
+
 static void PrintHelp(const char* argv0) {
     // clang-format off
     std::cout
         << "Usage: " << argv0
         << " [options] <filename>\n"
-           "--f, --file                                 Load the specified database file\n"
-           "--o, --out                                  Store database location\n"
-           "--m, --mikrotik=user:password@address:port  Connect to the specified mikrotik device\n"
+           "-f, --file                                 Load the specified database file\n"
+           "-o, --out                                  Store database location\n"
+           "-m, --mikrotik=user:password@address:port  Connect to the specified mikrotik device\n"
            //"-d, --database=user:password@address:port  Connect to the specified database\n"
-           "--h, --help                                 Display this help and exit\n";
+           "-h, --help                                 Display this help and exit\n"
+           "-v, --version                              Print tool version\n";
     // clang-format on
 }
 
@@ -61,7 +66,7 @@ int main(int argc, char** argv) {
     std::string database_user{};
     std::string database_password{};
     std::string database_address{};
-    [[maybe_unused]]u16 database_port = {3306};
+    [[maybe_unused]] u16 database_port = {3306};
 
     static struct option long_options[] = {
         // clang-format off
@@ -70,12 +75,13 @@ int main(int argc, char** argv) {
         {"mikrotik", required_argument, 0, 'm'},
         //{"database", optional_argument, 0, 'd'},
         {"help", no_argument, 0, 'h'},
+        {"version", no_argument, 0, 'v'},
         {0, 0, 0, 0},
         // clang-format on
     };
 
     while (optind < argc) {
-        int arg = getopt_long(argc, argv, "g:fhvp::c:u:", long_options, &option_index);
+        int arg = getopt_long(argc, argv, "f:o:m:hv", long_options, &option_index);
         if (arg != -1) {
             switch (static_cast<char>(arg)) {
             case 'f': {
@@ -92,6 +98,9 @@ int main(int argc, char** argv) {
             }
             case 'h':
                 PrintHelp(argv[0]);
+                return 0;
+            case 'v':
+                PrintVersion();
                 return 0;
             case 'm': {
                 has_mikrotik = true;
