@@ -24,7 +24,7 @@ add_executable(the_dude_to_human
     TheDudeToHuman.cpp
 )
 
-target_link_libraries(the_dude_to_human PRIVATE common sqlite libssh2 zlib fmt::fmt)
+target_link_libraries(the_dude_to_human PRIVATE common sqlite libssh2::libssh2_static zlibstatic fmt::fmt)
 if (MSVC)
     target_link_libraries(the_dude_to_human PRIVATE getopt wsock32 ws2_32)
 endif()
