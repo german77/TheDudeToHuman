@@ -30,6 +30,7 @@ static void PrintHelp(const char* argv0) {
         << " [options] <filename>\n"
            "-f, --file                                 Load the specified database file\n"
            "-o, --out                                  Store database location\n"
+           "-c, --credentials                          Save credentials in plain text\n"
            "-m, --mikrotik=user:password@address:port  Connect to the specified mikrotik device\n"
            //"-d, --database=user:password@address:port  Connect to the specified database\n"
            "-h, --help                                 Display this help and exit\n"
@@ -54,6 +55,7 @@ int main(int argc, char** argv) {
     std::string filepath{};
 
     bool has_out_filepath{};
+    bool has_credentials{};
     std::string out_filepath{};
 
     bool has_mikrotik{};
@@ -72,6 +74,7 @@ int main(int argc, char** argv) {
         // clang-format off
         {"file", required_argument, 0, 'f'},
         {"out", required_argument, 0, 'o'},
+        {"credentials", no_argument, 0, 'c'},
         {"mikrotik", required_argument, 0, 'm'},
         //{"database", optional_argument, 0, 'd'},
         {"help", no_argument, 0, 'h'},
@@ -81,7 +84,7 @@ int main(int argc, char** argv) {
     };
 
     while (optind < argc) {
-        int arg = getopt_long(argc, argv, "f:o:m:hv", long_options, &option_index);
+        int arg = getopt_long(argc, argv, "f:o:cm:hv", long_options, &option_index);
         if (arg != -1) {
             switch (static_cast<char>(arg)) {
             case 'f': {
@@ -96,6 +99,9 @@ int main(int argc, char** argv) {
                 out_filepath = str_arg;
                 break;
             }
+            case 'c':
+                has_credentials = true;
+                break;
             case 'h':
                 PrintHelp(argv[0]);
                 return 0;
@@ -203,7 +209,7 @@ int main(int argc, char** argv) {
 
         if (has_out_filepath) {
             std::cout << "Saving database " << out_filepath << "\n";
-            db.SaveDatabase(out_filepath);
+            db.SaveDatabase(out_filepath, has_credentials);
         }
     }
 }

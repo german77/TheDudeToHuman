@@ -47,8 +47,8 @@ int DudeDatabase::GetOutages(Sqlite::SqlData& data) const {
     return db.GetTableData(data, "outages");
 }
 
-int DudeDatabase::SaveDatabase(const std::string& db_file) {
-    return SerializeDatabaseJson(this, db_file);
+int DudeDatabase::SaveDatabase(const std::string& db_file, bool has_credentials) {
+    return SerializeDatabaseJson(this, db_file, has_credentials);
 }
 
 std::vector<DataFormat> DudeDatabase::ListUsedDataFormats() const {

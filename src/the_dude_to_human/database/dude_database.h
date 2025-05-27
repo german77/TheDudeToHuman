@@ -27,7 +27,7 @@ public:
     int GetObjs(Sqlite::SqlData& data) const;
     int GetOutages(Sqlite::SqlData& data) const;
 
-    int SaveDatabase(const std::string& db_file);
+    int SaveDatabase(const std::string& db_file, bool has_credentials);
 
     // Usefull to find new unsuported types
     std::vector<DataFormat> ListUsedDataFormats() const;

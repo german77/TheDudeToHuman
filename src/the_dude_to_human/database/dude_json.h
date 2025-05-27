@@ -4,6 +4,6 @@
 #pragma once
 
 namespace Database {
-    class DudeDatabase;
-    int SerializeDatabaseJson(DudeDatabase* db, const std::string& db_file);
+class DudeDatabase;
+int SerializeDatabaseJson(DudeDatabase* db, const std::string& db_file, bool has_credentials);
 } // namespace Database
