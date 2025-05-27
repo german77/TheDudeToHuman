@@ -234,7 +234,7 @@ struct StringArrayField {
 
 struct DudeObj {
     virtual ~DudeObj() {}
-    virtual std::string SerializeJson() const {
+    virtual std::string SerializeJson(bool has_credentials) const {
         return "\"object_id\":-1";
     }
 };
@@ -347,7 +347,7 @@ struct ServerConfigData : DudeObj {
     LongArrayField unique_id;
     TextField name;
 
-    std::string SerializeJson() const override {
+    std::string SerializeJson(bool has_credentials) const override {
         return fmt::format(
             "\"timeZoneHistory\":{}, \"discoverSkipTypes\":{}, \"discoverSkipProbes\":{}, "
             "\"customColors\":{}, \"chartLineColors\":{}, \"notifyIds\":{}, "
@@ -449,7 +449,7 @@ struct ToolData : DudeObj {
     TextField command;
     TextField name;
 
-    std::string SerializeJson() const override {
+    std::string SerializeJson(bool has_credentials) const override {
         return fmt::format("\"builtin\":{}, \"type\":{}, \"deviceId\":{}, \"objectId\":{}, "
                            "\"command\":{}, \"name\":{}",
                            builtin.SerializeJson(), type.SerializeJson(), device_id.SerializeJson(),
@@ -465,7 +465,7 @@ struct FileData : DudeObj {
     TextField file_name;
     TextField name;
 
-    std::string SerializeJson() const override {
+    std::string SerializeJson(bool has_credentials) const override {
         return fmt::format("\"parentId\":{}, \"objectId\":{}, \"fileName\":{}, \"name\":{}",
                            parent_id.SerializeJson(), object_id.SerializeJson(),
                            file_name.SerializeJson(), name.SerializeJson());
@@ -479,7 +479,7 @@ struct NotesData : DudeObj {
     TimeField time_added;
     TextField name;
 
-    std::string SerializeJson() const override {
+    std::string SerializeJson(bool has_credentials) const override {
         return fmt::format("\"objectId\":{}, \"parentId\":{}, \"timeAdded\":{}, \"name\":{}",
                            object_id.SerializeJson(), parent_id.SerializeJson(),
                            time_added.SerializeJson(), name.SerializeJson());
@@ -574,7 +574,7 @@ struct MapData : DudeObj {
     TextField list_type;
     TextField name;
 
-    std::string SerializeJson() const override {
+    std::string SerializeJson(bool has_credentials) const override {
         return fmt::format(
             "\"notifyIds\":{}, \"useStaticColor\":{}, \"useLinkColor\":{}, "
             "\"useLinkLabelColor\":{}, \"useLinkFullColor\":{}, \"useDeviceLabel\":{}, "
@@ -684,7 +684,7 @@ struct ProbeData : DudeObj {
     TextField tcp_send_1;
     TextField name;
 
-    std::string SerializeJson() const override {
+    std::string SerializeJson(bool has_credentials) const override {
         return fmt::format(
             "\"logicProbeIds\":{}, \"snmpValueOid\":{}, \"snmpOid\":{}, \"dnsAddresses\":{}, "
             "\"snmpAvailIfUp\":{}, \"tcpOnlyConnect\":{}, \"tcpFirstReceive\":{}, "
@@ -728,7 +728,7 @@ struct DeviceTypeData : DudeObj {
     TextField url;
     TextField name;
 
-    std::string SerializeJson() const override {
+    std::string SerializeJson(bool has_credentials) const override {
         return fmt::format("\"ignoredServices\":{}, \"allowedServices\":{}, "
                            "\"requiredServices\":{}, \"imageId\":{}, \"imageScale\":{}, "
                            "\"objectId\":{}, \"nextId\":{}, \"url\":{}, \"name\":{}",
@@ -768,7 +768,7 @@ struct DeviceData : DudeObj {
     MacAddressField mac;
     TextField name;
 
-    std::string SerializeJson() const override {
+    std::string SerializeJson(bool has_credentials) const override {
         return fmt::format(
             "\"parentIds\":{}, \"notifyIds\":{}, \"dnsNames\":{}, \"ip\":{}, \"secureMode\":{}, "
             "\"routerOs\":{}, \"dudeServer\":{}, \"notifyUse\":{}, \"proveEnabled\":{}, "
@@ -784,8 +784,9 @@ struct DeviceData : DudeObj {
             object_id.SerializeJson(), prove_interval.SerializeJson(),
             prove_timeout.SerializeJson(), prove_down_count.SerializeJson(),
             custom_field_3.SerializeJson(), custom_field_2.SerializeJson(),
-            custom_field_1.SerializeJson(), password.SerializeJson(), username.SerializeJson(),
-            mac.SerializeJson(), name.SerializeJson());
+            custom_field_1.SerializeJson(), has_credentials ? password.SerializeJson() : "*****",
+            has_credentials ? username.SerializeJson() : "*****", mac.SerializeJson(),
+            name.SerializeJson());
     }
 };
 
@@ -797,7 +798,7 @@ struct NetworkData : DudeObj {
     IntField net_map_element;
     TextField name;
 
-    std::string SerializeJson() const override {
+    std::string SerializeJson(bool has_credentials) const override {
         return fmt::format(
             "\"subnets\":{}, \"objectId\":{}, \"netMapId\":{}, \"netMapElement\":{}, \"name\":{}",
             subnets.SerializeJson(), object_id.SerializeJson(), net_map_id.SerializeJson(),
@@ -831,7 +832,7 @@ struct ServiceData : DudeObj {
     LongField value;
     TextField name;
 
-    std::string SerializeJson() const override {
+    std::string SerializeJson(bool has_credentials) const override {
         return fmt::format(
             "\"notifyIds\":{}, \"enabled\":{}, \"history\":{}, \"notifyUse\":{}, \"acked\":{}, "
             "\"probePort\":{}, \"probeInterval\":{}, \"probeTimeout\":{}, \"probeDownCount\":{}, "
@@ -885,7 +886,7 @@ struct NotificationData : DudeObj {
     TextField text_template;
     TextField name;
 
-    std::string SerializeJson() const override {
+    std::string SerializeJson(bool has_credentials) const override {
         return fmt::format(
             "\"statusList\":{}, \"groupNotifyIds\":{}, \"mailCc\":{}, \"activity\":{}, "
             "\"logUseColor\":{}, \"enabled\":{}, \"mailTlsMode\":{}, \"sysLogServer\":{}, "
@@ -904,9 +905,9 @@ struct NotificationData : DudeObj {
             repeat_count.SerializeJson(), object_id.SerializeJson(), rype_id.SerializeJson(),
             mail_server.SerializeJson(), mail_port.SerializeJson(), log_prefix.SerializeJson(),
             mail_subject.SerializeJson(), mail_to.SerializeJson(), mail_from.SerializeJson(),
-            mail_password.SerializeJson(), mail_user.SerializeJson(),
-            mail_server_dns.SerializeJson(), mail_server6.SerializeJson(),
-            text_template.SerializeJson(), name.SerializeJson());
+            has_credentials ? mail_password.SerializeJson() : "*****",
+            has_credentials ? mail_user.SerializeJson() : "*****", mail_server_dns.SerializeJson(),
+            mail_server6.SerializeJson(), text_template.SerializeJson(), name.SerializeJson());
     }
 };
 
@@ -925,7 +926,7 @@ struct LinkData : DudeObj {
     LongField speed;
     TextField name;
 
-    std::string SerializeJson() const override {
+    std::string SerializeJson(bool has_credentials) const override {
         return fmt::format(
             "\"history\":{}, \"masteringType\":{}, \"masterDevice\":{}, \"masterInterface\":{}, "
             "\"netMapId\":{}, \"netMapElementId\":{}, \"typeId\":{}, \"txDataSourceId\":{}, "
@@ -948,7 +949,7 @@ struct LinkTypeData : DudeObj {
     LongField snmp_speed;
     TextField name;
 
-    std::string SerializeJson() const override {
+    std::string SerializeJson(bool has_credentials) const override {
         return fmt::format("\"objectId\":{}, \"style\":{}, \"thickness\":{}, \"snmpType\":{}, "
                            "\"nextId\":{}, \"snmpSpeed\":{}, \"name\":{}",
                            object_id.SerializeJson(), style.SerializeJson(),
@@ -973,7 +974,7 @@ struct DataSourceData : DudeObj {
     TextField unit;
     TextField name;
 
-    std::string SerializeJson() const override {
+    std::string SerializeJson(bool has_credentials) const override {
         return fmt::format("\"enabled\":{}, \"functionDeviceId\":{}, \"functionInterval\":{}, "
                            "\"dataSourceType\":{}, \"objectId\":{}, \"keepTimeRaw\":{}, "
                            "\"keepTime10min\":{}, \"keepTime2hour\":{}, \"keepTime1Day\":{}, "
@@ -994,7 +995,7 @@ struct ObjectListData : DudeObj {
     TextField type;
     TextField name;
 
-    std::string SerializeJson() const override {
+    std::string SerializeJson(bool has_credentials) const override {
         return fmt::format("\"ordered\":{}, \"objectId\":{}, \"type\":{}, \"name\":{}",
                            ordered.SerializeJson(), object_id.SerializeJson(), type.SerializeJson(),
                            name.SerializeJson());
@@ -1007,7 +1008,7 @@ struct DeviceGroupData : DudeObj {
     IntField object_id;
     TextField name;
 
-    std::string SerializeJson() const override {
+    std::string SerializeJson(bool has_credentials) const override {
         return fmt::format("\"deviceIds\":{}, \"objectId\":{}, \"name\":{}",
                            device_ids.SerializeJson(), object_id.SerializeJson(),
                            name.SerializeJson());
@@ -1025,7 +1026,7 @@ struct FunctionData : DudeObj {
     TextField code;
     TextField name;
 
-    std::string SerializeJson() const override {
+    std::string SerializeJson(bool has_credentials) const override {
         return fmt::format(
             "\"argumentDescriptors\":{}, \"builtin\":{}, \"minArguments\":{}, \"maxArguments\":{}, "
             "\"objectId\":{}, \"description\":{}, \"code\":{}, \"name\":{}",
@@ -1050,7 +1051,7 @@ struct SnmpProfileData : DudeObj {
     TextField community;
     TextField name;
 
-    std::string SerializeJson() const override {
+    std::string SerializeJson(bool has_credentials) const override {
         return fmt::format(
             "\"version\":{}, \"port\":{}, \"security\":{}, \"authMethod\":{}, \"crypthMethod\":{}, "
             "\"tryCount\":{}, \"tryTimeout\":{}, \"objectId\":{}, \"cryptPassword\":{}, "
@@ -1073,7 +1074,7 @@ struct PanelData : DudeObj {
     TextField type;
     TextField name;
 
-    std::string SerializeJson() const override {
+    std::string SerializeJson(bool has_credentials) const override {
         return fmt::format("\"ordered\":{}, \"locked\":{}, \"titleBars\":{}, \"objectId\":{}, "
                            "\"topElementId\":{}, \"admin\":{}, \"type\":{}, \"name\":{}",
                            ordered.SerializeJson(), locked.SerializeJson(),
@@ -1099,7 +1100,7 @@ struct SysLogRuleData : DudeObj {
     TextField regexp;
     TextField name;
 
-    std::string SerializeJson() const override {
+    std::string SerializeJson(bool has_credentials) const override {
         return fmt::format(
             "\"regexpNot\":{}, \"sourceSet\":{}, \"regexpSet\":{}, \"enabled\":{}, "
             "\"sourceNot\":{}, \"sourceFirst\":{}, \"sourceSecond\":{}, \"action\":{}, "
@@ -1148,7 +1149,7 @@ struct NetworkMapElementData : DudeObj {
     LongArrayField item_font;
     TextField name;
 
-    std::string SerializeJson() const override {
+    std::string SerializeJson(bool has_credentials) const override {
         return fmt::format(
             "\"itemUseAckedColor\":{}, \"itemUseLabel\":{}, \"itemUseShapes\":{}, "
             "\"itemUseFont\":{}, \"itemUseImage\":{}, "
@@ -1189,7 +1190,7 @@ struct ChartLineData : DudeObj {
     IntField next_id;
     TextField name;
 
-    std::string SerializeJson() const override {
+    std::string SerializeJson(bool has_credentials) const override {
         return fmt::format("\"chartId\":{}, \"sourceId\":{}, \"lineStyle\":{}, \"lineColor\":{}, "
                            "\"lineOpacity\":{}, \"fillColor\":{}, \"fillOpacity\":{}, "
                            "\"objectId\":{}, \"nextId\":{}, \"name\":{}",
@@ -1214,7 +1215,7 @@ struct PanelElementData : DudeObj {
     LongArrayField obj_meta;
     TextField name;
 
-    std::string SerializeJson() const override {
+    std::string SerializeJson(bool has_credentials) const override {
         return fmt::format(
             "\"split\":{}, \"panelId\":{}, \"splitType\":{}, \"splitShare\":{}, \"firstId\":{}, "
             "\"secondId\":{}, \"objId\":{}, \"objectId\":{}, \"objMeta\":{}, \"name\":{}",
