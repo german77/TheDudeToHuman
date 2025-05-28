@@ -349,22 +349,22 @@ struct ServerConfigData : DudeObj {
 
     std::string SerializeJson(bool has_credentials) const override {
         return fmt::format(
-            "\"timeZoneHistory\":{}, \"discoverSkipTypes\":{}, \"discoverSkipProbes\":{}, "
-            "\"customColors\":{}, \"chartLineColors\":{}, \"notifyIds\":{}, "
-            "\"discoverIdentification\":{}, \"discoverNetworks\":{}, \"discoverLinks\":{}, "
-            "\"mapDeviceVisible\":{}, \"discoverLayer2\":{}, \"firstConnection\":{}, "
-            "\"discoverPpp\":{}, \"discoverGraphServices\":{}, \"mapNetworkVisible\":{}, "
-            "\"discoverGraphLinks\":{}, \"discoverServiceLess\":{}, \"mapSubmapVisible\":{}, "
-            "\"probeEnabled\":{}, \"mapStaticVisible\":{}, \"syslogEnabled\":{}, "
-            "\"mapLinkVisible\":{}, \"snmpTrapEnabled\":{}, \"confirmRemove\":{}, "
-            "\"resolveMacAddressManufacturer\":{}, \"mapDepVisible\":{}, "
-            "\"mapAntialiasedGeometry\":{}, \"mapGradients\":{}, \"objectId\":{}, "
-            "\"version\":{}, \"snmpProfileId\":{}, \"agentId\":{}, \"probeInterval\":{}, "
-            "\"probeTimeout\":{}, \"probeDownCount\":{}, \"syslogPort\":{}, "
-            "\"snmpTrapPort\":{}, \"mapBackgroundColor\":{}, \"mapLabelRefreshInterval\":{}, "
-            "\"mapUpColor\":{}, \"mapDownPartialColor\":{}, \"mapDownCompleteColor\":{}, "
-            "\"mapUnknownColor\":{}, \"mapAckedColor\":{}, \"mapNetworkColor\":{}, "
-            "\"mapSubmapColor\":{}, \"mapSubmapUpColor\":{}, \"mapSubmapDownPartialColor\":{}, "
+            "\"objectId\":{}, \"name\":{}, \"timeZoneHistory\":{}, \"discoverSkipTypes\":{}, "
+            "\"discoverSkipProbes\":{}, \"customColors\":{}, \"chartLineColors\":{}, "
+            "\"notifyIds\":{}, \"discoverIdentification\":{}, \"discoverNetworks\":{}, "
+            "\"discoverLinks\":{}, \"mapDeviceVisible\":{}, \"discoverLayer2\":{}, "
+            "\"firstConnection\":{}, \"discoverPpp\":{}, \"discoverGraphServices\":{}, "
+            "\"mapNetworkVisible\":{}, \"discoverGraphLinks\":{}, \"discoverServiceLess\":{}, "
+            "\"mapSubmapVisible\":{}, \"probeEnabled\":{}, \"mapStaticVisible\":{}, "
+            "\"syslogEnabled\":{}, \"mapLinkVisible\":{}, \"snmpTrapEnabled\":{}, "
+            "\"confirmRemove\":{}, \"resolveMacAddressManufacturer\":{}, \"mapDepVisible\":{}, "
+            "\"mapAntialiasedGeometry\":{}, \"mapGradients\":{}, \"version\":{}, "
+            "\"snmpProfileId\":{}, \"agentId\":{}, \"probeInterval\":{}, \"probeTimeout\":{}, "
+            "\"probeDownCount\":{}, \"syslogPort\":{}, \"snmpTrapPort\":{}, "
+            "\"mapBackgroundColor\":{}, \"mapLabelRefreshInterval\":{}, \"mapUpColor\":{}, "
+            "\"mapDownPartialColor\":{}, \"mapDownCompleteColor\":{}, \"mapUnknownColor\":{}, "
+            "\"mapAckedColor\":{}, \"mapNetworkColor\":{}, \"mapSubmapColor\":{}, "
+            "\"mapSubmapUpColor\":{}, \"mapSubmapDownPartialColor\":{}, "
             "\"mapSubmapDownCompleteColor\":{}, \"mapSubmapAckedColor\":{}, \"mapStaticColor\":{}, "
             "\"mapLinkColor\":{}, \"mapLinkLabelColor\":{}, \"mapLinkFullColor\":{}, "
             "\"mapDeviceShape\":{}, \"mapNetworkShape\":{}, \"mapSubmapShape\":{}, "
@@ -383,23 +383,22 @@ struct ServerConfigData : DudeObj {
             "\"mapStaticFont\":{}, \"mapSubmapFont\":{}, \"mapSubmapTooltip\":{}, "
             "\"mapSubmapLabel\":{}, \"mapNetworkFont\":{}, \"mapNetworkTooltip\":{}, "
             "\"mapNetworkLabel\":{}, \"mapDeviceFont\":{}, \"mapDeviceTooltip\":{}, "
-            "\"mapDeviceLabel\":{}, \"uniqueId\":{}, \"name\":{}",
-
-            time_zone_history.SerializeJson(), discover_skip_types.SerializeJson(),
-            discover_skip_probes.SerializeJson(), custom_colors.SerializeJson(),
-            chart_line_colors.SerializeJson(), notify_ids.SerializeJson(),
-            discover_identification.SerializeJson(), discover_networks.SerializeJson(),
-            discover_links.SerializeJson(), map_device_visible.SerializeJson(),
-            discover_layer_2.SerializeJson(), first_connection.SerializeJson(),
-            discover_ppp.SerializeJson(), discover_graph_services.SerializeJson(),
-            map_network_visible.SerializeJson(), discover_graph_links.SerializeJson(),
-            discover_service_less.SerializeJson(), map_submap_visible.SerializeJson(),
-            probe_enabled.SerializeJson(), map_static_visible.SerializeJson(),
-            syslog_enabled.SerializeJson(), map_link_visible.SerializeJson(),
-            snmp_trap_enabled.SerializeJson(), confirm_remove.SerializeJson(),
-            resolve_mac_address_manufacturer.SerializeJson(), map_dep_visible.SerializeJson(),
-            map_antialiased_geometry.SerializeJson(), map_gradients.SerializeJson(),
-            object_id.SerializeJson(), version.SerializeJson(), snmp_profile_id.SerializeJson(),
+            "\"mapDeviceLabel\":{}, \"uniqueId\":{}",
+            object_id.SerializeJson(), name.SerializeJson(), time_zone_history.SerializeJson(),
+            discover_skip_types.SerializeJson(), discover_skip_probes.SerializeJson(),
+            custom_colors.SerializeJson(), chart_line_colors.SerializeJson(),
+            notify_ids.SerializeJson(), discover_identification.SerializeJson(),
+            discover_networks.SerializeJson(), discover_links.SerializeJson(),
+            map_device_visible.SerializeJson(), discover_layer_2.SerializeJson(),
+            first_connection.SerializeJson(), discover_ppp.SerializeJson(),
+            discover_graph_services.SerializeJson(), map_network_visible.SerializeJson(),
+            discover_graph_links.SerializeJson(), discover_service_less.SerializeJson(),
+            map_submap_visible.SerializeJson(), probe_enabled.SerializeJson(),
+            map_static_visible.SerializeJson(), syslog_enabled.SerializeJson(),
+            map_link_visible.SerializeJson(), snmp_trap_enabled.SerializeJson(),
+            confirm_remove.SerializeJson(), resolve_mac_address_manufacturer.SerializeJson(),
+            map_dep_visible.SerializeJson(), map_antialiased_geometry.SerializeJson(),
+            map_gradients.SerializeJson(), version.SerializeJson(), snmp_profile_id.SerializeJson(),
             agent_id.SerializeJson(), probe_interval.SerializeJson(), probe_timeout.SerializeJson(),
             probe_down_count.SerializeJson(), syslog_port.SerializeJson(),
             snmp_trap_port.SerializeJson(), map_background_color.SerializeJson(),
@@ -436,7 +435,7 @@ struct ServerConfigData : DudeObj {
             map_network_font.SerializeJson(), map_network_tooltip.SerializeJson(),
             map_network_label.SerializeJson(), map_device_font.SerializeJson(),
             map_device_tooltip.SerializeJson(), map_device_label.SerializeJson(),
-            unique_id.SerializeJson(), name.SerializeJson());
+            unique_id.SerializeJson());
     }
 };
 
@@ -450,11 +449,11 @@ struct ToolData : DudeObj {
     TextField name;
 
     std::string SerializeJson(bool has_credentials) const override {
-        return fmt::format("\"builtin\":{}, \"type\":{}, \"deviceId\":{}, \"objectId\":{}, "
-                           "\"command\":{}, \"name\":{}",
-                           builtin.SerializeJson(), type.SerializeJson(), device_id.SerializeJson(),
-                           object_id.SerializeJson(), command.SerializeJson(),
-                           name.SerializeJson());
+        return fmt::format("\"objectId\":{}, \"name\":{}, \"builtin\":{}, \"type\":{}, "
+                           "\"deviceId\":{}, \"command\":{}",
+                           object_id.SerializeJson(), name.SerializeJson(), builtin.SerializeJson(),
+                           type.SerializeJson(), device_id.SerializeJson(),
+                           command.SerializeJson());
     }
 };
 
@@ -466,9 +465,9 @@ struct FileData : DudeObj {
     TextField name;
 
     std::string SerializeJson(bool has_credentials) const override {
-        return fmt::format("\"parentId\":{}, \"objectId\":{}, \"fileName\":{}, \"name\":{}",
-                           parent_id.SerializeJson(), object_id.SerializeJson(),
-                           file_name.SerializeJson(), name.SerializeJson());
+        return fmt::format("\"objectId\":{}, \"name\":{}, \"parentId\":{}, \"fileName\":{}",
+                           object_id.SerializeJson(), name.SerializeJson(),
+                           parent_id.SerializeJson(), file_name.SerializeJson());
     }
 };
 
@@ -480,9 +479,9 @@ struct NotesData : DudeObj {
     TextField name;
 
     std::string SerializeJson(bool has_credentials) const override {
-        return fmt::format("\"objectId\":{}, \"parentId\":{}, \"timeAdded\":{}, \"name\":{}",
-                           object_id.SerializeJson(), parent_id.SerializeJson(),
-                           time_added.SerializeJson(), name.SerializeJson());
+        return fmt::format("\"objectId\":{}, \"name\":{}, \"parentId\":{}, \"timeAdded\":{}",
+                           object_id.SerializeJson(), name.SerializeJson(),
+                           parent_id.SerializeJson(), time_added.SerializeJson());
     }
 };
 
@@ -576,12 +575,12 @@ struct MapData : DudeObj {
 
     std::string SerializeJson(bool has_credentials) const override {
         return fmt::format(
-            "\"notifyIds\":{}, \"useStaticColor\":{}, \"useLinkColor\":{}, "
-            "\"useLinkLabelColor\":{}, \"useLinkFullColor\":{}, \"useDeviceLabel\":{}, "
-            "\"useDeviceShape\":{}, \"useDeviceFont\":{}, \"useNetworkLabel\":{}, "
-            "\"useNetworkShape\":{}, \"useNetworkFont\":{}, \"useSubmapLabel\":{}, "
-            "\"useSubmapShape\":{}, \"useSubmapFont\":{}, \"useStaticShape\":{}, "
-            "\"useStaticFont\":{}, \"useLinkLabel\":{}, \"useLinkFont\":{}, "
+            "\"objectId\":{}, \"name\":{}, \"notifyIds\":{}, \"useStaticColor\":{}, "
+            "\"useLinkColor\":{}, \"useLinkLabelColor\":{}, \"useLinkFullColor\":{}, "
+            "\"useDeviceLabel\":{}, \"useDeviceShape\":{}, \"useDeviceFont\":{}, "
+            "\"useNetworkLabel\":{}, \"useNetworkShape\":{}, \"useNetworkFont\":{}, "
+            "\"useSubmapLabel\":{}, \"useSubmapShape\":{}, \"useSubmapFont\":{}, "
+            "\"useStaticShape\":{}, \"useStaticFont\":{}, \"useLinkLabel\":{}, \"useLinkFont\":{}, "
             "\"useLinkThickness\":{}, \"ordered\":{}, \"proveEnabled\":{}, \"notifyUse\":{}, "
             "\"reportScanning\":{}, \"locked\":{}, \"imageTile\":{}, \"colorVisible\":{}, "
             "\"deviceVisible\":{}, \"networkVisible\":{}, \"submapVisible\":{}, "
@@ -591,28 +590,27 @@ struct MapData : DudeObj {
             "\"useSubmapColor\":{}, \"useSubmapUpColor\":{}, \"useSubmapDownPartialColor\":{}, "
             "\"useSubmapDownCompleteColor\":{}, \"useSubmapAckedColor\":{}, \"linkThickness\":{}, "
             "\"layoutDensity\":{}, \"layoutQuality\":{}, \"proveInterval\":{}, "
-            "\"proveTimeout\":{}, \"proveDownCount\":{}, \"objectId\":{}, \"defaultZoom\":{}, "
-            "\"imageId\":{}, \"imageScale\":{}, \"labelRefreshInterval\":{}, "
-            "\"backgroundColor\":{}, \"upColor\":{}, \"downPartialColor\":{}, "
-            "\"downCompleteColor\":{}, \"unknownColor\":{}, \"ackedColor\":{}, "
-            "\"networkColor\":{}, \"submapColor\":{}, \"submapUpColor\":{}, "
-            "\"submapDownPartialColor\":{}, \"submapDownCompleteColor\":{}, "
+            "\"proveTimeout\":{}, \"proveDownCount\":{}, \"defaultZoom\":{}, \"imageId\":{}, "
+            "\"imageScale\":{}, \"labelRefreshInterval\":{}, \"backgroundColor\":{}, "
+            "\"upColor\":{}, \"downPartialColor\":{}, \"downCompleteColor\":{}, "
+            "\"unknownColor\":{}, \"ackedColor\":{}, \"networkColor\":{}, \"submapColor\":{}, "
+            "\"submapUpColor\":{}, \"submapDownPartialColor\":{}, \"submapDownCompleteColor\":{}, "
             "\"submapAckedColor\":{}, \"staticColor\":{}, \"linkColor\":{}, \"linkLabelColor\":{}, "
             "\"linkFullColor\":{}, \"deviceShape\":{}, \"networkShape\":{}, \"submapShape\":{}, "
             "\"staticShape\":{}, \"linkFont\":{}, \"linkLabel\":{}, \"staticFont\":{}, "
             "\"submapFont\":{}, \"submapLabel\":{}, \"networkFont\":{}, \"networkLabel\":{}, "
-            "\"deviceFont\":{}, \"deviceLabel\":{}, \"listType\":{}, \"name\":{}",
-            notify_ids.SerializeJson(), use_static_color.SerializeJson(),
-            use_link_color.SerializeJson(), use_link_label_color.SerializeJson(),
-            use_link_full_color.SerializeJson(), use_device_label.SerializeJson(),
-            use_device_shape.SerializeJson(), use_device_font.SerializeJson(),
-            use_network_label.SerializeJson(), use_network_shape.SerializeJson(),
-            use_network_font.SerializeJson(), use_submap_label.SerializeJson(),
-            use_submap_shape.SerializeJson(), use_submap_font.SerializeJson(),
-            use_static_shape.SerializeJson(), use_static_font.SerializeJson(),
-            use_link_label.SerializeJson(), use_link_font.SerializeJson(),
-            use_link_thickness.SerializeJson(), ordered.SerializeJson(),
-            prove_enabled.SerializeJson(), notify_use.SerializeJson(),
+            "\"deviceFont\":{}, \"deviceLabel\":{}, \"listType\":{}",
+            object_id.SerializeJson(), name.SerializeJson(), notify_ids.SerializeJson(),
+            use_static_color.SerializeJson(), use_link_color.SerializeJson(),
+            use_link_label_color.SerializeJson(), use_link_full_color.SerializeJson(),
+            use_device_label.SerializeJson(), use_device_shape.SerializeJson(),
+            use_device_font.SerializeJson(), use_network_label.SerializeJson(),
+            use_network_shape.SerializeJson(), use_network_font.SerializeJson(),
+            use_submap_label.SerializeJson(), use_submap_shape.SerializeJson(),
+            use_submap_font.SerializeJson(), use_static_shape.SerializeJson(),
+            use_static_font.SerializeJson(), use_link_label.SerializeJson(),
+            use_link_font.SerializeJson(), use_link_thickness.SerializeJson(),
+            ordered.SerializeJson(), prove_enabled.SerializeJson(), notify_use.SerializeJson(),
             report_scanning.SerializeJson(), locked.SerializeJson(), image_tile.SerializeJson(),
             color_visible.SerializeJson(), device_visible.SerializeJson(),
             network_visible.SerializeJson(), submap_visible.SerializeJson(),
@@ -626,22 +624,21 @@ struct MapData : DudeObj {
             link_thickness.SerializeJson(), layout_density.SerializeJson(),
             layout_quality.SerializeJson(), prove_interval.SerializeJson(),
             prove_timeout.SerializeJson(), prove_down_count.SerializeJson(),
-            object_id.SerializeJson(), default_zoom.SerializeJson(), image_id.SerializeJson(),
-            image_scale.SerializeJson(), label_refresh_interval.SerializeJson(),
-            background_color.SerializeJson(), up_color.SerializeJson(),
-            down_partial_color.SerializeJson(), down_complete_color.SerializeJson(),
-            unknown_color.SerializeJson(), acked_color.SerializeJson(),
-            network_color.SerializeJson(), submap_color.SerializeJson(),
-            submap_up_color.SerializeJson(), submap_down_partial_color.SerializeJson(),
-            submap_down_complete_color.SerializeJson(), submap_acked_color.SerializeJson(),
-            static_color.SerializeJson(), link_color.SerializeJson(),
-            link_label_color.SerializeJson(), link_full_color.SerializeJson(),
-            device_shape.SerializeJson(), network_shape.SerializeJson(),
-            submap_shape.SerializeJson(), static_shape.SerializeJson(), link_font.SerializeJson(),
-            link_label.SerializeJson(), static_font.SerializeJson(), submap_font.SerializeJson(),
-            submap_label.SerializeJson(), network_font.SerializeJson(),
-            network_label.SerializeJson(), device_font.SerializeJson(),
-            device_label.SerializeJson(), list_type.SerializeJson(), name.SerializeJson());
+            default_zoom.SerializeJson(), image_id.SerializeJson(), image_scale.SerializeJson(),
+            label_refresh_interval.SerializeJson(), background_color.SerializeJson(),
+            up_color.SerializeJson(), down_partial_color.SerializeJson(),
+            down_complete_color.SerializeJson(), unknown_color.SerializeJson(),
+            acked_color.SerializeJson(), network_color.SerializeJson(),
+            submap_color.SerializeJson(), submap_up_color.SerializeJson(),
+            submap_down_partial_color.SerializeJson(), submap_down_complete_color.SerializeJson(),
+            submap_acked_color.SerializeJson(), static_color.SerializeJson(),
+            link_color.SerializeJson(), link_label_color.SerializeJson(),
+            link_full_color.SerializeJson(), device_shape.SerializeJson(),
+            network_shape.SerializeJson(), submap_shape.SerializeJson(),
+            static_shape.SerializeJson(), link_font.SerializeJson(), link_label.SerializeJson(),
+            static_font.SerializeJson(), submap_font.SerializeJson(), submap_label.SerializeJson(),
+            network_font.SerializeJson(), network_label.SerializeJson(),
+            device_font.SerializeJson(), device_label.SerializeJson(), list_type.SerializeJson());
     }
 };
 
@@ -686,33 +683,32 @@ struct ProbeData : DudeObj {
 
     std::string SerializeJson(bool has_credentials) const override {
         return fmt::format(
-            "\"logicProbeIds\":{}, \"snmpValueOid\":{}, \"snmpOid\":{}, \"dnsAddresses\":{}, "
-            "\"snmpAvailIfUp\":{}, \"tcpOnlyConnect\":{}, \"tcpFirstReceive\":{}, "
-            "\"logicType\":{}, \"typeId\":{}, \"objectId\":{}, \"agentId\":{}, \"defaultPort\":{}, "
-            "\"icmpSize\":{}, \"icmpRetryCount\":{}, \"icmpRetryInterval\":{}, "
+            "\"objectId\":{}, \"name\":{}, \"logicProbeIds\":{}, \"snmpValueOid\":{}, "
+            "\"snmpOid\":{}, \"dnsAddresses\":{}, \"snmpAvailIfUp\":{}, \"tcpOnlyConnect\":{}, "
+            "\"tcpFirstReceive\":{}, \"logicType\":{}, \"typeId\":{}, \"agentId\":{}, "
+            "\"defaultPort\":{}, \"icmpSize\":{}, \"icmpRetryCount\":{}, \"icmpRetryInterval\":{}, "
             "\"randomProbability\":{}, \"icmpTtl\":{}, \"snmpProfileId\":{}, \"snmpOidType\":{}, "
             "\"snmpCompareMethod\":{}, \"snmpValueNumber\":{}, \"snmpValueIp\":{}, "
             "\"functionUnit\":{}, \"funtionValue\":{}, \"functionError\":{}, "
             "\"functionAvailable\":{}, \"snmpValueString\":{}, \"snmpValueBigNumber\":{}, "
             "\"dnsName\":{}, \"tcpReceive3\":{}, \"tcpSend3\":{}, \"tcpReceive2\":{}, "
-            "\"tcpSend2\":{}, \"tcpReceive1\":{}, \"tcpSend1\":{}, \"name\":{}",
-            logic_probe_ids.SerializeJson(), snmp_value_oid.SerializeJson(),
-            snmp_oid.SerializeJson(), dns_addresses.SerializeJson(),
+            "\"tcpSend2\":{}, \"tcpReceive1\":{}, \"tcpSend1\":{}",
+            object_id.SerializeJson(), name.SerializeJson(), logic_probe_ids.SerializeJson(),
+            snmp_value_oid.SerializeJson(), snmp_oid.SerializeJson(), dns_addresses.SerializeJson(),
             snmp_avail_if_up.SerializeJson(), tcp_only_connect.SerializeJson(),
             tcp_first_receive.SerializeJson(), logic_type.SerializeJson(), type_id.SerializeJson(),
-            object_id.SerializeJson(), agent_id.SerializeJson(), default_port.SerializeJson(),
-            icmp_size.SerializeJson(), icmp_retry_count.SerializeJson(),
-            icmp_retry_interval.SerializeJson(), random_probability.SerializeJson(),
-            icmp_ttl.SerializeJson(), snmp_profile_id.SerializeJson(),
-            snmp_oid_type.SerializeJson(), snmp_compare_method.SerializeJson(),
-            snmp_value_number.SerializeJson(), snmp_value_ip.SerializeJson(),
-            function_unit.SerializeJson(),
+            agent_id.SerializeJson(), default_port.SerializeJson(), icmp_size.SerializeJson(),
+            icmp_retry_count.SerializeJson(), icmp_retry_interval.SerializeJson(),
+            random_probability.SerializeJson(), icmp_ttl.SerializeJson(),
+            snmp_profile_id.SerializeJson(), snmp_oid_type.SerializeJson(),
+            snmp_compare_method.SerializeJson(), snmp_value_number.SerializeJson(),
+            snmp_value_ip.SerializeJson(), function_unit.SerializeJson(),
             funtion_value.SerializeJson(), // Using "funtion" to match struct
             function_error.SerializeJson(), function_available.SerializeJson(),
             snmp_value_string.SerializeJson(), snmp_value_big_number.SerializeJson(),
             dns_name.SerializeJson(), tcp_receive_3.SerializeJson(), tcp_send_3.SerializeJson(),
             tcp_receive_2.SerializeJson(), tcp_send_2.SerializeJson(),
-            tcp_receive_1.SerializeJson(), tcp_send_1.SerializeJson(), name.SerializeJson());
+            tcp_receive_1.SerializeJson(), tcp_send_1.SerializeJson());
     }
 };
 
@@ -729,13 +725,13 @@ struct DeviceTypeData : DudeObj {
     TextField name;
 
     std::string SerializeJson(bool has_credentials) const override {
-        return fmt::format("\"ignoredServices\":{}, \"allowedServices\":{}, "
-                           "\"requiredServices\":{}, \"imageId\":{}, \"imageScale\":{}, "
-                           "\"objectId\":{}, \"nextId\":{}, \"url\":{}, \"name\":{}",
-                           ignored_services.SerializeJson(), allowed_services.SerializeJson(),
-                           required_services.SerializeJson(), image_id.SerializeJson(),
-                           image_scale.SerializeJson(), object_id.SerializeJson(),
-                           next_id.SerializeJson(), url.SerializeJson(), name.SerializeJson());
+        return fmt::format(
+            "\"objectId\":{}, \"name\":{}, \"ignoredServices\":{}, \"allowedServices\":{}, "
+            "\"requiredServices\":{}, \"imageId\":{}, \"imageScale\":{}, \"nextId\":{}, \"url\":{}",
+            object_id.SerializeJson(), name.SerializeJson(), ignored_services.SerializeJson(),
+            allowed_services.SerializeJson(), required_services.SerializeJson(),
+            image_id.SerializeJson(), image_scale.SerializeJson(), next_id.SerializeJson(),
+            url.SerializeJson());
     }
 };
 
@@ -770,24 +766,23 @@ struct DeviceData : DudeObj {
 
     std::string SerializeJson(bool has_credentials) const override {
         return fmt::format(
-            "\"parentIds\":{}, \"notifyIds\":{}, \"dnsNames\":{}, \"ip\":{}, \"secureMode\":{}, "
-            "\"routerOs\":{}, \"dudeServer\":{}, \"notifyUse\":{}, \"proveEnabled\":{}, "
-            "\"lookup\":{}, \"dnsLookupInterval\":{}, \"macLookup\":{}, \"typeId\":{}, "
-            "\"agentId\":{}, \"snmpProfileId\":{}, \"objectId\":{}, \"proveInterval\":{}, "
+            "\"objectId\":{}, \"name\":{}, \"parentIds\":{}, \"notifyIds\":{}, \"dnsNames\":{}, "
+            "\"ip\":{}, \"secureMode\":{}, \"routerOs\":{}, \"dudeServer\":{}, \"notifyUse\":{}, "
+            "\"proveEnabled\":{}, \"lookup\":{}, \"dnsLookupInterval\":{}, \"macLookup\":{}, "
+            "\"typeId\":{}, \"agentId\":{}, \"snmpProfileId\":{}, \"proveInterval\":{}, "
             "\"proveTimeout\":{}, \"proveDownCount\":{}, \"customField3\":{}, \"customField2\":{}, "
-            "\"customField1\":{}, \"password\":{}, \"username\":{}, \"mac\":{}, \"name\":{}",
-            parent_ids.SerializeJson(), notify_ids.SerializeJson(), dns_names.SerializeJson(),
-            ip.SerializeJson(), secure_mode.SerializeJson(), router_os.SerializeJson(),
-            dude_server.SerializeJson(), notify_use.SerializeJson(), prove_enabled.SerializeJson(),
-            lookup.SerializeJson(), dns_lookup_interval.SerializeJson(), mac_lookup.SerializeJson(),
+            "\"customField1\":{}, \"password\":{}, \"username\":{}, \"mac\":{}",
+            object_id.SerializeJson(), name.SerializeJson(), parent_ids.SerializeJson(),
+            notify_ids.SerializeJson(), dns_names.SerializeJson(), ip.SerializeJson(),
+            secure_mode.SerializeJson(), router_os.SerializeJson(), dude_server.SerializeJson(),
+            notify_use.SerializeJson(), prove_enabled.SerializeJson(), lookup.SerializeJson(),
+            dns_lookup_interval.SerializeJson(), mac_lookup.SerializeJson(),
             type_id.SerializeJson(), agent_id.SerializeJson(), snmp_profile_id.SerializeJson(),
-            object_id.SerializeJson(), prove_interval.SerializeJson(),
-            prove_timeout.SerializeJson(), prove_down_count.SerializeJson(),
-            custom_field_3.SerializeJson(), custom_field_2.SerializeJson(),
-            custom_field_1.SerializeJson(),
+            prove_interval.SerializeJson(), prove_timeout.SerializeJson(),
+            prove_down_count.SerializeJson(), custom_field_3.SerializeJson(),
+            custom_field_2.SerializeJson(), custom_field_1.SerializeJson(),
             has_credentials ? password.SerializeJson() : "\"*****\"",
-            has_credentials ? username.SerializeJson() : "\"*****\"", mac.SerializeJson(),
-            name.SerializeJson());
+            has_credentials ? username.SerializeJson() : "\"*****\"", mac.SerializeJson());
     }
 };
 
@@ -801,9 +796,9 @@ struct NetworkData : DudeObj {
 
     std::string SerializeJson(bool has_credentials) const override {
         return fmt::format(
-            "\"subnets\":{}, \"objectId\":{}, \"netMapId\":{}, \"netMapElement\":{}, \"name\":{}",
-            subnets.SerializeJson(), object_id.SerializeJson(), net_map_id.SerializeJson(),
-            net_map_element.SerializeJson(), name.SerializeJson());
+            "\"objectId\":{}, \"name\":{}, \"subnets\":{}, \"netMapId\":{}, \"netMapElement\":{}",
+            object_id.SerializeJson(), name.SerializeJson(), subnets.SerializeJson(),
+            net_map_id.SerializeJson(), net_map_element.SerializeJson());
     }
 };
 
@@ -835,22 +830,22 @@ struct ServiceData : DudeObj {
 
     std::string SerializeJson(bool has_credentials) const override {
         return fmt::format(
-            "\"notifyIds\":{}, \"enabled\":{}, \"history\":{}, \"notifyUse\":{}, \"acked\":{}, "
-            "\"probePort\":{}, \"probeInterval\":{}, \"probeTimeout\":{}, \"probeDownCount\":{}, "
-            "\"dataSourceId\":{}, \"status\":{}, \"timeSinceChanged\":{}, \"timeSinceLastUp\":{}, "
-            "\"timeSinceLastDown\":{}, \"timePreviousUp\":{}, \"timePreviousDown\":{}, "
-            "\"provesDown\":{}, \"objectId\":{}, \"deviceId\":{}, \"agentId\":{}, \"proveId\":{}, "
-            "\"value\":{}, \"name\":{}",
-            notify_ids.SerializeJson(), enabled.SerializeJson(), history.SerializeJson(),
-            notify_use.SerializeJson(), acked.SerializeJson(), probe_port.SerializeJson(),
-            probe_interval.SerializeJson(), probe_timeout.SerializeJson(),
-            probe_down_count.SerializeJson(), data_source_id.SerializeJson(),
-            status.SerializeJson(), time_since_changed.SerializeJson(),
-            time_since_last_up.SerializeJson(), time_since_last_down.SerializeJson(),
-            time_previous_up.SerializeJson(), time_previous_down.SerializeJson(),
-            proves_down.SerializeJson(), object_id.SerializeJson(), device_id.SerializeJson(),
-            agent_id.SerializeJson(), prove_id.SerializeJson(), value.SerializeJson(),
-            name.SerializeJson());
+            "\"objectId\":{}, \"name\":{}, \"notifyIds\":{}, \"enabled\":{}, \"history\":{}, "
+            "\"notifyUse\":{}, \"acked\":{}, \"probePort\":{}, \"probeInterval\":{}, "
+            "\"probeTimeout\":{}, \"probeDownCount\":{}, \"dataSourceId\":{}, \"status\":{}, "
+            "\"timeSinceChanged\":{}, \"timeSinceLastUp\":{}, \"timeSinceLastDown\":{}, "
+            "\"timePreviousUp\":{}, \"timePreviousDown\":{}, \"provesDown\":{}, \"deviceId\":{}, "
+            "\"agentId\":{}, \"proveId\":{}, \"value\":{}",
+            object_id.SerializeJson(), name.SerializeJson(), notify_ids.SerializeJson(),
+            enabled.SerializeJson(), history.SerializeJson(), notify_use.SerializeJson(),
+            acked.SerializeJson(), probe_port.SerializeJson(), probe_interval.SerializeJson(),
+            probe_timeout.SerializeJson(), probe_down_count.SerializeJson(),
+            data_source_id.SerializeJson(), status.SerializeJson(),
+            time_since_changed.SerializeJson(), time_since_last_up.SerializeJson(),
+            time_since_last_down.SerializeJson(), time_previous_up.SerializeJson(),
+            time_previous_down.SerializeJson(), proves_down.SerializeJson(),
+            device_id.SerializeJson(), agent_id.SerializeJson(), prove_id.SerializeJson(),
+            value.SerializeJson());
     }
 };
 
@@ -889,27 +884,27 @@ struct NotificationData : DudeObj {
 
     std::string SerializeJson(bool has_credentials) const override {
         return fmt::format(
-            "\"statusList\":{}, \"groupNotifyIds\":{}, \"mailCc\":{}, \"activity\":{}, "
-            "\"logUseColor\":{}, \"enabled\":{}, \"mailTlsMode\":{}, \"sysLogServer\":{}, "
-            "\"sysLogPort\":{}, \"soundFileId\":{}, \"logColor\":{}, \"speakRate\":{}, "
-            "\"speakVolume\":{}, \"delayInterval\":{}, \"repeatInterval\":{}, \"repeatCount\":{}, "
-            "\"objectId\":{}, \"rypeId\":{}, \"mailServer\":{}, \"mailPort\":{}, \"logPrefix\":{}, "
-            "\"mailSubject\":{}, \"mailTo\":{}, \"mailFrom\":{}, \"mailPassword\":{}, "
-            "\"mailUser\":{}, \"mailServerDns\":{}, \"mailServer6\":{}, \"textTemplate\":{}, "
-            "\"name\":{}",
-            status_list.SerializeJson(), group_notify_ids.SerializeJson(), mail_cc.SerializeJson(),
-            activity.SerializeJson(), log_use_color.SerializeJson(), enabled.SerializeJson(),
-            mail_tls_mode.SerializeJson(), sys_log_server.SerializeJson(),
-            sys_log_port.SerializeJson(), sound_file_id.SerializeJson(), log_color.SerializeJson(),
-            speak_rate.SerializeJson(), speak_volume.SerializeJson(),
-            delay_interval.SerializeJson(), repeat_interval.SerializeJson(),
-            repeat_count.SerializeJson(), object_id.SerializeJson(), rype_id.SerializeJson(),
+            "\"objectId\":{}, \"name\":{}, \"statusList\":{}, \"groupNotifyIds\":{}, "
+            "\"mailCc\":{}, \"activity\":{}, \"logUseColor\":{}, \"enabled\":{}, "
+            "\"mailTlsMode\":{}, \"sysLogServer\":{}, \"sysLogPort\":{}, \"soundFileId\":{}, "
+            "\"logColor\":{}, \"speakRate\":{}, \"speakVolume\":{}, \"delayInterval\":{}, "
+            "\"repeatInterval\":{}, \"repeatCount\":{}, \"rypeId\":{}, \"mailServer\":{}, "
+            "\"mailPort\":{}, \"logPrefix\":{}, \"mailSubject\":{}, \"mailTo\":{}, "
+            "\"mailFrom\":{}, \"mailPassword\":{}, \"mailUser\":{}, \"mailServerDns\":{}, "
+            "\"mailServer6\":{}, \"textTemplate\":{}",
+            object_id.SerializeJson(), name.SerializeJson(), status_list.SerializeJson(),
+            group_notify_ids.SerializeJson(), mail_cc.SerializeJson(), activity.SerializeJson(),
+            log_use_color.SerializeJson(), enabled.SerializeJson(), mail_tls_mode.SerializeJson(),
+            sys_log_server.SerializeJson(), sys_log_port.SerializeJson(),
+            sound_file_id.SerializeJson(), log_color.SerializeJson(), speak_rate.SerializeJson(),
+            speak_volume.SerializeJson(), delay_interval.SerializeJson(),
+            repeat_interval.SerializeJson(), repeat_count.SerializeJson(), rype_id.SerializeJson(),
             mail_server.SerializeJson(), mail_port.SerializeJson(), log_prefix.SerializeJson(),
             mail_subject.SerializeJson(), mail_to.SerializeJson(), mail_from.SerializeJson(),
             has_credentials ? mail_password.SerializeJson() : "\"*****\"",
             has_credentials ? mail_user.SerializeJson() : "\"*****\"",
             mail_server_dns.SerializeJson(), mail_server6.SerializeJson(),
-            text_template.SerializeJson(), name.SerializeJson());
+            text_template.SerializeJson());
     }
 };
 
@@ -930,14 +925,15 @@ struct LinkData : DudeObj {
 
     std::string SerializeJson(bool has_credentials) const override {
         return fmt::format(
-            "\"history\":{}, \"masteringType\":{}, \"masterDevice\":{}, \"masterInterface\":{}, "
-            "\"netMapId\":{}, \"netMapElementId\":{}, \"typeId\":{}, \"txDataSourceId\":{}, "
-            "\"objectId\":{}, \"rxDataSourceId\":{}, \"speed\":{}, \"name\":{}",
-            history.SerializeJson(), mastering_type.SerializeJson(), master_device.SerializeJson(),
+            "\"objectId\":{}, \"name\":{}, \"history\":{}, \"masteringType\":{}, "
+            "\"masterDevice\":{}, \"masterInterface\":{}, \"netMapId\":{}, \"netMapElementId\":{}, "
+            "\"typeId\":{}, \"txDataSourceId\":{}, \"rxDataSourceId\":{}, \"speed\":{}",
+            object_id.SerializeJson(), name.SerializeJson(), history.SerializeJson(),
+            mastering_type.SerializeJson(), master_device.SerializeJson(),
             master_interface.SerializeJson(), net_map_id.SerializeJson(),
             net_map_element_id.SerializeJson(), type_id.SerializeJson(),
-            tx_data_source_id.SerializeJson(), object_id.SerializeJson(),
-            rx_data_source_id.SerializeJson(), speed.SerializeJson(), name.SerializeJson());
+            tx_data_source_id.SerializeJson(), rx_data_source_id.SerializeJson(),
+            speed.SerializeJson());
     }
 };
 
@@ -952,12 +948,11 @@ struct LinkTypeData : DudeObj {
     TextField name;
 
     std::string SerializeJson(bool has_credentials) const override {
-        return fmt::format("\"objectId\":{}, \"style\":{}, \"thickness\":{}, \"snmpType\":{}, "
-                           "\"nextId\":{}, \"snmpSpeed\":{}, \"name\":{}",
-                           object_id.SerializeJson(), style.SerializeJson(),
+        return fmt::format("\"objectId\":{}, \"name\":{}, \"style\":{}, \"thickness\":{}, "
+                           "\"snmpType\":{}, \"nextId\":{}, \"snmpSpeed\":{}",
+                           object_id.SerializeJson(), name.SerializeJson(), style.SerializeJson(),
                            thickness.SerializeJson(), snmp_type.SerializeJson(),
-                           next_id.SerializeJson(), snmp_speed.SerializeJson(),
-                           name.SerializeJson());
+                           next_id.SerializeJson(), snmp_speed.SerializeJson());
     }
 };
 
@@ -977,16 +972,16 @@ struct DataSourceData : DudeObj {
     TextField name;
 
     std::string SerializeJson(bool has_credentials) const override {
-        return fmt::format("\"enabled\":{}, \"functionDeviceId\":{}, \"functionInterval\":{}, "
-                           "\"dataSourceType\":{}, \"objectId\":{}, \"keepTimeRaw\":{}, "
+        return fmt::format("\"objectId\":{}, \"name\":{}, \"enabled\":{}, \"functionDeviceId\":{}, "
+                           "\"functionInterval\":{}, \"dataSourceType\":{}, \"keepTimeRaw\":{}, "
                            "\"keepTime10min\":{}, \"keepTime2hour\":{}, \"keepTime1Day\":{}, "
-                           "\"functionCode\":{}, \"unit\":{}, \"name\":{}",
-                           enabled.SerializeJson(), function_device_id.SerializeJson(),
-                           function_interval.SerializeJson(), data_source_type.SerializeJson(),
-                           object_id.SerializeJson(), keep_time_raw.SerializeJson(),
+                           "\"functionCode\":{}, \"unit\":{}",
+                           object_id.SerializeJson(), name.SerializeJson(), enabled.SerializeJson(),
+                           function_device_id.SerializeJson(), function_interval.SerializeJson(),
+                           data_source_type.SerializeJson(), keep_time_raw.SerializeJson(),
                            keep_time_10min.SerializeJson(), keep_time_2hour.SerializeJson(),
                            keep_time_1Day.SerializeJson(), function_code.SerializeJson(),
-                           unit.SerializeJson(), name.SerializeJson());
+                           unit.SerializeJson());
     }
 };
 
@@ -998,9 +993,9 @@ struct ObjectListData : DudeObj {
     TextField name;
 
     std::string SerializeJson(bool has_credentials) const override {
-        return fmt::format("\"ordered\":{}, \"objectId\":{}, \"type\":{}, \"name\":{}",
-                           ordered.SerializeJson(), object_id.SerializeJson(), type.SerializeJson(),
-                           name.SerializeJson());
+        return fmt::format("\"objectId\":{}, \"name\":{}, \"ordered\":{}, \"type\":{}",
+                           object_id.SerializeJson(), name.SerializeJson(), ordered.SerializeJson(),
+                           type.SerializeJson());
     }
 };
 
@@ -1011,9 +1006,9 @@ struct DeviceGroupData : DudeObj {
     TextField name;
 
     std::string SerializeJson(bool has_credentials) const override {
-        return fmt::format("\"deviceIds\":{}, \"objectId\":{}, \"name\":{}",
-                           device_ids.SerializeJson(), object_id.SerializeJson(),
-                           name.SerializeJson());
+        return fmt::format("\"objectId\":{}, \"name\":{}, \"deviceIds\":{}",
+                           object_id.SerializeJson(), name.SerializeJson(),
+                           device_ids.SerializeJson());
     }
 };
 
@@ -1030,11 +1025,11 @@ struct FunctionData : DudeObj {
 
     std::string SerializeJson(bool has_credentials) const override {
         return fmt::format(
-            "\"argumentDescriptors\":{}, \"builtin\":{}, \"minArguments\":{}, \"maxArguments\":{}, "
-            "\"objectId\":{}, \"description\":{}, \"code\":{}, \"name\":{}",
-            argument_descriptors.SerializeJson(), builtin.SerializeJson(),
-            min_arguments.SerializeJson(), max_arguments.SerializeJson(), object_id.SerializeJson(),
-            description.SerializeJson(), code.SerializeJson(), name.SerializeJson());
+            "\"objectId\":{}, \"name\":{}, \"argumentDescriptors\":{}, \"builtin\":{}, "
+            "\"minArguments\":{}, \"maxArguments\":{}, \"description\":{}, \"code\":{}",
+            object_id.SerializeJson(), name.SerializeJson(), argument_descriptors.SerializeJson(),
+            builtin.SerializeJson(), min_arguments.SerializeJson(), max_arguments.SerializeJson(),
+            description.SerializeJson(), code.SerializeJson());
     }
 };
 
@@ -1055,13 +1050,14 @@ struct SnmpProfileData : DudeObj {
 
     std::string SerializeJson(bool has_credentials) const override {
         return fmt::format(
-            "\"version\":{}, \"port\":{}, \"security\":{}, \"authMethod\":{}, \"crypthMethod\":{}, "
-            "\"tryCount\":{}, \"tryTimeout\":{}, \"objectId\":{}, \"cryptPassword\":{}, "
-            "\"authPassword\":{}, \"community\":{}, \"name\":{}",
-            version.SerializeJson(), port.SerializeJson(), security.SerializeJson(),
-            auth_method.SerializeJson(), crypth_method.SerializeJson(), try_count.SerializeJson(),
-            try_timeout.SerializeJson(), object_id.SerializeJson(), crypt_password.SerializeJson(),
-            auth_password.SerializeJson(), community.SerializeJson(), name.SerializeJson());
+            "\"objectId\":{}, \"name\":{}, \"version\":{}, \"port\":{}, \"security\":{}, "
+            "\"authMethod\":{}, \"crypthMethod\":{}, \"tryCount\":{}, \"tryTimeout\":{}, "
+            "\"cryptPassword\":{}, \"authPassword\":{}, \"community\":{}",
+            object_id.SerializeJson(), name.SerializeJson(), version.SerializeJson(),
+            port.SerializeJson(), security.SerializeJson(), auth_method.SerializeJson(),
+            crypth_method.SerializeJson(), try_count.SerializeJson(), try_timeout.SerializeJson(),
+            crypt_password.SerializeJson(), auth_password.SerializeJson(),
+            community.SerializeJson());
     }
 };
 
@@ -1077,12 +1073,12 @@ struct PanelData : DudeObj {
     TextField name;
 
     std::string SerializeJson(bool has_credentials) const override {
-        return fmt::format("\"ordered\":{}, \"locked\":{}, \"titleBars\":{}, \"objectId\":{}, "
-                           "\"topElementId\":{}, \"admin\":{}, \"type\":{}, \"name\":{}",
-                           ordered.SerializeJson(), locked.SerializeJson(),
-                           title_bars.SerializeJson(), object_id.SerializeJson(),
+        return fmt::format("\"objectId\":{}, \"name\":{}, \"ordered\":{}, \"locked\":{}, "
+                           "\"titleBars\":{}, \"topElementId\":{}, \"admin\":{}, \"type\":{}",
+                           object_id.SerializeJson(), name.SerializeJson(), ordered.SerializeJson(),
+                           locked.SerializeJson(), title_bars.SerializeJson(),
                            top_element_id.SerializeJson(), admin.SerializeJson(),
-                           type.SerializeJson(), name.SerializeJson());
+                           type.SerializeJson());
     }
 };
 
@@ -1104,14 +1100,14 @@ struct SysLogRuleData : DudeObj {
 
     std::string SerializeJson(bool has_credentials) const override {
         return fmt::format(
-            "\"regexpNot\":{}, \"sourceSet\":{}, \"regexpSet\":{}, \"enabled\":{}, "
-            "\"sourceNot\":{}, \"sourceFirst\":{}, \"sourceSecond\":{}, \"action\":{}, "
-            "\"notifyId\":{}, \"objectId\":{}, \"nextId\":{}, \"regexp\":{}, \"name\":{}",
-            regexp_not.SerializeJson(), source_set.SerializeJson(), regexp_set.SerializeJson(),
-            enabled.SerializeJson(), source_not.SerializeJson(), source_first.SerializeJson(),
-            source_second.SerializeJson(), action.SerializeJson(), notify_id.SerializeJson(),
-            object_id.SerializeJson(), next_id.SerializeJson(), regexp.SerializeJson(),
-            name.SerializeJson());
+            "\"objectId\":{}, \"name\":{}, \"regexpNot\":{}, \"sourceSet\":{}, \"regexpSet\":{}, "
+            "\"enabled\":{}, \"sourceNot\":{}, \"sourceFirst\":{}, \"sourceSecond\":{}, "
+            "\"action\":{}, \"notifyId\":{}, \"nextId\":{}, \"regexp\":{}",
+            object_id.SerializeJson(), name.SerializeJson(), regexp_not.SerializeJson(),
+            source_set.SerializeJson(), regexp_set.SerializeJson(), enabled.SerializeJson(),
+            source_not.SerializeJson(), source_first.SerializeJson(), source_second.SerializeJson(),
+            action.SerializeJson(), notify_id.SerializeJson(), next_id.SerializeJson(),
+            regexp.SerializeJson());
     }
 };
 
@@ -1153,29 +1149,28 @@ struct NetworkMapElementData : DudeObj {
 
     std::string SerializeJson(bool has_credentials) const override {
         return fmt::format(
-            "\"itemUseAckedColor\":{}, \"itemUseLabel\":{}, \"itemUseShapes\":{}, "
-            "\"itemUseFont\":{}, \"itemUseImage\":{}, "
+            "\"objectId\":{}, \"name\":{}, \"itemUseAckedColor\":{}, \"itemUseLabel\":{}, "
+            "\"itemUseShapes\":{}, \"itemUseFont\":{}, \"itemUseImage\":{}, "
             "\"itemUseImageScale\":{}, \"itemUseWidth\":{}, \"itemUseUpColor\":{}, "
             "\"itemUse_down_partialColor\":{}, \"itemUseDown_complete_color\":{}, "
             "\"itemUseUnknownColor\":{}, \"itemUpColor\":{}, \"itemDownPartialColor\":{}, "
             "\"itemDownCompleteColor\":{}, \"itemUnknownColor\":{}, \"itemAckedColor\":{}, "
             "\"itemShape\":{}, \"linkFrom\":{}, \"linkTo\":{}, \"linkId\":{}, \"linkWidth\":{}, "
-            "\"objectId\":{}, \"mapId\":{}, \"type\":{}, \"itemType\":{}, \"itemId\":{}, "
-            "\"itemX\":{}, \"itemY\":{}, \"itemFont\":{}, \"objectId\":{}, \"name\":{}",
-            item_use_acked_color.SerializeJson(), item_use_label.SerializeJson(),
-            item_use_shapes.SerializeJson(), item_use_font.SerializeJson(),
-            item_use_image.SerializeJson(), item_use_image_scale.SerializeJson(),
-            item_use_width.SerializeJson(), item_use_up_color.SerializeJson(),
-            item_use_down_partial_color.SerializeJson(),
+            "\"mapId\":{}, \"type\":{}, \"itemType\":{}, \"itemId\":{}, \"itemX\":{}, "
+            "\"itemY\":{}, \"labelRefreshInterval\":{}, \"itemFont\":{}",
+            object_id.SerializeJson(), name.SerializeJson(), item_use_acked_color.SerializeJson(),
+            item_use_label.SerializeJson(), item_use_shapes.SerializeJson(),
+            item_use_font.SerializeJson(), item_use_image.SerializeJson(),
+            item_use_image_scale.SerializeJson(), item_use_width.SerializeJson(),
+            item_use_up_color.SerializeJson(), item_use_down_partial_color.SerializeJson(),
             item_use_down_complete_color.SerializeJson(), item_use_unknown_color.SerializeJson(),
             item_up_color.SerializeJson(), item_down_partial_color.SerializeJson(),
             item_down_complete_color.SerializeJson(), item_unknown_color.SerializeJson(),
             item_acked_color.SerializeJson(), item_shape.SerializeJson(), link_from.SerializeJson(),
             link_to.SerializeJson(), link_id.SerializeJson(), link_width.SerializeJson(),
-            object_id.SerializeJson(), map_id.SerializeJson(), type.SerializeJson(),
-            item_type.SerializeJson(), item_id.SerializeJson(), item_x.SerializeJson(),
-            item_y.SerializeJson(), label_refresh_interval.SerializeJson(),
-            item_font.SerializeJson(), name.SerializeJson());
+            map_id.SerializeJson(), type.SerializeJson(), item_type.SerializeJson(),
+            item_id.SerializeJson(), item_x.SerializeJson(), item_y.SerializeJson(),
+            label_refresh_interval.SerializeJson(), item_font.SerializeJson());
     }
 };
 
@@ -1193,14 +1188,14 @@ struct ChartLineData : DudeObj {
     TextField name;
 
     std::string SerializeJson(bool has_credentials) const override {
-        return fmt::format("\"chartId\":{}, \"sourceId\":{}, \"lineStyle\":{}, \"lineColor\":{}, "
-                           "\"lineOpacity\":{}, \"fillColor\":{}, \"fillOpacity\":{}, "
-                           "\"objectId\":{}, \"nextId\":{}, \"name\":{}",
+        return fmt::format("\"objectId\":{}, \"name\":{}, \"chartId\":{}, \"sourceId\":{}, "
+                           "\"lineStyle\":{}, \"lineColor\":{}, \"lineOpacity\":{}, "
+                           "\"fillColor\":{}, \"fillOpacity\":{}, \"nextId\":{}",
+                           object_id.SerializeJson(), name.SerializeJson(),
                            chart_id.SerializeJson(), source_id.SerializeJson(),
                            line_style.SerializeJson(), line_color.SerializeJson(),
                            line_opacity.SerializeJson(), fill_color.SerializeJson(),
-                           fill_opacity.SerializeJson(), object_id.SerializeJson(),
-                           next_id.SerializeJson(), name.SerializeJson());
+                           fill_opacity.SerializeJson(), next_id.SerializeJson());
     }
 };
 
@@ -1219,12 +1214,12 @@ struct PanelElementData : DudeObj {
 
     std::string SerializeJson(bool has_credentials) const override {
         return fmt::format(
-            "\"split\":{}, \"panelId\":{}, \"splitType\":{}, \"splitShare\":{}, \"firstId\":{}, "
-            "\"secondId\":{}, \"objId\":{}, \"objectId\":{}, \"objMeta\":{}, \"name\":{}",
-            split.SerializeJson(), panel_id.SerializeJson(), split_type.SerializeJson(),
-            split_share.SerializeJson(), first_id.SerializeJson(), second_id.SerializeJson(),
-            obj_id.SerializeJson(), object_id.SerializeJson(), obj_meta.SerializeJson(),
-            name.SerializeJson());
+            "\"objectId\":{}, \"name\":{}, \"split\":{}, \"panelId\":{}, \"splitType\":{}, "
+            "\"splitShare\":{}, \"firstId\":{}, \"secondId\":{}, \"objId\":{}, \"objMeta\":{}",
+            object_id.SerializeJson(), name.SerializeJson(), split.SerializeJson(),
+            panel_id.SerializeJson(), split_type.SerializeJson(), split_share.SerializeJson(),
+            first_id.SerializeJson(), second_id.SerializeJson(), obj_id.SerializeJson(),
+            obj_meta.SerializeJson());
     }
 };
 } // namespace Database
