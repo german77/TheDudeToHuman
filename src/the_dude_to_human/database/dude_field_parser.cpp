@@ -411,14 +411,14 @@ ParserResult DudeFieldParser::ReadField(StringArrayField& field, FieldId id) {
 
     field.entries.resize(field.entry_count);
     for (std::size_t i = 0; i < field.entry_count; ++i) {
-        result = ReadData(&field.entries[i].data_size, sizeof(StringArrayField::entry_count));
+        result = ReadData(&field.entries[i].text_size, sizeof(StringArrayField::entry_count));
         if (result != ParserResult::Success) {
             RestoreOffset();
             return result;
         }
 
-        std::vector<char> raw_text(field.entries[i].data_size);
-        result = ReadData(raw_text.data(), field.entries[i].data_size);
+        std::vector<char> raw_text(field.entries[i].text_size);
+        result = ReadData(raw_text.data(), field.entries[i].text_size);
         if (result != ParserResult::Success) {
             RestoreOffset();
             return result;

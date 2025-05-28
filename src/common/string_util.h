@@ -37,7 +37,10 @@ bool SplitPath(const std::string& full_path, std::string* _pPath, std::string* _
 
 [[nodiscard]] std::string ReplaceAll(std::string result, const std::string& src,
                                      const std::string& dest);
-[[nodiscard]] std::string Sanitize(std::string str);
+// Binary replace ignoring null terminators
+[[nodiscard]] std::string ReplaceChar(std::string src, char c, const std::string& dest,
+                                      std::size_t length);
+[[nodiscard]] std::string Sanitize(std::string str, std::size_t length);
 
 [[nodiscard]] std::string UTF16ToUTF8(std::u16string_view input);
 [[nodiscard]] std::u16string UTF8ToUTF16(std::string_view input);

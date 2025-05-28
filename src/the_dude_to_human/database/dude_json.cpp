@@ -24,9 +24,10 @@ static std::string SerializeData(std::vector<T> obj, bool has_credentials) {
 }
 
 template <typename T>
-static std::string SerializeTable(std::string table_name, std::vector<T> obj,
-                                  bool has_credentials) {
-    return fmt::format("{}\": [{}],\n", table_name, SerializeData(obj, has_credentials));
+static std::string SerializeTable(std::string table_name, std::vector<T> obj, bool has_credentials,
+                                  bool has_coma = true) {
+    return fmt::format("\"{}\": [{}]{}\n", table_name, SerializeData(obj, has_credentials),
+                       has_coma ? "," : "");
 }
 
 int SerializeDatabaseJson(DudeDatabase* db, const std::string& db_file, bool has_credentials) {
@@ -40,7 +41,7 @@ int SerializeDatabaseJson(DudeDatabase* db, const std::string& db_file, bool has
     jsonFile << SerializeTable("file", db->GetFileData(), has_credentials);
     jsonFile << SerializeTable("notes", db->GetNotesData(), has_credentials);
     jsonFile << SerializeTable("Map", db->GetMapData(), has_credentials);
-    // jsonFile << SerializeTable("Probe", db->GetProbeData(), has_credentials);
+    jsonFile << SerializeTable("Probe", db->GetProbeData(), has_credentials);
     jsonFile << SerializeTable("deviceType", db->GetDeviceTypeData(), has_credentials);
     jsonFile << SerializeTable("Device", db->GetDeviceData(), has_credentials);
     jsonFile << SerializeTable("Network", db->GetNetworkData(), has_credentials);
@@ -58,7 +59,7 @@ int SerializeDatabaseJson(DudeDatabase* db, const std::string& db_file, bool has
     jsonFile << SerializeTable("NetworkMapElement", db->GetNetworkMapElementData(),
                                has_credentials);
     jsonFile << SerializeTable("ChartLine", db->GetChartLineData(), has_credentials);
-    jsonFile << SerializeTable("PanelElement", db->GetPanelElementData(), has_credentials);
+    jsonFile << SerializeTable("PanelElement", db->GetPanelElementData(), has_credentials, false);
     jsonFile << "}";
 
     jsonFile.close();
