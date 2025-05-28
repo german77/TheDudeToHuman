@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Copyright 2024 Narr the Reg
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
 
 #include "the_dude_to_human/gzip/gzip.h"
 #include "zlib.h"
@@ -54,7 +54,8 @@ bool Gzip::IsGzipFile() {
     file_data.read(signature.data(), signature.size());
     file_data.close();
 
-    return static_cast<u8>(signature[0]) == gzip_signature[0] && static_cast<u8>(signature[1]) == gzip_signature[1];
+    return static_cast<u8>(signature[0]) == gzip_signature[0] &&
+           static_cast<u8>(signature[1]) == gzip_signature[1];
 }
 
 bool Gzip::Decompress(const std::string& out_file) {
@@ -66,8 +67,8 @@ bool Gzip::Decompress(const std::string& out_file) {
         return false;
     }
 #else
-    out = fopen(out_file.c_str(),"wb");
-    if(!out){
+    out = fopen(out_file.c_str(), "wb");
+    if (!out) {
         return false;
     }
 #endif
