@@ -7,6 +7,7 @@
 #include <codecvt>
 #include <locale>
 #include <sstream>
+#include <vector>
 
 #include "common/string_util.h"
 
@@ -141,14 +142,71 @@ std::string ReplaceAll(std::string result, const std::string& src, const std::st
     return result;
 }
 
-std::string Sanitize(std::string str) {
-    str = ReplaceAll(str, std::string("\\"), std::string("\\\\"));
-    str = ReplaceAll(str, std::string("\""), std::string("\\\""));
-    str = ReplaceAll(str, std::string("\b"), std::string("\\b"));
-    str = ReplaceAll(str, std::string("\f"), std::string("\\f"));
-    str = ReplaceAll(str, std::string("\n"), std::string("\\n"));
-    str = ReplaceAll(str, std::string("\r"), std::string("\\r"));
-    str = ReplaceAll(str, std::string("\t"), std::string("\\t"));
+std::string ReplaceChar(std::string src, char c, const std::string& dest, std::size_t length) {
+    std::size_t instances = 0;
+    for (std::size_t i = 0; i < length; i++) {
+        if (src.at(i) == c)
+            instances++;
+    }
+
+    if (instances == 0) {
+        return src;
+    }
+
+    std::vector<char> text;
+    text.reserve(length + (instances * dest.size()));
+    for (std::size_t i = 0; i < length; i++) {
+        if (src.at(i) == c) {
+            for (std::size_t e = 0; e < dest.size(); e++) {
+                text.push_back(dest.at(e));
+            }
+            continue;
+        }
+        text.push_back(src.at(i));
+    }
+    return std::string(text.begin(), text.end());
+}
+
+std::string Sanitize(std::string str, std::size_t length) {
+    if (str.size() != length) {
+        return "Invalid size";
+    }
+
+    str = ReplaceChar(str, '\\', "\\\\", length);
+    str = ReplaceChar(str, '\0', "\\\\0", length);
+    str = ReplaceAll(str, "\x1", "\\\\x01");
+    str = ReplaceAll(str, "\x2", "\\\\x02");
+    str = ReplaceAll(str, "\x3", "\\\\x03");
+    str = ReplaceAll(str, "\x4", "\\\\x04");
+    str = ReplaceAll(str, "\x5", "\\\\x05");
+    str = ReplaceAll(str, "\x6", "\\\\x06");
+    str = ReplaceAll(str, "\x7", "\\\\x07");
+    str = ReplaceAll(str, "\b", "\\b");
+    str = ReplaceAll(str, "\t", "\\t");
+    str = ReplaceAll(str, "\n", "\\n");
+    str = ReplaceAll(str, "\v", "\\\\v");
+    str = ReplaceAll(str, "\f", "\\f");
+    str = ReplaceAll(str, "\r", "\\r");
+    str = ReplaceAll(str, "\xe", "\\\\x0e");
+    str = ReplaceAll(str, "\xf", "\\\\x0f");
+    str = ReplaceAll(str, "\x10", "\\\\x10");
+    str = ReplaceAll(str, "\x11", "\\\\x11");
+    str = ReplaceAll(str, "\x12", "\\\\x12");
+    str = ReplaceAll(str, "\x13", "\\\\x13");
+    str = ReplaceAll(str, "\x14", "\\\\x14");
+    str = ReplaceAll(str, "\x15", "\\\\x15");
+    str = ReplaceAll(str, "\x16", "\\\\x16");
+    str = ReplaceAll(str, "\x17", "\\\\x17");
+    str = ReplaceAll(str, "\x18", "\\\\x18");
+    str = ReplaceAll(str, "\x19", "\\\\x19");
+    str = ReplaceAll(str, "\x1a", "\\\\x1a");
+    str = ReplaceAll(str, "\x1b", "\\\\x1b");
+    str = ReplaceAll(str, "\x1c", "\\\\x1c");
+    str = ReplaceAll(str, "\x1d", "\\\\x1d");
+    str = ReplaceAll(str, "\x1e", "\\\\x1e");
+    str = ReplaceAll(str, "\x1f", "\\\\x1f");
+    str = ReplaceAll(str, "\xa8", "\\\\xa8");
+    str = ReplaceAll(str, "\"", "\\\"");
     return str;
 }
 

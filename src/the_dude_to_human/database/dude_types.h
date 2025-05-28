@@ -142,7 +142,7 @@ struct TextField {
     std::string text{};
 
     std::string SerializeJson() const {
-        return fmt::format("\"{}\"", Common::Sanitize(text));
+        return fmt::format("\"{}\"", Common::Sanitize(text, text_size));
     }
 };
 
@@ -208,7 +208,7 @@ struct MacAddressField {
 };
 
 struct StringArrayEntry {
-    u16 data_size{};
+    u16 text_size{};
     std::string text{};
 };
 
@@ -222,7 +222,7 @@ struct StringArrayField {
         std::string array = "";
 
         for (const StringArrayEntry& entry : entries) {
-            array += fmt::format("\"{}\",", Common::Sanitize(entry.text));
+            array += fmt::format("\"{}\",", Common::Sanitize(entry.text, entry.text_size));
         }
         if (!entries.empty()) {
             array.pop_back();
@@ -784,8 +784,9 @@ struct DeviceData : DudeObj {
             object_id.SerializeJson(), prove_interval.SerializeJson(),
             prove_timeout.SerializeJson(), prove_down_count.SerializeJson(),
             custom_field_3.SerializeJson(), custom_field_2.SerializeJson(),
-            custom_field_1.SerializeJson(), has_credentials ? password.SerializeJson() : "*****",
-            has_credentials ? username.SerializeJson() : "*****", mac.SerializeJson(),
+            custom_field_1.SerializeJson(),
+            has_credentials ? password.SerializeJson() : "\"*****\"",
+            has_credentials ? username.SerializeJson() : "\"*****\"", mac.SerializeJson(),
             name.SerializeJson());
     }
 };
@@ -905,9 +906,10 @@ struct NotificationData : DudeObj {
             repeat_count.SerializeJson(), object_id.SerializeJson(), rype_id.SerializeJson(),
             mail_server.SerializeJson(), mail_port.SerializeJson(), log_prefix.SerializeJson(),
             mail_subject.SerializeJson(), mail_to.SerializeJson(), mail_from.SerializeJson(),
-            has_credentials ? mail_password.SerializeJson() : "*****",
-            has_credentials ? mail_user.SerializeJson() : "*****", mail_server_dns.SerializeJson(),
-            mail_server6.SerializeJson(), text_template.SerializeJson(), name.SerializeJson());
+            has_credentials ? mail_password.SerializeJson() : "\"*****\"",
+            has_credentials ? mail_user.SerializeJson() : "\"*****\"",
+            mail_server_dns.SerializeJson(), mail_server6.SerializeJson(),
+            text_template.SerializeJson(), name.SerializeJson());
     }
 };
 
