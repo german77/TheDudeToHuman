@@ -3,9 +3,9 @@
 
 #pragma once
 
+#include <span>
 #include <string>
 #include <vector>
-#include <span>
 
 #include "common/bit_field.h"
 #include "common/common_types.h"
