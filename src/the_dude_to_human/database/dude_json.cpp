@@ -40,26 +40,26 @@ int SerializeDatabaseJson(DudeDatabase* db, const std::string& db_file, bool has
     jsonFile << SerializeTable("tool", db->GetToolData(), has_credentials);
     jsonFile << SerializeTable("file", db->GetFileData(), has_credentials);
     jsonFile << SerializeTable("notes", db->GetNotesData(), has_credentials);
-    jsonFile << SerializeTable("Map", db->GetMapData(), has_credentials);
-    jsonFile << SerializeTable("Probe", db->GetProbeData(), has_credentials);
+    jsonFile << SerializeTable("map", db->GetMapData(), has_credentials);
+    jsonFile << SerializeTable("probe", db->GetProbeData(), has_credentials);
     jsonFile << SerializeTable("deviceType", db->GetDeviceTypeData(), has_credentials);
-    jsonFile << SerializeTable("Device", db->GetDeviceData(), has_credentials);
-    jsonFile << SerializeTable("Network", db->GetNetworkData(), has_credentials);
-    jsonFile << SerializeTable("Service", db->GetServiceData(), has_credentials);
-    jsonFile << SerializeTable("Notification", db->GetNotificationData(), has_credentials);
-    jsonFile << SerializeTable("Link", db->GetLinkData(), has_credentials);
-    jsonFile << SerializeTable("LinkType", db->GetLinkTypeData(), has_credentials);
-    jsonFile << SerializeTable("DataSource", db->GetDataSourceData(), has_credentials);
-    jsonFile << SerializeTable("ObjectList", db->GetObjectListData(), has_credentials);
-    jsonFile << SerializeTable("DeviceGroup", db->GetDeviceGroupData(), has_credentials);
-    jsonFile << SerializeTable("Function", db->GetFunctionData(), has_credentials);
-    jsonFile << SerializeTable("SnmpProfile", db->GetSnmpProfileData(), has_credentials);
-    jsonFile << SerializeTable("Panel", db->GetPanelData(), has_credentials);
-    jsonFile << SerializeTable("SysLogRule", db->GetSysLogRuleData(), has_credentials);
-    jsonFile << SerializeTable("NetworkMapElement", db->GetNetworkMapElementData(),
+    jsonFile << SerializeTable("device", db->GetDeviceData(), has_credentials);
+    jsonFile << SerializeTable("network", db->GetNetworkData(), has_credentials);
+    jsonFile << SerializeTable("service", db->GetServiceData(), has_credentials);
+    jsonFile << SerializeTable("notification", db->GetNotificationData(), has_credentials);
+    jsonFile << SerializeTable("link", db->GetLinkData(), has_credentials);
+    jsonFile << SerializeTable("linkType", db->GetLinkTypeData(), has_credentials);
+    jsonFile << SerializeTable("dataSource", db->GetDataSourceData(), has_credentials);
+    jsonFile << SerializeTable("objectList", db->GetObjectListData(), has_credentials);
+    jsonFile << SerializeTable("deviceGroup", db->GetDeviceGroupData(), has_credentials);
+    jsonFile << SerializeTable("function", db->GetFunctionData(), has_credentials);
+    jsonFile << SerializeTable("snmpProfile", db->GetSnmpProfileData(), has_credentials);
+    jsonFile << SerializeTable("panel", db->GetPanelData(), has_credentials);
+    jsonFile << SerializeTable("sysLogRule", db->GetSysLogRuleData(), has_credentials);
+    jsonFile << SerializeTable("networkMapElement", db->GetNetworkMapElementData(),
                                has_credentials);
-    jsonFile << SerializeTable("ChartLine", db->GetChartLineData(), has_credentials);
-    jsonFile << SerializeTable("PanelElement", db->GetPanelElementData(), has_credentials, false);
+    jsonFile << SerializeTable("chartLine", db->GetChartLineData(), has_credentials);
+    jsonFile << SerializeTable("panelElement", db->GetPanelElementData(), has_credentials, false);
     jsonFile << "}";
 
     jsonFile.close();

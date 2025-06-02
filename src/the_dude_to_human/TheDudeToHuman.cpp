@@ -10,6 +10,8 @@
 #include <windows.h>
 
 #include <shellapi.h>
+#else
+#include <termios.h>
 #endif
 
 #undef _UNICODE
@@ -20,7 +22,7 @@
 #include "the_dude_to_human/mikrotik/mikrotik_device.h"
 
 static void PrintVersion() {
-    std::cout << "the dude to human version 1.0.0";
+    std::cout << "the dude to human version 1.0.0\n";
 }
 
 static void PrintHelp(const char* argv0) {
@@ -29,7 +31,7 @@ static void PrintHelp(const char* argv0) {
         << "Usage: " << argv0
         << " [options] <filename>\n"
            "-f, --file                                 Load the specified database file\n"
-           "-o, --out                                  Store database location\n"
+           "-o, --out                                  Save json database file\n"
            "-c, --credentials                          Save credentials in plain text\n"
            "-m, --mikrotik=user:password@address:port  Connect to the specified mikrotik device\n"
            //"-d, --database=user:password@address:port  Connect to the specified database\n"
@@ -37,6 +39,53 @@ static void PrintHelp(const char* argv0) {
            "-v, --version                              Print tool version\n";
     // clang-format on
 }
+
+static void PrintAddressFormats() {
+    // clang-format off
+    std::cout
+        << "Address format examples:\n"
+           "    user@192.168.1.1                       IP address\n"
+           "    user@domain.name                       Domain name\n"
+           "    user@192.168.1.1:1234                  User defined port\n"
+           "    user:password@192.168.1.1              User defined password\n"
+           "    user:@192.168.1.1                      Hidden user defined password\n"
+        << std::endl;
+    // clang-format on
+}
+
+#ifdef _WIN32
+static std::string takePassword() {
+    HANDLE std_input = GetStdHandle(STD_INPUT_HANDLE);
+
+    DWORD mode = 0;
+    GetConsoleMode(std_input, &mode);
+    SetConsoleMode(std_input, mode & (~ENABLE_ECHO_INPUT));
+
+    std::string password;
+    std::getline(std::cin, password);
+    SetConsoleMode(std_input, mode);
+    std::cout << std::endl;
+
+    return password;
+}
+#else
+static std::string takePassword() {
+    termios mode, new_mode;
+
+    // Get current terminal attributes
+    tcgetattr(fileno(stdin), &mode);
+    new_mode = mode;
+    new_mode.c_lflag &= ~ECHO;
+    tcsetattr(fileno(stdin), TCSANOW, &new_mode);
+
+    std::string password;
+    std::cin >> password;
+    tcsetattr(fileno(stdin), TCSANOW, &mode);
+    std::cout << std::endl;
+
+    return password;
+}
+#endif
 
 int main(int argc, char** argv) {
     int option_index = 0;
@@ -112,32 +161,31 @@ int main(int argc, char** argv) {
                 has_mikrotik = true;
                 const std::string str_arg(optarg);
                 // regex to check if the format is user:password@ip:port
-                // with optional :password
-                const std::regex re("^([^:]+)(?::(.+))?@([^:]+)(?::([0-9]+))?$");
-                if (!std::regex_match(str_arg, re)) {
-                    std::cout << "Wrong format for option --mikrotik\n";
-                    PrintHelp(argv[0]);
-                    return 0;
-                }
+                // with optional :password :port
+                const std::regex re("^([^:]+)(:(.+)?)?@([^:]+)(?::([0-9]+))?$");
 
                 std::smatch match;
-                std::regex_search(str_arg, match, re);
-                if (match.size() != 5) {
+                if (!std::regex_match(str_arg, match, re) || match.size() != 6) {
                     std::cout << "Wrong format for option --mikrotik\n";
+                    PrintAddressFormats();
                     PrintHelp(argv[0]);
                     return 0;
                 }
 
                 mikrotik_user = match[1];
-                mikrotik_password = match[2];
-                mikrotik_address = match[3];
-                if (!match[4].str().empty()) {
+                mikrotik_password = match[3];
+                mikrotik_address = match[4];
+                if (!match[5].str().empty()) {
                     mikrotik_port =
-                        static_cast<u16>(std::strtoul(match[4].str().c_str(), nullptr, 0));
+                        static_cast<u16>(std::strtoul(match[5].str().c_str(), nullptr, 0));
                 }
                 if (mikrotik_address.empty()) {
                     std::cout << "Address to mikrotik device must not be empty.\n";
                     return 0;
+                }
+                if (match[2].length() != 0 && mikrotik_password.empty()) {
+                    std::cout << "Enter Mikrotik password: ";
+                    mikrotik_password = takePassword();
                 }
                 break;
             }
@@ -145,32 +193,31 @@ int main(int argc, char** argv) {
                 has_database = true;
                 const std::string str_arg(optarg);
                 // regex to check if the format is user:password@ip:port
-                // with optional :password
-                const std::regex re("^([^:]+)(?::(.+))?@([^:]+)(?::([0-9]+))?$");
-                if (!std::regex_match(str_arg, re)) {
-                    std::cout << "Wrong format for option --database\n";
-                    PrintHelp(argv[0]);
-                    return 0;
-                }
+                // with optional :password :port
+                const std::regex re("^([^:]+)(:(.+)?)?@([^:]+)(?::([0-9]+))?$");
 
                 std::smatch match;
-                std::regex_search(str_arg, match, re);
-                if (match.size() != 5) {
+                if (!std::regex_match(str_arg, match, re) || match.size() != 6) {
                     std::cout << "Wrong format for option --database\n";
+                    PrintAddressFormats();
                     PrintHelp(argv[0]);
                     return 0;
                 }
 
                 database_user = match[1];
-                database_password = match[2];
-                database_address = match[3];
-                if (!match[4].str().empty()) {
+                database_password = match[3];
+                database_address = match[4];
+                if (!match[5].str().empty()) {
                     database_port =
-                        static_cast<u16>(std::strtoul(match[4].str().c_str(), nullptr, 0));
+                        static_cast<u16>(std::strtoul(match[5].str().c_str(), nullptr, 0));
                 }
                 if (database_address.empty()) {
                     std::cout << "Address to database device must not be empty.\n";
                     return 0;
+                }
+                if (match[2].length() != 0 && mikrotik_password.empty()) {
+                    std::cout << "Enter database password: ";
+                    mikrotik_password = takePassword();
                 }
                 break;
             }
