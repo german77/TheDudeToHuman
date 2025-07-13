@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cctype>
 #include <codecvt>
+#include <iomanip>
 #include <locale>
 #include <sstream>
 #include <vector>
@@ -41,6 +42,16 @@ std::string StringFromBuffer(std::span<const u8> data) {
 
 std::string StringFromBuffer(std::span<const char> data) {
     return std::string(data.begin(), std::find(data.begin(), data.end(), '\0'));
+}
+
+std::string HexStringFromBuffer(std::span<const u8> data) {
+    std::stringstream ss;
+    ss << std::hex << std::uppercase;
+
+    for (uint8_t byte : data) {
+        ss << std::setw(2) << std::setfill('0') << static_cast<int>(byte);
+    }
+    return ss.str();
 }
 
 // Turns "  hej " into "hej". Also handles tabs.
