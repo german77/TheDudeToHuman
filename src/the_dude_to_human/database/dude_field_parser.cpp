@@ -11,27 +11,28 @@ DudeFieldParser::DudeFieldParser(std::span<const u8> data) : raw_data{data} {
 }
 
 void DudeFieldParser::Reset() {
-    is_data_valid = true;
+    status = ParserResult::Success;
+    error_count = 0;
     offset = 0;
 
     if (ReadData(&magic, sizeof(u16)) != ParserResult::Success) {
-        is_data_valid = false;
+        status = ParserResult::InvalidMagic;
         return;
     }
 
     if (ReadField(data_format, FieldId::DataFormat) != ParserResult::Success) {
-        is_data_valid = false;
+        status = ParserResult::InvalidHeader;
         return;
     }
 
     if (data_format.entries == 0) {
-        is_data_valid = false;
+        status = ParserResult::InvalidHeader;
         return;
     }
 }
 
 u16 DudeFieldParser::GetMagic() const {
-    if (!is_data_valid) {
+    if (!IsDataValid()) {
         return {};
     }
 
@@ -39,7 +40,7 @@ u16 DudeFieldParser::GetMagic() const {
 }
 
 IntArrayField DudeFieldParser::GetFormat() const {
-    if (!is_data_valid) {
+    if (!IsDataValid()) {
         return {};
     }
 
@@ -47,7 +48,7 @@ IntArrayField DudeFieldParser::GetFormat() const {
 }
 
 DataFormat DudeFieldParser::GetMainFormat() const {
-    if (!is_data_valid) {
+    if (!IsDataValid()) {
         return {};
     }
 
@@ -69,7 +70,7 @@ ParserResult DudeFieldParser::SkipField() {
     ParserResult result = GetFieldInfo(info);
 
     if (result != ParserResult::Success) {
-        return result;
+        return ReturnWithError(result);
     }
 
     BoolField bool_field;
@@ -103,7 +104,7 @@ ParserResult DudeFieldParser::SkipField() {
     case FieldType::StringArray:
         return ReadField(string_array_field, FieldId::None);
     default:
-        return ParserResult::InvalidFieldType;
+        return ReturnWithError(ParserResult::InvalidFieldType);
     }
 }
 
@@ -112,13 +113,13 @@ ParserResult DudeFieldParser::ReadData(void* data, std::size_t size) {
         return ParserResult::Success;
     }
     if (data == nullptr) {
-        return ParserResult::InvalidFieldArguments;
+        return ReturnWithError(ParserResult::InvalidFieldArguments);
     }
-    if (!is_data_valid) {
+    if (!IsDataValid()) {
         return ParserResult::Corrupted;
     }
     if (raw_data.size() < size + offset) {
-        return ParserResult::EndOfFile;
+        return ReturnWithError(ParserResult::EndOfFile);
     }
 
     std::memcpy(data, raw_data.data() + offset, size);
@@ -142,7 +143,7 @@ ParserResult DudeFieldParser::ValidataFieldInfo(const FieldInfo& field_info, Fie
     case FieldType::StringArray:
         break;
     default:
-        return ParserResult::InvalidFieldType;
+        return ReturnWithError(ParserResult::InvalidFieldType);
     }
 
     // Allow all id if none is specified
@@ -453,6 +454,53 @@ void DudeFieldParser::SaveOffset() {
 
 void DudeFieldParser::RestoreOffset() {
     offset = previous_offset;
+}
+
+ParserResult DudeFieldParser::ReturnWithError(ParserResult result) {
+    if (result == ParserResult::Success) {
+        return ParserResult::Success;
+    }
+
+    error_count++;
+    status = result;
+    return result;
+}
+
+bool DudeFieldParser::IsDataValid() const {
+    return status == ParserResult::Success;
+}
+
+ParserResult DudeFieldParser::GetStatus() const {
+    return status;
+}
+
+std::string DudeFieldParser::GetErrorMessage() const {
+    return GetErrorMessage(status);
+}
+
+std::string DudeFieldParser::GetErrorMessage(ParserResult result) {
+    switch (result) {
+    case ParserResult::Success:
+        return "OK";
+    case ParserResult::Corrupted:
+        return "The field can't be fully parsed";
+    case ParserResult::FieldTypeMismatch:
+        return "Requested field type mismatch";
+    case ParserResult::FieldIdMismatch:
+        return "Requested field id mismatch";
+    case ParserResult::InvalidFieldType:
+        return "Unsupported field type";
+    case ParserResult::InvalidFieldArguments:
+        return "Arguments given are invalid";
+    case ParserResult::InvalidMagic:
+        return "Magic bytes can't be read";
+    case ParserResult::InvalidHeader:
+        return "Header is invalid";
+    case ParserResult::EndOfFile:
+        return "Reached end of file while parsing data";
+    default:
+        return "Unexpected error";
+    }
 }
 
 } // namespace Database

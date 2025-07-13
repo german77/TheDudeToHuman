@@ -28,6 +28,7 @@ public:
     int GetOutages(Sqlite::SqlData& data) const;
 
     int SaveDatabase(const std::string& db_file, bool has_credentials);
+    int CheckIntegrity();
 
     // Usefull to find new unsuported types
     std::vector<DataFormat> ListUsedDataFormats() const;

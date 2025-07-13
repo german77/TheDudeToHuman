@@ -8,6 +8,7 @@
 #include "the_dude_to_human/database/dude_database.h"
 #include "the_dude_to_human/database/dude_field_parser.h"
 #include "the_dude_to_human/database/dude_json.h"
+#include "the_dude_to_human/database/dude_validator.h"
 
 namespace Database {
 DudeDatabase::DudeDatabase(const std::string& db_file) : db{db_file} {
@@ -51,6 +52,10 @@ int DudeDatabase::SaveDatabase(const std::string& db_file, bool has_credentials)
     return SerializeDatabaseJson(this, db_file, has_credentials);
 }
 
+int DudeDatabase::CheckIntegrity() {
+    return ValidateDatabase(this);
+}
+
 std::vector<DataFormat> DudeDatabase::ListUsedDataFormats() const {
     std::vector<DataFormat> data_formats{};
     Sqlite::SqlData sql_data{};
@@ -66,7 +71,7 @@ std::vector<DataFormat> DudeDatabase::ListUsedDataFormats() const {
                 continue;
             }
 
-            printf("New Format 0x%02x in row %d \n", data_format, id);
+            // printf("New Format 0x%02x in row %d \n", data_format, id);
             data_formats.push_back(format);
         }
     }
@@ -109,8 +114,12 @@ std::vector<T> DudeDatabase::GetObjectData(DataFormat format,
 
         const T obj_data = (this->*RawToObjData)(parser);
 
-        if (id != (u32)obj_data.object_id.value) {
-            printf("Corrupted Entry %d\n", id);
+        if (!parser.IsDataValid()) {
+            printf("Corrupted Entry id %d: %s\n\t'%s'\n", id, parser.GetErrorMessage().c_str(),
+                   Common::HexStringFromBuffer(blob).c_str());
+            continue;
+        } else if (id != (u32)obj_data.object_id.value) {
+            printf("Invalid Entry expected %d, found %d\n", id, obj_data.object_id.value);
             continue;
         }
 
