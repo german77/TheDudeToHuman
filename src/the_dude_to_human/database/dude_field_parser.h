@@ -30,6 +30,8 @@ public:
     std::string GetErrorMessage() const;
     static std::string GetErrorMessage(ParserResult result);
 
+    void PrintFieldInfo();
+
     u16 GetMagic() const;
     IntArrayField GetFormat() const;
     DataFormat GetMainFormat() const;

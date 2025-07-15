@@ -103,6 +103,14 @@ struct IntField {
     std::string SerializeJson() const {
         return fmt::format("{}", value);
     }
+
+    bool operator==(s32 rhs) const {
+        return value == rhs;
+    }
+
+    bool operator==(IntField rhs) const {
+        return value == rhs.value;
+    }
 };
 
 // This is FieldType::Int
