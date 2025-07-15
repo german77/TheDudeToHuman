@@ -120,6 +120,8 @@ std::vector<T> DudeDatabase::GetObjectData(DataFormat format,
             continue;
         } else if (id != (u32)obj_data.object_id.value) {
             printf("Invalid Entry expected %d, found %d\n", id, obj_data.object_id.value);
+            parser.PrintFieldInfo();
+            printf("\n");
             continue;
         }
 

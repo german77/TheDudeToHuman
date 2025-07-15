@@ -147,7 +147,7 @@ ParserResult DudeFieldParser::ValidataFieldInfo(const FieldInfo& field_info, Fie
     }
 
     // Allow all id if none is specified
-    if (field_info.id.Value() == FieldId::None) {
+    if (id == FieldId::None) {
         return ParserResult::Success;
     }
 
@@ -500,6 +500,86 @@ std::string DudeFieldParser::GetErrorMessage(ParserResult result) {
         return "Reached end of file while parsing data";
     default:
         return "Unexpected error";
+    }
+}
+
+void DudeFieldParser::PrintFieldInfo() {
+    printf("Field data: ");
+    Reset();
+    if (!IsDataValid()) {
+        printf(" Error: %s\n", GetErrorMessage().c_str());
+        return;
+    }
+    printf(" Format 0x%x\n", static_cast<u32>(GetMainFormat()));
+
+    while (offset < raw_data.size()) {
+        FieldInfo info{};
+        ParserResult result = GetFieldInfo(info);
+
+        if (result != ParserResult::Success) {
+            printf("\tError: %s\n", GetErrorMessage(result).c_str());
+            return;
+        }
+
+        std::string field_json = "";
+        BoolField bool_field;
+        IntField int_field;
+        LongField long_field;
+        LongLongField long_long_field;
+        TextField text_field;
+        LongArrayField long_array_field;
+        IntArrayField int_array_field;
+        StringArrayField string_array_field;
+
+        RestoreOffset();
+        switch (info.type) {
+        case FieldType::BoolFalse:
+        case FieldType::BoolTrue:
+            ReadField(bool_field, info.id);
+            field_json = bool_field.SerializeJson();
+            break;
+        case FieldType::Int:
+        case FieldType::Byte:
+            ReadField(int_field, info.id);
+            field_json = int_field.SerializeJson();
+            break;
+        case FieldType::Long:
+            ReadField(long_field, info.id);
+            field_json = long_field.SerializeJson();
+            break;
+        case FieldType::LongLong:
+            ReadField(long_long_field, info.id);
+            field_json = long_long_field.SerializeJson();
+            break;
+        case FieldType::LongString:
+        case FieldType::ShortString:
+            ReadField(text_field, info.id);
+            field_json = text_field.SerializeJson();
+            break;
+        case FieldType::LongArray:
+            ReadField(long_array_field, info.id);
+            field_json = long_array_field.SerializeJson();
+            break;
+        case FieldType::IntArray:
+            ReadField(int_array_field, info.id);
+            field_json = int_array_field.SerializeJson();
+            break;
+        case FieldType::StringArray:
+            ReadField(string_array_field, info.id);
+            field_json = string_array_field.SerializeJson();
+            break;
+        default:
+            printf("\tError: %s\n", GetErrorMessage(ParserResult::InvalidFieldType).c_str());
+            return;
+        }
+
+        if (!IsDataValid()) {
+            printf("\tError: %s\n", GetErrorMessage().c_str());
+            return;
+        }
+
+        printf("\tCategory 0x%x, 0x%x: %s\n", static_cast<u32>(info.id.Value()),
+               static_cast<u32>(info.type.Value()), field_json.c_str());
     }
 }
 
