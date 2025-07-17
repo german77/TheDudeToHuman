@@ -201,7 +201,20 @@ ParserResult DudeFieldParser::ReadField(ByteField& field, FieldId id) {
         return result;
     }
 
-    if (field.info.type.Value() != FieldType::Byte) {
+    switch (field.info.type) {
+    case FieldType::Byte:
+        break;
+    case FieldType::Int:
+        printf("Warning attempted to read byte on int field: %s\n",
+               field.info.SerializeJson().c_str());
+        RestoreOffset();
+        return ParserResult::FieldTypeMismatch;
+    case FieldType::Long:
+        printf("Warning attempted to read byte on long field: %s\n",
+               field.info.SerializeJson().c_str());
+        RestoreOffset();
+        return ParserResult::FieldTypeMismatch;
+    default:
         RestoreOffset();
         return ParserResult::FieldTypeMismatch;
     }
@@ -219,6 +232,10 @@ ParserResult DudeFieldParser::ReadField(IntField& field, FieldId id) {
     case FieldType::Int:
     case FieldType::Byte:
         break;
+    case FieldType::Long:
+        printf("Warning attempted to read int on long field: %s\n",
+               field.info.SerializeJson().c_str());
+        return ParserResult::FieldTypeMismatch;
     default:
         RestoreOffset();
         return ParserResult::FieldTypeMismatch;
