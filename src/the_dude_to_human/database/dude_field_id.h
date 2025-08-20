@@ -284,7 +284,7 @@ enum class FieldId : u32 {
 
     // Notification
     Notification_Enabled = 0x103e80,
-    Notification_RypeID = 0x103e81,
+    Notification_TypeID = 0x103e81,
     Notification_Activity = 0x103e82,
     Notification_TextTemplate = 0x103e83,
     Notification_MailServer = 0x103e84,

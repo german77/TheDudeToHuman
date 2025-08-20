@@ -98,7 +98,7 @@ struct ByteField {
 // This is FieldType::Int
 struct IntField {
     FieldInfo info{};
-    u32 value{};
+    s32 value{};
 
     std::string SerializeJson() const {
         return fmt::format("{}", value);
@@ -157,6 +157,23 @@ struct IntArrayField {
 
         for (u32 entry : data) {
             array += fmt::format("{},", entry);
+        }
+        if (!data.empty()) {
+            array.pop_back();
+        }
+
+        return fmt::format("[{}]", array);
+    }
+};
+
+struct IpArrayField : IntArrayField {
+    std::string SerializeJson() const {
+        std::string array = "";
+
+        for (u32 entry : data) {
+            IpAddress ip{};
+            memcpy(&ip, &entry, sizeof(u32));
+            array += fmt::format("{}.{}.{}.{},", ip[0], ip[1], ip[2], ip[3]);
         }
         if (!data.empty()) {
             array.pop_back();
@@ -647,7 +664,7 @@ struct ProbeData : DudeObj {
     IntArrayField logic_probe_ids;
     IntArrayField snmp_value_oid;
     IntArrayField snmp_oid;
-    IntArrayField dns_addresses;
+    IpArrayField dns_addresses;
     BoolField snmp_avail_if_up;
     BoolField tcp_only_connect;
     BoolField tcp_first_receive;
@@ -740,7 +757,7 @@ struct DeviceData : DudeObj {
     IntArrayField parent_ids;
     IntArrayField notify_ids;
     StringArrayField dns_names;
-    IntArrayField ip;
+    IpArrayField ip;
     BoolField secure_mode;
     BoolField router_os;
     BoolField dude_server;
@@ -868,7 +885,7 @@ struct NotificationData : DudeObj {
     ByteField repeat_interval;
     ByteField repeat_count;
     IntField object_id;
-    IntField rype_id;
+    IntField type_id;
     IntField mail_server;
     IntField mail_port;
     TextField log_prefix;
@@ -888,7 +905,7 @@ struct NotificationData : DudeObj {
             "\"mailCc\":{}, \"activity\":{}, \"logUseColor\":{}, \"enabled\":{}, "
             "\"mailTlsMode\":{}, \"sysLogServer\":{}, \"sysLogPort\":{}, \"soundFileId\":{}, "
             "\"logColor\":{}, \"speakRate\":{}, \"speakVolume\":{}, \"delayInterval\":{}, "
-            "\"repeatInterval\":{}, \"repeatCount\":{}, \"rypeId\":{}, \"mailServer\":{}, "
+            "\"repeatInterval\":{}, \"repeatCount\":{}, \"typeId\":{}, \"mailServer\":{}, "
             "\"mailPort\":{}, \"logPrefix\":{}, \"mailSubject\":{}, \"mailTo\":{}, "
             "\"mailFrom\":{}, \"mailPassword\":{}, \"mailUser\":{}, \"mailServerDns\":{}, "
             "\"mailServer6\":{}, \"textTemplate\":{}",
@@ -898,7 +915,7 @@ struct NotificationData : DudeObj {
             sys_log_server.SerializeJson(), sys_log_port.SerializeJson(),
             sound_file_id.SerializeJson(), log_color.SerializeJson(), speak_rate.SerializeJson(),
             speak_volume.SerializeJson(), delay_interval.SerializeJson(),
-            repeat_interval.SerializeJson(), repeat_count.SerializeJson(), rype_id.SerializeJson(),
+            repeat_interval.SerializeJson(), repeat_count.SerializeJson(), type_id.SerializeJson(),
             mail_server.SerializeJson(), mail_port.SerializeJson(), log_prefix.SerializeJson(),
             mail_subject.SerializeJson(), mail_to.SerializeJson(), mail_from.SerializeJson(),
             has_credentials ? mail_password.SerializeJson() : "\"*****\"",
