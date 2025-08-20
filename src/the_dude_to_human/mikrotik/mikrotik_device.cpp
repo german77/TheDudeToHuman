@@ -15,7 +15,7 @@
 
 #define BUFSIZE 32000
 
-#ifdef _WIN32
+#ifdef _MSC_VER
 #pragma warning(disable : 4996)
 #endif
 
