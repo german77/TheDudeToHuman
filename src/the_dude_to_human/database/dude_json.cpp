@@ -14,7 +14,7 @@ static std::string SerializeData(std::vector<T> obj, bool has_credentials) {
     std::string json = "";
 
     for (const DudeObj& data : obj) {
-        json += fmt::format("{{{}}},", data.SerializeJson(has_credentials));
+        json += fmt::format("\n    {{{}}},", data.SerializeJson(has_credentials));
     }
     if (!obj.empty()) {
         json.pop_back();
@@ -26,7 +26,7 @@ static std::string SerializeData(std::vector<T> obj, bool has_credentials) {
 template <typename T>
 static std::string SerializeTable(std::string table_name, std::vector<T> obj, bool has_credentials,
                                   bool has_coma = true) {
-    return fmt::format("\"{}\": [{}]{}\n", table_name, SerializeData(obj, has_credentials),
+    return fmt::format("\"{}\": [{}\n]{}\n", table_name, SerializeData(obj, has_credentials),
                        has_coma ? "," : "");
 }
 

@@ -109,7 +109,7 @@ std::vector<T> DudeDatabase::GetObjectData(DataFormat format,
 
         const T obj_data = (this->*RawToObjData)(parser);
 
-        if (id != obj_data.object_id.value) {
+        if (id != (u32)obj_data.object_id.value) {
             printf("Corrupted Entry %d\n", id);
             continue;
         }
@@ -622,7 +622,7 @@ NotificationData DudeDatabase::GetNotificationData(DudeFieldParser& parser) cons
     parser.ReadField(data.repeat_interval, FieldId::Notification_RepeatInterval);
     parser.ReadField(data.repeat_count, FieldId::Notification_RepeatCount);
     parser.ReadField(data.object_id, FieldId::SysId);
-    parser.ReadField(data.rype_id, FieldId::Notification_RypeID);
+    parser.ReadField(data.type_id, FieldId::Notification_TypeID);
     parser.ReadField(data.mail_server, FieldId::Notification_MailServer);
     parser.ReadField(data.mail_port, FieldId::Notification_MailPort);
     parser.ReadField(data.log_prefix, FieldId::Notification_LogPrefix);
