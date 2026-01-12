@@ -28,7 +28,7 @@ jobs:
 
           - os: macos
             arch: amd64
-            builder: macos-13
+            builder: macos-15
 
           - os: macos
             arch: arm64
