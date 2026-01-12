@@ -173,7 +173,7 @@ struct IpArrayField : IntArrayField {
         for (u32 entry : data) {
             IpAddress ip{};
             memcpy(&ip, &entry, sizeof(u32));
-            array += fmt::format("{}.{}.{}.{},", ip[0], ip[1], ip[2], ip[3]);
+            array += fmt::format("\"{}.{}.{}.{}\",", ip[0], ip[1], ip[2], ip[3]);
         }
         if (!data.empty()) {
             array.pop_back();
