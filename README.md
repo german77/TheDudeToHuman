@@ -19,6 +19,7 @@ Usage: the_dude_to_human.exe [options] <filename>
 -o, --out                                  Save json database file
 -c, --credentials                          Save credentials in plain text
 -m, --mikrotik=user:password@address:port  Connect to the specified mikrotik device
+-i, --integrity                            Validate database health
 -h, --help                                 Display this help and exit
 -v, --version                              Print tool version
 

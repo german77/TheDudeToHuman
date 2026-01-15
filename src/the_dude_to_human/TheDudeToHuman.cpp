@@ -35,6 +35,7 @@ static void PrintHelp(const char* argv0) {
            "-c, --credentials                          Save credentials in plain text\n"
            "-m, --mikrotik=user:password@address:port  Connect to the specified mikrotik device\n"
            //"-d, --database=user:password@address:port  Connect to the specified database\n"
+           "-i, --integrity                            Validate database health\n"
            "-h, --help                                 Display this help and exit\n"
            "-v, --version                              Print tool version\n";
     // clang-format on
@@ -119,12 +120,15 @@ int main(int argc, char** argv) {
     std::string database_address{};
     [[maybe_unused]] u16 database_port = {3306};
 
+    bool check_integrity{};
+
     static struct option long_options[] = {
         // clang-format off
         {"file", required_argument, 0, 'f'},
         {"out", required_argument, 0, 'o'},
         {"credentials", no_argument, 0, 'c'},
         {"mikrotik", required_argument, 0, 'm'},
+        {"integrity", no_argument, 0, 'i'},
         //{"database", optional_argument, 0, 'd'},
         {"help", no_argument, 0, 'h'},
         {"version", no_argument, 0, 'v'},
@@ -133,7 +137,7 @@ int main(int argc, char** argv) {
     };
 
     while (optind < argc) {
-        int arg = getopt_long(argc, argv, "f:o:cm:hv", long_options, &option_index);
+        int arg = getopt_long(argc, argv, "f:o:cm:ihv", long_options, &option_index);
         if (arg != -1) {
             switch (static_cast<char>(arg)) {
             case 'f': {
@@ -150,6 +154,9 @@ int main(int argc, char** argv) {
             }
             case 'c':
                 has_credentials = true;
+                break;
+            case 'i':
+                check_integrity = true;
                 break;
             case 'h':
                 PrintHelp(argv[0]);
@@ -251,8 +258,10 @@ int main(int argc, char** argv) {
     if (has_filepath) {
         std::cout << "Reading database " << filepath << "\n";
         Database::DudeDatabase db{filepath};
-        db.ListMapData();
-        db.ListDeviceData();
+
+        if (check_integrity) {
+            db.CheckIntegrity();
+        }
 
         if (has_out_filepath) {
             std::cout << "Saving database " << out_filepath << "\n";
