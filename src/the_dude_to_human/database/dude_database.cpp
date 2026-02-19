@@ -398,7 +398,7 @@ MapData DudeDatabase::GetMapData(DudeFieldParser& parser) const {
     parser.ReadField(data.use_link_font, FieldId::NetworkMap_UseLinkFont);
     parser.ReadField(data.use_link_thickness, FieldId::NetworkMap_UseLinkThickness);
     parser.ReadField(data.ordered, FieldId::ObjectList_Ordered);
-    parser.ReadField(data.prove_enabled, FieldId::NetworkMap_ProbeEnabled);
+    parser.ReadField(data.probe_enabled, FieldId::NetworkMap_ProbeEnabled);
     parser.ReadField(data.notify_use, FieldId::NetworkMap_NotifyUse);
     parser.ReadField(data.report_scanning, FieldId::NetworkMap_ReportScanning);
     parser.ReadField(data.locked, FieldId::NetworkMap_Locked);
@@ -426,9 +426,9 @@ MapData DudeDatabase::GetMapData(DudeFieldParser& parser) const {
     parser.ReadField(data.link_thickness, FieldId::NetworkMap_LinkThickness);
     parser.ReadField(data.layout_density, FieldId::NetworkMap_LayoutDensity);
     parser.ReadField(data.layout_quality, FieldId::NetworkMap_LayoutQuality);
-    parser.ReadField(data.prove_interval, FieldId::NetworkMap_ProbeInterval);
-    parser.ReadField(data.prove_timeout, FieldId::NetworkMap_ProbeTimeout);
-    parser.ReadField(data.prove_down_count, FieldId::NetworkMap_ProbeDownCount);
+    parser.ReadField(data.probe_interval, FieldId::NetworkMap_ProbeInterval);
+    parser.ReadField(data.probe_timeout, FieldId::NetworkMap_ProbeTimeout);
+    parser.ReadField(data.probe_down_count, FieldId::NetworkMap_ProbeDownCount);
     parser.ReadField(data.object_id, FieldId::SysId);
     parser.ReadField(data.default_zoom, FieldId::NetworkMap_DefaultZoom);
     parser.ReadField(data.image_id, FieldId::NetworkMap_ImageID);
@@ -539,7 +539,7 @@ DeviceData DudeDatabase::GetDeviceData(DudeFieldParser& parser) const {
     parser.ReadField(data.router_os, FieldId::Device_RouterOs);
     parser.ReadField(data.dude_server, FieldId::Device_DudeServer);
     parser.ReadField(data.notify_use, FieldId::Device_NotifyUse);
-    parser.ReadField(data.prove_enabled, FieldId::Device_ProveEnabled);
+    parser.ReadField(data.probe_enabled, FieldId::Device_ProbeEnabled);
     parser.ReadField(data.lookup, FieldId::Device_Lookup);
     parser.ReadField(data.dns_lookup_interval, FieldId::Device_LookupInterval);
     parser.ReadField(data.mac_lookup, FieldId::Device_MacLookup);
@@ -547,9 +547,9 @@ DeviceData DudeDatabase::GetDeviceData(DudeFieldParser& parser) const {
     parser.ReadField(data.agent_id, FieldId::Device_AgentId);
     parser.ReadField(data.snmp_profile_id, FieldId::Device_SnmpProfileId);
     parser.ReadField(data.object_id, FieldId::SysId);
-    parser.ReadField(data.prove_interval, FieldId::Device_ProveInterval);
-    parser.ReadField(data.prove_timeout, FieldId::Device_ProveTimeout);
-    parser.ReadField(data.prove_down_count, FieldId::Device_ProveDownCount);
+    parser.ReadField(data.probe_interval, FieldId::Device_ProbeInterval);
+    parser.ReadField(data.probe_timeout, FieldId::Device_ProbeTimeout);
+    parser.ReadField(data.probe_down_count, FieldId::Device_ProbeDownCount);
     parser.ReadField(data.custom_field_3, FieldId::Device_CustomField3);
     parser.ReadField(data.custom_field_2, FieldId::Device_CustomField2);
     parser.ReadField(data.custom_field_1, FieldId::Device_CustomField1);
@@ -591,11 +591,11 @@ ServiceData DudeDatabase::GetServiceData(DudeFieldParser& parser) const {
     parser.ReadField(data.time_since_last_down, FieldId::Service_TimeLastDown);
     parser.ReadField(data.time_previous_up, FieldId::Service_TimePrevUp);
     parser.ReadField(data.time_previous_down, FieldId::Service_TimePrevDown);
-    parser.ReadField(data.proves_down, FieldId::Service_ProbesDown);
+    parser.ReadField(data.probes_down, FieldId::Service_ProbesDown);
     parser.ReadField(data.object_id, FieldId::SysId);
     parser.ReadField(data.device_id, FieldId::Service_DeviceID);
     parser.ReadField(data.agent_id, FieldId::Service_AgentID);
-    parser.ReadField(data.prove_id, FieldId::Service_probeID);
+    parser.ReadField(data.probe_id, FieldId::Service_probeID);
     parser.ReadField(data.value, FieldId::Service_Value);
     parser.ReadField(data.name, FieldId::SysName);
 

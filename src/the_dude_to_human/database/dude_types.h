@@ -524,7 +524,7 @@ struct MapData : DudeObj {
     BoolField use_link_font;
     BoolField use_link_thickness;
     BoolField ordered;
-    BoolField prove_enabled;
+    BoolField probe_enabled;
     BoolField notify_use;
     BoolField report_scanning;
     BoolField locked;
@@ -550,9 +550,9 @@ struct MapData : DudeObj {
     IntField link_thickness;
     IntField layout_density;
     IntField layout_quality;
-    IntField prove_interval;
-    IntField prove_timeout;
-    IntField prove_down_count;
+    IntField probe_interval;
+    IntField probe_timeout;
+    IntField probe_down_count;
     IntField object_id;
     IntField default_zoom;
     IntField image_id;
@@ -598,7 +598,7 @@ struct MapData : DudeObj {
             "\"useNetworkLabel\":{}, \"useNetworkShape\":{}, \"useNetworkFont\":{}, "
             "\"useSubmapLabel\":{}, \"useSubmapShape\":{}, \"useSubmapFont\":{}, "
             "\"useStaticShape\":{}, \"useStaticFont\":{}, \"useLinkLabel\":{}, \"useLinkFont\":{}, "
-            "\"useLinkThickness\":{}, \"ordered\":{}, \"proveEnabled\":{}, \"notifyUse\":{}, "
+            "\"useLinkThickness\":{}, \"ordered\":{}, \"probeEnabled\":{}, \"notifyUse\":{}, "
             "\"reportScanning\":{}, \"locked\":{}, \"imageTile\":{}, \"colorVisible\":{}, "
             "\"deviceVisible\":{}, \"networkVisible\":{}, \"submapVisible\":{}, "
             "\"staticVisible\":{}, \"linkVisible\":{}, \"useBackgroundColor\":{}, "
@@ -606,8 +606,8 @@ struct MapData : DudeObj {
             "\"useUnknownColor\":{}, \"useAckedColor\":{}, \"useNetworkColor\":{}, "
             "\"useSubmapColor\":{}, \"useSubmapUpColor\":{}, \"useSubmapDownPartialColor\":{}, "
             "\"useSubmapDownCompleteColor\":{}, \"useSubmapAckedColor\":{}, \"linkThickness\":{}, "
-            "\"layoutDensity\":{}, \"layoutQuality\":{}, \"proveInterval\":{}, "
-            "\"proveTimeout\":{}, \"proveDownCount\":{}, \"defaultZoom\":{}, \"imageId\":{}, "
+            "\"layoutDensity\":{}, \"layoutQuality\":{}, \"probeInterval\":{}, "
+            "\"probeTimeout\":{}, \"probeDownCount\":{}, \"defaultZoom\":{}, \"imageId\":{}, "
             "\"imageScale\":{}, \"labelRefreshInterval\":{}, \"backgroundColor\":{}, "
             "\"upColor\":{}, \"downPartialColor\":{}, \"downCompleteColor\":{}, "
             "\"unknownColor\":{}, \"ackedColor\":{}, \"networkColor\":{}, \"submapColor\":{}, "
@@ -627,7 +627,7 @@ struct MapData : DudeObj {
             use_submap_font.SerializeJson(), use_static_shape.SerializeJson(),
             use_static_font.SerializeJson(), use_link_label.SerializeJson(),
             use_link_font.SerializeJson(), use_link_thickness.SerializeJson(),
-            ordered.SerializeJson(), prove_enabled.SerializeJson(), notify_use.SerializeJson(),
+            ordered.SerializeJson(), probe_enabled.SerializeJson(), notify_use.SerializeJson(),
             report_scanning.SerializeJson(), locked.SerializeJson(), image_tile.SerializeJson(),
             color_visible.SerializeJson(), device_visible.SerializeJson(),
             network_visible.SerializeJson(), submap_visible.SerializeJson(),
@@ -639,8 +639,8 @@ struct MapData : DudeObj {
             use_submap_up_color.SerializeJson(), use_submap_down_partial_color.SerializeJson(),
             use_submap_down_complete_color.SerializeJson(), use_submap_acked_color.SerializeJson(),
             link_thickness.SerializeJson(), layout_density.SerializeJson(),
-            layout_quality.SerializeJson(), prove_interval.SerializeJson(),
-            prove_timeout.SerializeJson(), prove_down_count.SerializeJson(),
+            layout_quality.SerializeJson(), probe_interval.SerializeJson(),
+            probe_timeout.SerializeJson(), probe_down_count.SerializeJson(),
             default_zoom.SerializeJson(), image_id.SerializeJson(), image_scale.SerializeJson(),
             label_refresh_interval.SerializeJson(), background_color.SerializeJson(),
             up_color.SerializeJson(), down_partial_color.SerializeJson(),
@@ -762,7 +762,7 @@ struct DeviceData : DudeObj {
     BoolField router_os;
     BoolField dude_server;
     BoolField notify_use;
-    BoolField prove_enabled;
+    BoolField probe_enabled;
     ByteField lookup;
     IntField dns_lookup_interval;
     ByteField mac_lookup;
@@ -770,9 +770,9 @@ struct DeviceData : DudeObj {
     IntField agent_id;
     IntField snmp_profile_id;
     IntField object_id;
-    IntField prove_interval;
-    IntField prove_timeout;
-    IntField prove_down_count;
+    IntField probe_interval;
+    IntField probe_timeout;
+    IntField probe_down_count;
     TextField custom_field_3;
     TextField custom_field_2;
     TextField custom_field_1;
@@ -785,18 +785,18 @@ struct DeviceData : DudeObj {
         return fmt::format(
             "\"objectId\":{}, \"name\":{}, \"parentIds\":{}, \"notifyIds\":{}, \"dnsNames\":{}, "
             "\"ip\":{}, \"secureMode\":{}, \"routerOs\":{}, \"dudeServer\":{}, \"notifyUse\":{}, "
-            "\"proveEnabled\":{}, \"lookup\":{}, \"dnsLookupInterval\":{}, \"macLookup\":{}, "
-            "\"typeId\":{}, \"agentId\":{}, \"snmpProfileId\":{}, \"proveInterval\":{}, "
-            "\"proveTimeout\":{}, \"proveDownCount\":{}, \"customField3\":{}, \"customField2\":{}, "
+            "\"probeEnabled\":{}, \"lookup\":{}, \"dnsLookupInterval\":{}, \"macLookup\":{}, "
+            "\"typeId\":{}, \"agentId\":{}, \"snmpProfileId\":{}, \"probeInterval\":{}, "
+            "\"probeTimeout\":{}, \"probeDownCount\":{}, \"customField3\":{}, \"customField2\":{}, "
             "\"customField1\":{}, \"password\":{}, \"username\":{}, \"mac\":{}",
             object_id.SerializeJson(), name.SerializeJson(), parent_ids.SerializeJson(),
             notify_ids.SerializeJson(), dns_names.SerializeJson(), ip.SerializeJson(),
             secure_mode.SerializeJson(), router_os.SerializeJson(), dude_server.SerializeJson(),
-            notify_use.SerializeJson(), prove_enabled.SerializeJson(), lookup.SerializeJson(),
+            notify_use.SerializeJson(), probe_enabled.SerializeJson(), lookup.SerializeJson(),
             dns_lookup_interval.SerializeJson(), mac_lookup.SerializeJson(),
             type_id.SerializeJson(), agent_id.SerializeJson(), snmp_profile_id.SerializeJson(),
-            prove_interval.SerializeJson(), prove_timeout.SerializeJson(),
-            prove_down_count.SerializeJson(), custom_field_3.SerializeJson(),
+            probe_interval.SerializeJson(), probe_timeout.SerializeJson(),
+            probe_down_count.SerializeJson(), custom_field_3.SerializeJson(),
             custom_field_2.SerializeJson(), custom_field_1.SerializeJson(),
             has_credentials ? password.SerializeJson() : "\"*****\"",
             has_credentials ? username.SerializeJson() : "\"*****\"", mac.SerializeJson());
@@ -837,11 +837,11 @@ struct ServiceData : DudeObj {
     IntField time_since_last_down;
     IntField time_previous_up;
     IntField time_previous_down;
-    IntField proves_down;
+    IntField probes_down;
     IntField object_id;
     IntField device_id;
     IntField agent_id;
-    IntField prove_id;
+    IntField probe_id;
     LongField value;
     TextField name;
 
@@ -851,8 +851,8 @@ struct ServiceData : DudeObj {
             "\"notifyUse\":{}, \"acked\":{}, \"probePort\":{}, \"probeInterval\":{}, "
             "\"probeTimeout\":{}, \"probeDownCount\":{}, \"dataSourceId\":{}, \"status\":{}, "
             "\"timeSinceChanged\":{}, \"timeSinceLastUp\":{}, \"timeSinceLastDown\":{}, "
-            "\"timePreviousUp\":{}, \"timePreviousDown\":{}, \"provesDown\":{}, \"deviceId\":{}, "
-            "\"agentId\":{}, \"proveId\":{}, \"value\":{}",
+            "\"timePreviousUp\":{}, \"timePreviousDown\":{}, \"probesDown\":{}, \"deviceId\":{}, "
+            "\"agentId\":{}, \"probeId\":{}, \"value\":{}",
             object_id.SerializeJson(), name.SerializeJson(), notify_ids.SerializeJson(),
             enabled.SerializeJson(), history.SerializeJson(), notify_use.SerializeJson(),
             acked.SerializeJson(), probe_port.SerializeJson(), probe_interval.SerializeJson(),
@@ -860,8 +860,8 @@ struct ServiceData : DudeObj {
             data_source_id.SerializeJson(), status.SerializeJson(),
             time_since_changed.SerializeJson(), time_since_last_up.SerializeJson(),
             time_since_last_down.SerializeJson(), time_previous_up.SerializeJson(),
-            time_previous_down.SerializeJson(), proves_down.SerializeJson(),
-            device_id.SerializeJson(), agent_id.SerializeJson(), prove_id.SerializeJson(),
+            time_previous_down.SerializeJson(), probes_down.SerializeJson(),
+            device_id.SerializeJson(), agent_id.SerializeJson(), probe_id.SerializeJson(),
             value.SerializeJson());
     }
 };
