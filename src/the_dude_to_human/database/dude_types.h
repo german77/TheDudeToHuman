@@ -202,11 +202,6 @@ struct LongArrayField {
         return fmt::format("[{}]", array);
     }
 
-    uint16_t FontSize() const {
-        if (data.size() < 2) {
-            return 0;
-        }
-        return static_cast<uint16_t>(data[0]) | (static_cast<uint16_t>(data[1]) << 8);
     u16 FontSize() const {
         if (data.size() < 2) {
             return 0;
@@ -214,32 +209,6 @@ struct LongArrayField {
         return data[0] | (data[1] << 8);
     }
 
-    std::string FontFamily() const {
-        std::string family = "";
-        // Find the first valid printable string inside the data blob.
-        size_t start = 0;
-        for (size_t i = 0; i + 1 < data.size(); ++i) {
-            if (data[i] >= 32 && data[i] <= 126) {
-                size_t j = i;
-                while (j < data.size() && data[j] >= 32 && data[j] <= 126) {
-                    j++;
-                }
-                if (j < data.size() && data[j] == 0 && (j - i) >= 3) {
-                    start = i;
-                    break;
-                }
-            }
-        }
-
-        if (start >= data.size()) {
-            return family;
-        }
-
-        for (size_t i = start; i < data.size() && data[i] != 0; ++i) {
-            family.push_back(static_cast<char>(data[i]));
-        }
-
-        return family;
     std::string FontFamily() const {
         constexpr u8 text_position = 0x1c;
         if (data.size() < text_position + 1) {
@@ -261,7 +230,7 @@ struct LongArrayField {
         auto family = FontFamily();
         // itemFontRaw already contains the complete raw byte array.
         // Expose only parsed fields in itemFont to avoid duplicate raw payload.
-return fmt::format("{{\"size\":{},\"family\":\"{}\"}}",
+        return fmt::format("{{\"size\":{},\"family\":\"{}\"}}",
                    FontSize(), Common::Sanitize(family, family.size()));
     }
 };
@@ -1237,7 +1206,7 @@ struct NetworkMapElementData : DudeObj {
             "\"itemDownCompleteColor\":{}, \"itemUnknownColor\":{}, \"itemAckedColor\":{}, "
             "\"itemShape\":{}, \"linkFrom\":{}, \"linkTo\":{}, \"linkId\":{}, \"linkWidth\":{}, "
             "\"mapId\":{}, \"type\":{}, \"itemType\":{}, \"itemId\":{}, \"itemX\":{}, "
-            "\"itemY\":{}, \"labelRefreshInterval\":{}, \"itemFontRaw\":{}, \"itemFont\":{}",
+            "\"itemY\":{}, \"labelRefreshInterval\":{}, \"itemFont\":{}",
             object_id.SerializeJson(), name.SerializeJson(), item_use_acked_color.SerializeJson(),
             item_use_label.SerializeJson(), item_use_shapes.SerializeJson(),
             item_use_font.SerializeJson(), item_use_image.SerializeJson(),
@@ -1250,7 +1219,7 @@ struct NetworkMapElementData : DudeObj {
             link_to.SerializeJson(), link_id.SerializeJson(), link_width.SerializeJson(),
             map_id.SerializeJson(), type.SerializeJson(), item_type.SerializeJson(),
             item_id.SerializeJson(), item_x.SerializeJson(), item_y.SerializeJson(),
-            label_refresh_interval.SerializeJson(), item_font.SerializeJson(), item_font.SerializeFontJson());
+            label_refresh_interval.SerializeJson(), item_font.SerializeFontJson());
     }
 };
 
