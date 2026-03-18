@@ -235,6 +235,21 @@ struct LongArrayField {
         }
 
         return family;
+    std::string FontFamily() const {
+        constexpr u8 text_position = 0x1c;
+        if (data.size() < text_position + 1) {
+            return "";
+        }
+
+        std::string text(data.begin() + text_position, data.end());
+        
+        // Get rid of trailing zeroes
+        u64 null_position = text.find('\0');
+        if (null_position != std::string::npos) {
+            text.resize(null_position );
+        }
+
+        return text;
     }
 
     std::string SerializeFontJson() const {
