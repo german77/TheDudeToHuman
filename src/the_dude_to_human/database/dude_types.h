@@ -207,6 +207,11 @@ struct LongArrayField {
             return 0;
         }
         return static_cast<uint16_t>(data[0]) | (static_cast<uint16_t>(data[1]) << 8);
+    u16 FontSize() const {
+        if (data.size() < 2) {
+            return 0;
+        }
+        return data[0] | (data[1] << 8);
     }
 
     std::string FontFamily() const {
