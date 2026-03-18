@@ -256,7 +256,8 @@ struct LongArrayField {
         auto family = FontFamily();
         // itemFontRaw already contains the complete raw byte array.
         // Expose only parsed fields in itemFont to avoid duplicate raw payload.
-        return fmt::format("{{\"size\":{},\"family\":\"{}\"}}", FontSize(), family);
+return fmt::format("{{\"size\":{},\"family\":\"{}\"}}",
+                   FontSize(), Common::Sanitize(family, family.size()));
     }
 };
 
