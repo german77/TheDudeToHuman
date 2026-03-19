@@ -201,7 +201,10 @@ struct LongArrayField {
 
         return fmt::format("[{}]", array);
     }
+};
 
+// This is FieldType::LongArray
+struct FontField : LongArrayField {
     u32 FontSize() const {
         if (data.size() < 2) {
             return 0;
@@ -226,7 +229,7 @@ struct LongArrayField {
         return text;
     }
 
-    std::string SerializeFontJson() const {
+    std::string SerializeJson() const {
         auto family = FontFamily();
         // itemFontRaw already contains the complete raw byte array.
         // Expose only parsed fields in itemFont to avoid duplicate raw payload.
@@ -378,19 +381,19 @@ struct ServerConfigData : DudeObj {
     ByteField contents_pane_behavior;
     IntField last_chart_maintenance_time;
     TextField discover_black_list;
-    LongArrayField report_font;
-    LongArrayField chart_font;
-    LongArrayField map_link_font;
+    FontField report_font;
+    FontField chart_font;
+    FontField map_link_font;
     TextField map_link_tooltip;
     TextField map_link_label;
-    LongArrayField map_static_font;
-    LongArrayField map_submap_font;
+    FontField map_static_font;
+    FontField map_submap_font;
     TextField map_submap_tooltip;
     TextField map_submap_label;
-    LongArrayField map_network_font;
+    FontField map_network_font;
     TextField map_network_tooltip;
     TextField map_network_label;
-    LongArrayField map_device_font;
+    FontField map_device_font;
     TextField map_device_tooltip;
     TextField map_device_label;
     LongArrayField unique_id;
@@ -610,14 +613,14 @@ struct MapData : DudeObj {
     IntField network_shape;
     IntField submap_shape;
     IntField static_shape;
-    LongArrayField link_font;
+    FontField link_font;
     TextField link_label;
-    LongArrayField static_font;
-    LongArrayField submap_font;
+    FontField static_font;
+    FontField submap_font;
     TextField submap_label;
-    LongArrayField network_font;
+    FontField network_font;
     TextField network_label;
-    LongArrayField device_font;
+    FontField device_font;
     TextField device_label;
     TextField list_type;
     TextField name;
@@ -1193,7 +1196,7 @@ struct NetworkMapElementData : DudeObj {
     IntField item_x;
     IntField item_y;
     IntField label_refresh_interval;
-    LongArrayField item_font;
+    FontField item_font;
     TextField name;
 
     std::string SerializeJson(bool has_credentials) const override {
@@ -1219,7 +1222,7 @@ struct NetworkMapElementData : DudeObj {
             link_to.SerializeJson(), link_id.SerializeJson(), link_width.SerializeJson(),
             map_id.SerializeJson(), type.SerializeJson(), item_type.SerializeJson(),
             item_id.SerializeJson(), item_x.SerializeJson(), item_y.SerializeJson(),
-            label_refresh_interval.SerializeJson(), item_font.SerializeFontJson());
+            label_refresh_interval.SerializeJson(), item_font.SerializeJson());
     }
 };
 
