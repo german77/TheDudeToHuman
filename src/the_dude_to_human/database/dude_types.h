@@ -216,7 +216,7 @@ struct LongArrayField {
         }
 
         std::string text(data.begin() + text_position, data.end());
-        
+
         // Get rid of trailing zeroes
         u64 null_position = text.find('\0');
         if (null_position != std::string::npos) {
