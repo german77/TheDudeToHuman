@@ -33,7 +33,7 @@ static void PrintHelp(const char* argv0) {
            "-f, --file                                 Load the specified database file\n"
            "-o, --out                                  Save json database file\n"
            "-c, --credentials                          Save credentials in plain text\n"
-           "-m, --mikrotik=user:password@address:port  Connect to the specified mikrotik device\n"
+           "-m, --mikrotik user:password@address:port  Connect to the specified mikrotik device\n"
            //"-d, --database=user:password@address:port  Connect to the specified database\n"
            "-h, --help                                 Display this help and exit\n"
            "-v, --version                              Print tool version\n";
@@ -241,10 +241,12 @@ int main(int argc, char** argv) {
             std::cout << "Unable to connect to device\n";
             return 0;
         }
-        std::string output{};
-        std::cout << "Executing command 'system health print;'\n";
-        device.Execute("system health print;", &output);
-        std::cout << output;
+        has_filepath = true;
+        filepath = "DudeToHuman.db";
+        if (!device.DownloadDatabase(filepath)) {
+            std::cout << "Unable to download database\n";
+            return 0;
+        }
         device.Disconnect();
     }
 

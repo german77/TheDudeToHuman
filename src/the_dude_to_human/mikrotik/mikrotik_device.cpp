@@ -10,10 +10,15 @@
 #include <unistd.h>
 #endif
 
+#include <fstream>
+#include <iostream>
+
 #include "libssh2.h"
+#include "libssh2_sftp.h"
 #include "the_dude_to_human/mikrotik/mikrotik_device.h"
 
 #define BUFSIZE 32000
+#define DOWNLOADBUFSIZE 8192
 
 #ifdef _MSC_VER
 #pragma warning(disable : 4996)
@@ -106,10 +111,35 @@ bool MikrotikDevice::Execute(std::string commandline, std::string* output) {
     return true;
 }
 
-void MikrotikDevice::DownloadDatabase() {
+bool MikrotikDevice::DownloadDatabase(std::string filename) {
     if (!is_connected) {
-        return;
+        return false;
     }
+
+    fprintf(stdout, "Exporting database.\n");
+
+    std::string output{};
+    if (!Execute("dude export-db backup-file=\"" + filename + "\";", &output))
+        return false;
+
+    output.clear();
+    if (!Execute("file print count-only where name =\"" + filename + "\";", &output))
+        return false;
+
+    if (!output.starts_with("1\r")) {
+        fprintf(stderr, "Failed to export the database. File not found\n");
+        return false;
+    }
+
+    InitializeSFTP();
+    DownloadFile(filename);
+    DisconnectSFTP();
+
+    output.clear();
+    if (!Execute("file remove \"" + filename + "\";", &output))
+        return false;
+
+    return true;
 }
 
 void MikrotikDevice::UploadDatabase() {
@@ -131,6 +161,17 @@ int MikrotikDevice::InitializeSSH() {
     if (!session) {
         fprintf(stderr, "Could not initialize SSH session.\n");
         return 2;
+    }
+
+    return 0;
+}
+
+int MikrotikDevice::InitializeSFTP() {
+    sftp_session = libssh2_sftp_init(session);
+
+    if (!sftp_session) {
+        fprintf(stderr, "sftp initialization failed\n");
+        return 1;
     }
 
     return 0;
@@ -244,6 +285,51 @@ int MikrotikDevice::ExecuteSSH(std::string commandline, std::string* output) {
     return result;
 }
 
+int MikrotikDevice::DownloadFile(std::string filename) {
+    sftp_handle = libssh2_sftp_open(sftp_session, filename.c_str(), LIBSSH2_FXF_READ, 0);
+    if (!sftp_handle) {
+        fprintf(stderr, "Unable to open file with SFTP: %ld\n",
+                libssh2_sftp_last_error(sftp_session));
+        return 1;
+    }
+
+    std::ofstream output_file(filename, std::ios::binary);
+    if (!output_file) {
+        fprintf(stderr, "Unable to create output file\n");
+        return 1;
+    }
+
+    LIBSSH2_SFTP_ATTRIBUTES attrs;
+    libssh2_sftp_fstat_ex(sftp_handle, &attrs, 0);
+
+    fprintf(stdout, "Downloading file %llu bytes...\n", attrs.filesize);
+
+    u64 i = 0;
+    u64 total_read_size = 0;
+    do {
+        char buffer[DOWNLOADBUFSIZE];
+        ssize_t nread;
+
+        /* loop until we fail */
+        nread = libssh2_sftp_read(sftp_handle, buffer, DOWNLOADBUFSIZE);
+
+        if (nread <= 0) {
+            break;
+        }
+
+        total_read_size += nread;
+
+        if ((++i % 10) == 0) {
+            fprintf(stdout, "\t%llu%%\n", total_read_size * 100 / attrs.filesize);
+        }
+
+        output_file.write(buffer, nread);
+    } while (1);
+    output_file.close();
+    fprintf(stdout, "Download complete!\n");
+    return 0;
+}
+
 int MikrotikDevice::DisconnectSSH() {
     int result = 0;
     auto lock = std::scoped_lock(session_mutex);
@@ -262,6 +348,16 @@ int MikrotikDevice::DisconnectSSH() {
 #endif
 
     return result;
+}
+
+int MikrotikDevice::DisconnectSFTP() {
+    if (sftp_handle)
+        libssh2_sftp_close(sftp_handle);
+
+    if (sftp_session)
+        libssh2_sftp_shutdown(sftp_session);
+
+    return 0;
 }
 
 } // namespace Mikrotik
