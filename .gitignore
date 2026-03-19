@@ -34,6 +34,7 @@
 # Database files
 *.db*
 *.json
+!examples/*
 
 # Visual Studio
 build
