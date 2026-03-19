@@ -202,7 +202,7 @@ struct LongArrayField {
         return fmt::format("[{}]", array);
     }
 
-    u16 FontSize() const {
+    u32 FontSize() const {
         if (data.size() < 2) {
             return 0;
         }
