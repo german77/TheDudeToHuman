@@ -22,7 +22,7 @@
 #include "the_dude_to_human/mikrotik/mikrotik_device.h"
 
 static void PrintVersion() {
-    std::cout << "the dude to human version 1.0.0\n";
+    std::cout << "the dude to human version 1.1.0\n";
 }
 
 static void PrintHelp(const char* argv0) {

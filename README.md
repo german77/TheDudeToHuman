@@ -2,7 +2,7 @@
 This is a Mikrotik The Dude database exporter. Pulls the database from your Mikrotik device loads the contents and saves the contents into a json file.
 
 ## Why
-There's no support from Mikrotik to access this data easily. Either by API, CLI or the dude itself. The most useful tool Mikrotik provides is to export to csv which omits a lot data. More importantly the object index. Which is used to easily identify a device from the database.
+There's no support from Mikrotik to access this data easily. Either by API, CLI or the dude itself. The most useful tool Mikrotik provides is to export to csv which omits a lot of data. More importantly the object index. Which is used to easily identify a device from the database.
 
 The Dude database uses SQLite. But all the objects are stored in a proprietary binary blob rendering useless for querying any kind of info out of the database. This program parses every single binary blob into a well defined structure with field names.
 
@@ -18,7 +18,7 @@ Usage: the_dude_to_human.exe [options] <filename>
 -f, --file                                 Load the specified database file
 -o, --out                                  Save json database file
 -c, --credentials                          Save credentials in plain text
--m, --mikrotik=user:password@address:port  Connect to the specified mikrotik device
+-m, --mikrotik user:password@address:port  Connect to the specified mikrotik device
 -h, --help                                 Display this help and exit
 -v, --version                              Print tool version
 
@@ -30,11 +30,17 @@ Address format examples:
     user:@192.168.1.1                      Hidden user defined password
 ```
 ## Example
+From database file
 ```bash
-./the_dude_to_human -f dude.db -o dude.json
+./the_dude_to_human -f BasicDudeMonitoring.db -o BasicDudeMonitoring.json
 ```
 
-Expected output
+From Dude server. This will briefly stop the server while exporting the database.
+```bash
+./the_dude_to_human -m admin:@192.168.1.1 -o BasicDudeMonitoring.json
+```
+
+Expected output -> [BasicDudeMonitoring.json](examples/BasicDudeMonitoring.json)
 
 ```json
 {
@@ -84,4 +90,4 @@ cmake --build build --target the_dude_to_human
 * Export into other formats sql, sqlite, csv, etc.
 * Repair database corruption with minimal data loss
 * Clean database. Reduce size by removing unused objects and polling data.
-* Compact database. Overtime objects id get too large leading to integer overflows. This should reorganize settings to keep the database in good shape.
+* Compact database. Overtime objects id get too large leading to integer overflows. This should reorganize the entries to keep the database in good shape.
