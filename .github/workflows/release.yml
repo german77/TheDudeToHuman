@@ -7,6 +7,9 @@ on:
       - 'v*.*.*'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 env:
   binary_name: the_dude_to_human
   binary_version: false
