@@ -220,7 +220,7 @@ struct LongArrayField {
         // Get rid of trailing zeroes
         u64 null_position = text.find('\0');
         if (null_position != std::string::npos) {
-            text.resize(null_position );
+            text.resize(null_position);
         }
 
         return text;
@@ -230,8 +230,8 @@ struct LongArrayField {
         auto family = FontFamily();
         // itemFontRaw already contains the complete raw byte array.
         // Expose only parsed fields in itemFont to avoid duplicate raw payload.
-        return fmt::format("{{\"size\":{},\"family\":\"{}\"}}",
-                   FontSize(), Common::Sanitize(family, family.size()));
+        return fmt::format("{{\"size\":{},\"family\":\"{}\"}}", FontSize(),
+                           Common::Sanitize(family, family.size()));
     }
 };
 
