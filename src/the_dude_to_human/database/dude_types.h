@@ -158,12 +158,12 @@ struct TextField {
 struct IntArrayField {
     FieldInfo info{};
     u16 entries{};
-    std::vector<u32> data{};
+    std::vector<s32> data{};
 
     std::string SerializeJson() const {
         std::string array = "";
 
-        for (u32 entry : data) {
+        for (s32 entry : data) {
             array += fmt::format("{},", entry);
         }
         if (!data.empty()) {
@@ -172,15 +172,19 @@ struct IntArrayField {
 
         return fmt::format("[{}]", array);
     }
+
+    s32 operator[](std::size_t index) const {
+        return data[index];
+    }
 };
 
 struct IpArrayField : IntArrayField {
     std::string SerializeJson() const {
         std::string array = "";
 
-        for (u32 entry : data) {
+        for (s32 entry : data) {
             IpAddress ip{};
-            memcpy(&ip, &entry, sizeof(u32));
+            memcpy(&ip, &entry, sizeof(s32));
             array += fmt::format("\"{}.{}.{}.{}\",", ip[0], ip[1], ip[2], ip[3]);
         }
         if (!data.empty()) {

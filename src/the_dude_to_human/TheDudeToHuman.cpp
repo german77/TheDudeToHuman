@@ -263,6 +263,9 @@ int main(int argc, char** argv) {
 
         if (check_integrity) {
             db.CheckIntegrity();
+        } else {
+            db.ListMapData();
+            db.ListDeviceData();
         }
 
         if (has_out_filepath) {
