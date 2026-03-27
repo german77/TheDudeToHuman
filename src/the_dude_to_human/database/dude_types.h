@@ -150,12 +150,12 @@ struct TextField {
 struct IntArrayField {
     FieldInfo info{};
     u16 entries{};
-    std::vector<u32> data{};
+    std::vector<s32> data{};
 
     std::string SerializeJson() const {
         std::string array = "";
 
-        for (u32 entry : data) {
+        for (s32 entry : data) {
             array += fmt::format("{},", entry);
         }
         if (!data.empty()) {
