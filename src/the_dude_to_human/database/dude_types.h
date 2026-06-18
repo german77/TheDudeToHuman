@@ -1108,7 +1108,8 @@ struct SnmpProfileData : DudeObj {
             object_id.SerializeJson(), name.SerializeJson(), version.SerializeJson(),
             port.SerializeJson(), security.SerializeJson(), auth_method.SerializeJson(),
             crypth_method.SerializeJson(), try_count.SerializeJson(), try_timeout.SerializeJson(),
-            crypt_password.SerializeJson(), auth_password.SerializeJson(),
+            has_credentials ? crypt_password.SerializeJson() : "\"*****\"",
+            has_credentials ? auth_password.SerializeJson() : "\"*****\"",
             community.SerializeJson());
     }
 };
