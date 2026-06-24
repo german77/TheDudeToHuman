@@ -9,19 +9,28 @@
 #include "the_dude_to_human/database/dude_types.h"
 
 namespace Database {
-enum class ParserResult {
+enum class ParserResult : u32 {
     Success,
     Corrupted,
     FieldTypeMismatch,
     FieldIdMismatch,
     InvalidFieldType,
     InvalidFieldArguments,
+    InvalidMagic,
+    InvalidHeader,
     EndOfFile,
 };
 
 class DudeFieldParser {
 public:
     DudeFieldParser(std::span<const u8> raw_data);
+
+    bool IsDataValid() const;
+    ParserResult GetStatus() const;
+    std::string GetErrorMessage() const;
+    static std::string GetErrorMessage(ParserResult result);
+
+    void PrintFieldInfo();
 
     u16 GetMagic() const;
     IntArrayField GetFormat() const;
@@ -59,8 +68,11 @@ private:
     ParserResult ReadFieldInfo(FieldInfo& field_info, FieldId id = FieldId::None);
     ParserResult ValidataFieldInfo(const FieldInfo& field_info, FieldId id = FieldId::None);
 
-    bool is_data_valid{};
+    ParserResult ReturnWithError(ParserResult result);
+
     u16 magic{};
+    u32 error_count{};
+    ParserResult status{ParserResult::Success};
     IntArrayField data_format{};
 
     std::size_t offset;

@@ -103,6 +103,14 @@ struct IntField {
     std::string SerializeJson() const {
         return fmt::format("{}", value);
     }
+
+    bool operator==(s32 rhs) const {
+        return value == rhs;
+    }
+
+    bool operator==(IntField rhs) const {
+        return value == rhs.value;
+    }
 };
 
 // This is FieldType::Int
@@ -164,15 +172,19 @@ struct IntArrayField {
 
         return fmt::format("[{}]", array);
     }
+
+    s32 operator[](std::size_t index) const {
+        return data[index];
+    }
 };
 
 struct IpArrayField : IntArrayField {
     std::string SerializeJson() const {
         std::string array = "";
 
-        for (u32 entry : data) {
+        for (s32 entry : data) {
             IpAddress ip{};
-            memcpy(&ip, &entry, sizeof(u32));
+            memcpy(&ip, &entry, sizeof(s32));
             array += fmt::format("\"{}.{}.{}.{}\",", ip[0], ip[1], ip[2], ip[3]);
         }
         if (!data.empty()) {
